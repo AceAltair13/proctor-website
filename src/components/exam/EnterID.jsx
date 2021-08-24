@@ -29,7 +29,7 @@ function EnterID() {
                 fullWidth
             />
             <br />
-            <Link to="/exam/start" >
+            <Link to="/exam/start" className={classes.noUnderLine}>
                 <Button
                     color="primary"
                     variant="contained"
