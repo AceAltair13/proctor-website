@@ -1,14 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter } from "react-router-dom";
+import { HashRouter as Router } from "react-router-dom";
 import App from "./components/App";
 import { createBrowserHistory } from "history";
 
 const history = createBrowserHistory()
 
 ReactDOM.render(
-    <BrowserRouter history={history}>
+    <Router history={history}>
         <App />
-    </BrowserRouter>,
+    </Router>,
     document.getElementById("root")
 );
