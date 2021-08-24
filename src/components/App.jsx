@@ -4,7 +4,9 @@ import { indigo } from "@material-ui/core/colors";
 import { createTheme, MuiThemeProvider } from "@material-ui/core/styles";
 import Website from "./website/Website";
 import Examination from "./exam/Examination";
+import Unavailable from "./exam/Unavailable";
 import AdminDashboard from "./admin/AdminDashboard";
+import { isMobile } from "react-device-detect";
 
 const theme = createTheme({
     palette: {
@@ -19,9 +21,15 @@ function App() {
     return (
         <MuiThemeProvider theme={theme}>
             <Switch>
-                <Route exact path="/" component={Website}></Route>
-                <Route path="/admin" component={AdminDashboard}></Route>
-                <Route path="/exam" component={Examination}></Route>
+                <Route exact path="/">
+                    <Website />
+                </Route>
+                <Route path="/admin">
+                    <AdminDashboard />
+                </Route>
+                <Route path="/exam">
+                    {isMobile ? <Unavailable /> : <Examination />}
+                </Route>
             </Switch>
         </MuiThemeProvider>
     );
