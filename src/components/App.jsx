@@ -18,10 +18,6 @@ const theme = createTheme({
 });
 
 function App() {
-    if (isAndroid) {
-        console.log(mobileModel, deviceType, deviceDetect);
-    }
-    else {
         return (
             <MuiThemeProvider theme={theme}>
                 <Switch>
@@ -39,6 +35,5 @@ function App() {
         );
 
     }
-}
 
 export default App;
