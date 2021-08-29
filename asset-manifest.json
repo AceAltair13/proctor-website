@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.js": "/proctor-website/static/js/main.98cdc89b.chunk.js",
-    "main.js.map": "/proctor-website/static/js/main.98cdc89b.chunk.js.map",
+    "main.js": "/proctor-website/static/js/main.e431fed4.chunk.js",
+    "main.js.map": "/proctor-website/static/js/main.e431fed4.chunk.js.map",
     "runtime-main.js": "/proctor-website/static/js/runtime-main.e535e82c.js",
     "runtime-main.js.map": "/proctor-website/static/js/runtime-main.e535e82c.js.map",
-    "static/js/2.5cbda6d0.chunk.js": "/proctor-website/static/js/2.5cbda6d0.chunk.js",
-    "static/js/2.5cbda6d0.chunk.js.map": "/proctor-website/static/js/2.5cbda6d0.chunk.js.map",
+    "static/js/2.ebd83884.chunk.js": "/proctor-website/static/js/2.ebd83884.chunk.js",
+    "static/js/2.ebd83884.chunk.js.map": "/proctor-website/static/js/2.ebd83884.chunk.js.map",
     "index.html": "/proctor-website/index.html",
-    "static/js/2.5cbda6d0.chunk.js.LICENSE.txt": "/proctor-website/static/js/2.5cbda6d0.chunk.js.LICENSE.txt",
+    "static/js/2.ebd83884.chunk.js.LICENSE.txt": "/proctor-website/static/js/2.ebd83884.chunk.js.LICENSE.txt",
     "static/media/exam_console.517e514e.svg": "/proctor-website/static/media/exam_console.517e514e.svg",
     "static/media/mobiledenied.ad7f50e3.svg": "/proctor-website/static/media/mobiledenied.ad7f50e3.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.e535e82c.js",
-    "static/js/2.5cbda6d0.chunk.js",
-    "static/js/main.98cdc89b.chunk.js"
+    "static/js/2.ebd83884.chunk.js",
+    "static/js/main.e431fed4.chunk.js"
   ]
 }
