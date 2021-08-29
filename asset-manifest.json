@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.js": "/proctor-website/static/js/main.0a585bc5.chunk.js",
-    "main.js.map": "/proctor-website/static/js/main.0a585bc5.chunk.js.map",
+    "main.js": "/proctor-website/static/js/main.d016f034.chunk.js",
+    "main.js.map": "/proctor-website/static/js/main.d016f034.chunk.js.map",
     "runtime-main.js": "/proctor-website/static/js/runtime-main.e535e82c.js",
     "runtime-main.js.map": "/proctor-website/static/js/runtime-main.e535e82c.js.map",
     "static/js/2.ebd83884.chunk.js": "/proctor-website/static/js/2.ebd83884.chunk.js",
@@ -14,6 +14,6 @@
   "entrypoints": [
     "static/js/runtime-main.e535e82c.js",
     "static/js/2.ebd83884.chunk.js",
-    "static/js/main.0a585bc5.chunk.js"
+    "static/js/main.d016f034.chunk.js"
   ]
 }
