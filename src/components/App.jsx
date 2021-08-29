@@ -18,6 +18,12 @@ const theme = createTheme({
 });
 
 function App() {
+    if(isAndroid)
+    {
+        <Route path="/exam">
+        {<Unavailable />}
+        </Route> 
+    }
         return (
             <MuiThemeProvider theme={theme}>
                 <Switch>
