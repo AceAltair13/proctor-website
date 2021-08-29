@@ -1,14 +1,33 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
 import { indigo } from "@material-ui/core/colors";
-import { createTheme, MuiThemeProvider } from "@material-ui/core/styles";
+import {
+    createTheme,
+    MuiThemeProvider,
+    responsiveFontSizes,
+} from "@material-ui/core/styles";
 import Website from "./website/Website";
 import Examination from "./exam/Examination";
 import Unavailable from "./exam/Unavailable";
 import AdminDashboard from "./admin/AdminDashboard";
-import { isMobile, isTablet, isSmartTV, isAndroid, isWinPhone, isIOS, isFirefox, isSafari, isOpera, isIE, isEdge, isMobileSafari, isIOS13, isIPhone13} from "react-device-detect";
+import {
+    isMobile,
+    isTablet,
+    isSmartTV,
+    isAndroid,
+    isWinPhone,
+    isIOS,
+    isFirefox,
+    isSafari,
+    isOpera,
+    isIE,
+    isEdge,
+    isMobileSafari,
+    isIOS13,
+    isIPhone13,
+} from "react-device-detect";
 
-const theme = createTheme({
+let theme = createTheme({
     palette: {
         primary: indigo,
         secondary: {
@@ -16,48 +35,41 @@ const theme = createTheme({
         },
     },
 });
+theme = responsiveFontSizes(theme);
 
-function App()
-{
-    if(isAndroid)
-    {
-        return(
-            <MuiThemeProvider theme={theme}>
-                <Switch>
-                    <Route exact path="/">
-                        <Website />
-                    </Route>
-                    <Route path="/admin">
-                        <AdminDashboard />
-                    </Route>
-                    <Route path="/exam">
+function App() {
+    return (
+        <MuiThemeProvider theme={theme}>
+            <Switch>
+                <Route exact path="/">
+                    <Website />
+                </Route>
+                <Route path="/admin">
+                    <AdminDashboard />
+                </Route>
+                <Route path="/exam">
+                    {isMobile ||
+                    isTablet ||
+                    isSmartTV ||
+                    isAndroid ||
+                    isWinPhone ||
+                    isIOS ||
+                    isFirefox ||
+                    isSafari ||
+                    isOpera ||
+                    isIE ||
+                    isEdge ||
+                    isMobileSafari ||
+                    isIOS13 ||
+                    isIPhone13 ? (
                         <Unavailable />
-                    </Route>
-                </Switch>
-            </MuiThemeProvider>
-
-        );
-    }
-    else
-    {
-        return (
-            <MuiThemeProvider theme={theme}>
-                <Switch>
-                    <Route exact path="/">
-                        <Website />
-                    </Route>
-                    <Route path="/admin">
-                        <AdminDashboard />
-                    </Route>
-                    <Route path="/exam">
-                        {isMobile || isTablet || isSmartTV || isAndroid || isWinPhone || isIOS || isFirefox || isSafari || isOpera || isIE || isEdge || isMobileSafari || isIOS13 || isIPhone13 ? <Unavailable /> : <Examination />}
-                    </Route>
-                </Switch>
-            </MuiThemeProvider>
-        );
-
-    }
-
+                    ) : (
+                        <Examination />
+                    )}
+                </Route>
+            </Switch>
+        </MuiThemeProvider>
+    );
 }
 
 export default App;

@@ -6,7 +6,7 @@ import Test from "./Test";
 
 const useStyles = makeStyles((_) => ({
     root: {
-        height: "90vh",
+        height: "100vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",

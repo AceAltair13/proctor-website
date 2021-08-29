@@ -31,7 +31,7 @@ function Unavailable() {
                 className={classes.image}
             />
             <Typography variant="button" className={classes.text}>
-                This section is unavailable on <strong>mobile phones</strong>.
+                This page is unavailable on <strong>mobile phones</strong>.
                 <br />
                 Please use a <strong>desktop</strong> instead.
             </Typography>

@@ -6,15 +6,15 @@ import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     form: {
-        minWidth: "20%",
+        width: "20em",
         textAlign: "center",
     },
     textInput: {
         marginBottom: theme.spacing(2),
     },
     noUnderLine: {
-        textDecoration: "none"
-    }
+        textDecoration: "none",
+    },
 }));
 
 function EnterID() {
@@ -29,21 +29,22 @@ function EnterID() {
                 fullWidth
             />
             <br />
-            <Link to="/exam/start" className={classes.noUnderLine}>
-                <Button
-                    color="primary"
-                    variant="contained"
-                    fullWidth
-                    size="large"
-                    onClick={() => {
-                        var doc = document.documentElement;
-                        doc.requestFullscreen();
-                    }}
-                    endIcon={<Send />}
-                >
-                    Submit
-                </Button>
-            </Link>
+
+            <Button
+                color="primary"
+                variant="contained"
+                fullWidth
+                size="large"
+                onClick={() => {
+                    var doc = document.documentElement;
+                    doc.requestFullscreen();
+                }}
+                component={Link}
+                to={"/exam/start"}
+                endIcon={<Send />}
+            >
+                Submit
+            </Button>
         </form>
     );
 }
