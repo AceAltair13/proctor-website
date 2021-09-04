@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Send } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 
+
 const useStyles = makeStyles((theme) => ({
     form: {
         width: "20em",
@@ -17,12 +18,28 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+function a()
+{
+    var ExamId=document.getElementById("Exam").value
+    if(ExamId==="")
+    {
+        return(0);
+    }
+    else
+    {
+        return(1);
+    }
+
+}
+
 function EnterID() {
+    
     const classes = useStyles();
 
     return (
         <form className={classes.form}>
             <TextField
+                name="Exam"
                 label="Enter Examination ID"
                 variant="outlined"
                 className={classes.textInput}
@@ -36,8 +53,17 @@ function EnterID() {
                 fullWidth
                 size="large"
                 onClick={() => {
-                    var doc = document.documentElement;
-                    doc.requestFullscreen();
+                    var z=a()
+                    if(z)
+                    {
+                        var doc = document.documentElement;
+                        doc.requestFullscreen();
+
+                    }
+                    else
+                    {
+                        alert("ExamId daal madarchod")
+                    }
                 }}
                 component={Link}
                 to={"/exam/start"}
