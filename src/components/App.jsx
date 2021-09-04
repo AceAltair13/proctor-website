@@ -10,22 +10,9 @@ import Website from "./website/Website";
 import Examination from "./exam/Examination";
 import Unavailable from "./exam/Unavailable";
 import AdminDashboard from "./admin/AdminDashboard";
-import {
-    isMobile,
-    isTablet,
-    isSmartTV,
-    isAndroid,
-    isWinPhone,
-    isIOS,
-    isFirefox,
-    isSafari,
-    isOpera,
-    isIE,
-    isEdge,
-    isMobileSafari,
-    isIOS13,
-    isIPhone13,
-} from "react-device-detect";
+import { isChrome, isDesktop } from "react-device-detect";
+import SignUp from "./auth/SignUp";
+import SignIn from "./auth/SignIn";
 
 let theme = createTheme({
     palette: {
@@ -48,24 +35,17 @@ function App() {
                     <AdminDashboard />
                 </Route>
                 <Route path="/exam">
-                    {isMobile ||
-                    isTablet ||
-                    isSmartTV ||
-                    isAndroid ||
-                    isWinPhone ||
-                    isIOS ||
-                    isFirefox ||
-                    isSafari ||
-                    isOpera ||
-                    isIE ||
-                    isEdge ||
-                    isMobileSafari ||
-                    isIOS13 ||
-                    isIPhone13 ? (
+                    {!(isChrome && isDesktop) ? (
                         <Unavailable />
                     ) : (
                         <Examination />
                     )}
+                </Route>
+                <Route exact path="/signup">
+                    <SignUp />
+                </Route>
+                <Route exact path="/signin">
+                    <SignIn />
                 </Route>
             </Switch>
         </MuiThemeProvider>
