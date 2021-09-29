@@ -6,13 +6,13 @@ import {
     MuiThemeProvider,
     responsiveFontSizes,
 } from "@material-ui/core/styles";
-import Website from "./website/Website";
-import Examination from "./exam/Examination";
-import Unavailable from "./exam/Unavailable";
-import AdminDashboard from "./admin/AdminDashboard";
+import Examination from "./Examination/Examination";
+import Unavailable from "./Examination/Unavailable";
+import AdminDashboard from "./Dashboard/AdminDashboard";
 import { isChrome, isDesktop } from "react-device-detect";
-import SignUp from "./auth/SignUp";
-import SignIn from "./auth/SignIn";
+import SignUp from "./Auth/SignUp";
+import SignIn from "./Auth/SignIn";
+import Homepage from "./Home/Homepage";
 
 let theme = createTheme({
     palette: {
@@ -29,7 +29,7 @@ function App() {
         <MuiThemeProvider theme={theme}>
             <Switch>
                 <Route exact path="/">
-                    <Website />
+                    <Homepage />
                 </Route>
                 <Route path="/admin">
                     <AdminDashboard />

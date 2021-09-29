@@ -11,13 +11,18 @@ import HeaderImage from "../../../images/time.json";
 import lottie from "lottie-web";
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        height: "100vh",
+    header: {
         background: "-webkit-linear-gradient(-30deg, #3f51b5 50%, #6573c3 50%)",
     },
+    root: {
+        height: "100vh",
+        paddingTop: 50
+    },
     headerImage: {
-        maxWidth: "80%",
-        height: "auto",
+        // maxWidth: "100%",
+        // height: "auto",
+        height: 600,
+        width: 600,
     },
 }));
 
@@ -39,7 +44,7 @@ export default function Header() {
     }, []);
 
     return (
-        <header className={classes.root}>
+        <header className={classes.header}>
             <Navbar />
             <Container>
                 <Grid
@@ -47,6 +52,7 @@ export default function Header() {
                     justifyContent="center"
                     alignItems="center"
                     spacing={8}
+                    className={classes.root}
                 >
                     <Grid item direction="column" container md={6}>
                         <Grid item xs>
@@ -60,7 +66,7 @@ export default function Header() {
                             <Button>Create Your Exam</Button>
                         </Grid>
                     </Grid>
-                    <Grid item md={6} justifyContent="center" alignItems="center">
+                    <Grid item md={6}>
                         {lottieImage}
                     </Grid>
                 </Grid>

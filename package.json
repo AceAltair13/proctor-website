@@ -6,11 +6,14 @@
   "dependencies": {
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
+    "@tensorflow-models/coco-ssd": "^2.1.0",
+    "@tensorflow/tfjs": "^2.4.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "clsx": "^1.1.1",
     "lottie-web": "^5.7.13",
+    "ml5": "^0.4.2",
     "nodemon": "^2.0.12",
     "react": "^17.0.2",
     "react-device-detect": "^1.17.0",
@@ -18,6 +21,7 @@
     "react-hot-keys": "^2.7.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
+    "react-webcam": "^6.0.0",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
@@ -48,5 +52,8 @@
   },
   "devDependencies": {
     "gh-pages": "^3.2.3"
+  },
+  "peerDependencies": {
+    "@tensorflow/tfjs": "^2.4.0"
   }
 }

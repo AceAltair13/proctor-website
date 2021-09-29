@@ -158,7 +158,7 @@ export default function Navbar() {
 
   return (
     <div className={classes.grow}>
-      <AppBar position="static" color="default">
+      <AppBar position="absolute" color="default">
         <Toolbar>
           <Typography variant="h6" noWrap color="primary">
             EXAMINATOR
