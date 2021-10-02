@@ -38,24 +38,25 @@ function Test() {
         ) {
             const video = webcamRef.current.video;
             const predictions = await model.detect(video);
-            let count = 0
-            predictions.forEach(x => {
-                let name = x.class
-                let score = x.score
-                if (score > 0.55) {
-                    if (name === "cell phone") {
-                        console.log("cell phone detected !")
-                    }
-                    if (name === "person") {
-                        count++
-                    }
-                }
-                if (count > 1) {
-                    console.log("More than one person detected !")
-                } else if (count === 0) {
-                    console.log("No person detected !")
-                }
-            })
+            // let count = 0
+            // predictions.forEach(x => {
+            //     let name = x.class
+            //     let score = x.score
+            //     if (score > 0.55) {
+            //         if (name === "cell phone") {
+            //             console.log("cell phone detected !")
+            //         }
+            //         if (name === "person") {
+            //             count++
+            //         }
+            //     }
+            //     if (count > 1) {
+            //         console.log("More than one person detected !")
+            //     } else if (count === 0) {
+            //         console.log("No person detected !")
+            //     }
+            // })
+            console.log(predictions)
         }
     }
 
