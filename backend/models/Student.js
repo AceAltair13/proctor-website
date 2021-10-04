@@ -1,8 +1,8 @@
 const Exam = require("./Exam")
 
 class Student extends User{
-    constructor(id,firstName,lastName,phoneNumber,emailId,userName,password)
-    super(id,firstName,lastName,phoneNumber,emailId,userName,password)
+    constructor(firstName,lastName,phoneNumber,emailId,userName,password)
+    super(firstName,lastName,phoneNumber,emailId,userName,password)
     examsEnrolled = Array(Exam)
     
 

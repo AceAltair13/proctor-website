@@ -1,4 +1,4 @@
-const Supervisor = require("./Supervisor")
+const Supervisor = require("./Supervisor").default
 const Student = require("./Student")
 
 class Exam{
