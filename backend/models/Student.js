@@ -1,11 +1,14 @@
-const Exam = require("./Exam")
+import Exam from "./Exam"
 
 class Student extends User{
-    constructor(firstName,lastName,phoneNumber,emailId,userName,password)
-    super(firstName,lastName,phoneNumber,emailId,userName,password)
-    examsEnrolled = Array(Exam)
+    constructor(firstName,lastName,phoneNumber,emailId,userName,password){
+
+        super(firstName,lastName,phoneNumber,emailId,userName,password)
+        this.isStudent = isStudent
+        this.examsEnrolled = Array(Exam)
+    }
     
 
 }
 
-module.exports = Student
+export default Student

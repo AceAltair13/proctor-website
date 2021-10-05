@@ -1,7 +1,7 @@
-const express = require("express")
-const {registerStudent, registerSupervisor} = require("../controllers/user");
-const router  = express.Router()
-const fb = require("../db")
+import { Router } from "express";
+import { registerStudent, registerSupervisor } from "../controllers/user.js";
+const router  = Router()
+
 
 
 router.post("/register-student",registerStudent);
@@ -15,6 +15,4 @@ router.post("/register-supervisor",registerSupervisor);
 
 
 
-module.exports = {
-    routes:router
-}
+export const routes = router;

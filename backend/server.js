@@ -1,18 +1,19 @@
 'use strict'
-const express = require('express')
-const cors = require('cors')
-const bodyParser = require("body-parser")
-const config = require('./config')
+import express, { json } from 'express'
+import cors from 'cors'
 
-const userRoutes = require("./routes/user")
+import { port, url } from './config.js'
+
+import { routes } from "./routes/user.js"
+import bodyParser from 'body-parser'
 
 const app = express()
-app.use(express.json())
+app.use(json())
 app.use(cors())
 app.use(bodyParser.json())
 
-app.use("/api/user",userRoutes.routes)
+app.use("/api/user",routes)
 
-app.listen(config.port,()=>{
-    console.log(`Server is running on ${config.url}`);
+app.listen(port,()=>{
+    console.log(`Server is running on ${url}`);
 })

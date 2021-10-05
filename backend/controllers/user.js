@@ -1,14 +1,22 @@
-const {firebase_storage,firebase_firestore} = require("../db")
-const config = require("../config");
+import { firebase_storage, firebase_firestore } from "../db.js";
+import * as config  from "../config.js";
+import CryptoJs from "crypto-js";
+import User from "../models/User.js";
+import { userExists } from "./helpers.js";
+
+
 
 
 
 const registerStudent = async(req,res)=>{
     try {
-        console.log(typeof req.body);
-        req.body.isStudent = true
-        const data = req.body;
-        result =  await firebase_firestore.collection('users').add(data) 
+        userExists()  
+        
+
+        // console.log(newUser);
+        newUser = req.body
+        
+        result =  await firebase_firestore.collection('users').add(newUser) 
         return res.status(200).json(result)
     } catch (error) {
         return res.status(400).json(error)
@@ -28,7 +36,7 @@ const registerSupervisor = async(req,res)=>{
         
     }
 }
-module.exports = {
+export  {
     registerStudent,registerSupervisor
 }
 

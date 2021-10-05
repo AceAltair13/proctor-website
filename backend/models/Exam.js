@@ -1,5 +1,5 @@
-const Supervisor = require("./Supervisor").default
-const Student = require("./Student")
+import Supervisor from "./Supervisor";
+import Student from "./Student";
 
 class Exam{
     constructor(examId,supervisorId,examName,examStartTime,examEndTime){

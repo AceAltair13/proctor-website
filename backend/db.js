@@ -1,14 +1,16 @@
 // const firebase = require("firebase")
 // import { initializeApp } from "firebase/app"
 // const firebase = require("firebase/app")
-
-const firebase = require('firebase-admin')
-const config = require("./config")
-const serviceAccount = require("./firebase_key.json");
+import { createRequire } from "module"
+const require = createRequire(import.meta.url)
+const serviceAccount = require("./firebase_key.json")
+import  admin  from "firebase-admin"
+// const { initializeApp, credential } = pkg;
+import * as config from "./config.js";
 // const app = firebase.initializeApp(config.firebaseConfig)
-const app = firebase.initializeApp({credential:firebase.credential.cert(serviceAccount)})
+const app = admin.initializeApp({credential:admin.credential.cert(serviceAccount)})
 const firebase_firestore = app.firestore()
 const firebase_storage = app.storage()
- 
 
-module.exports = {firebase_firestore,firebase_storage};    
+
+export  {firebase_firestore,firebase_storage};    
