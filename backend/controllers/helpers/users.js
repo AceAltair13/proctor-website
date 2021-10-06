@@ -1,6 +1,7 @@
-import {firebase_firestore} from "../db.js";
+import {firebase_firestore} from "../../db.js";
 
 const userExists = async(req,res,next)=>{
+
     var userExists = false
     await firebase_firestore.collection("users").get().then(function(querySnapshot){
         querySnapshot.forEach(function(doc){

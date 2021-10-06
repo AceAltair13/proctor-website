@@ -1,4 +1,6 @@
 class User{
+
+
     constructor(firstName,lastName,phoneNumber,emailId,userName,password){
         this.firstName  =firstName;
         this.lastName  = lastName;
