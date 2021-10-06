@@ -1,9 +1,10 @@
-const jwt = require("jsonwebtoken")
+import jwt from "jsonwebtoken"
+
 
 export const verifyToken = (req,res,next)=>{
     const authHeader = req.headers.token;
     if(authHeader){
-        jwt.verify(authHeader,process.env.JWT_SEC,(err,user)=>{
+        jwt.verify(authHeader,config.jwt_passKey,(err,user)=>{
             if(err){
                 return res.status(403).json("invalid token")
             }

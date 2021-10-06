@@ -1,15 +1,16 @@
 import { Router } from "express";
-import { registerStudent, registerSupervisor } from "../controllers/user.js";
+import { userExists } from "../controllers/helpers.js";
+import { loginStudent, loginSupervisor, registerStudent, registerSupervisor } from "../controllers/user.js";
 const router  = Router()
 
 
 
-router.post("/register-student",registerStudent);
-router.post("/register-supervisor",registerSupervisor);
+router.post("/register-student",userExists,registerStudent);
+router.post("/register-supervisor",userExists,registerSupervisor);
 // router.put("/update-supervisor",registerSupervisor)
 // router.put("/update-student",registerStudent)
-// router.post("/login-student",login)
-// router.post("/login-supervisor",)
+router.post("/login-student",userExists,loginStudent)
+router.post("/login-supervisor",userExists,loginSupervisor)
 
 
 

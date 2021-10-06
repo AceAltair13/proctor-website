@@ -15,7 +15,8 @@ const{
     MESSAGING_SENDER_ID,
     APP_ID,
     MEASUREMENT_ID,
-    PASS_SECRET_KEY
+    PASS_SECRET_KEY,
+    JWT_SECRET_KEY
 } = process.env
 
 
@@ -35,3 +36,4 @@ export const firebaseConfig = {
     measurementId: MEASUREMENT_ID
 }
 export const passKey = PASS_SECRET_KEY
+export const jwt_passKey = JWT_SECRET_KEY
