@@ -1,4 +1,4 @@
-import {firebase_firestore} from "../../db.js";
+import {firebase_firestore} from "../db.js";
 
 const userExists = async(req,res,next)=>{
 
