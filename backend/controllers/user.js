@@ -1,13 +1,20 @@
-import { firebase_storage, firebase_firestore } from "../db.js";
+import {
+    firebase_storage,
+    firebase_firestore
+} from "../db.js";
 import * as config from "../config.js";
 import CryptoJs from "crypto-js";
 import User from "../models/User.js";
 import Student from "../models/Student.js";
 import Supervisor from "../models/Supervisor.js";
 
-import { userExists } from "../helpers/users.js";
+import {
+    userExists
+} from "../helpers/users.js";
 import jwt from "jsonwebtoken";
-import { uid } from "../helpers/other.js";
+import {
+    uid
+} from "../helpers/other.js";
 
 const registerStudent = async (req, res) => {
     try {
@@ -37,7 +44,9 @@ const registerStudent = async (req, res) => {
         await firebase_firestore
             .collection("users")
             .doc(result.id)
-            .update({ userId: result.id });
+            .update({
+                userId: result.id
+            });
         return res.status(200).json(result);
     } catch (error) {
         return res.status(400).json("Failed to create the Student" + error);
@@ -96,29 +105,39 @@ const login = async (req, res) => {
             return res.status(401).json("Wrong Password");
         }
 
-        const accessToken = jwt.sign(
-            {
+        const accessToken = jwt.sign({
                 userId: user.userId,
                 isStudent: user.isStudent ?? false,
                 isSupervisor: user.isSupervisor ?? false,
                 isAdmin: user.isAdmin ?? false,
                 emailId: user.emailId,
             },
-            config.jwt_passKey,
-            { expiresIn: "3d" }
+            config.jwt_passKey, {
+                expiresIn: "3d"
+            }
         );
 
         // const accessToken = jwt.sign({
         //     user
         // }, config.jwt_passKey, { expiresIn: "3d" })
 
-        const { password, ...others } = user;
-        res.status(200).json({ ...others, accessToken });
+        const {
+            password,
+            ...others
+        } = user;
+        res.status(200).json({
+            ...others,
+            accessToken
+        });
     } catch (err) {
         res.status(500).json(err);
     }
 };
 
-const logout = async (req, res) => { };
+const logout = async (req, res) => {};
 
-export { registerStudent, registerSupervisor, login };
+export {
+    registerStudent,
+    registerSupervisor,
+    login
+};
