@@ -5,7 +5,7 @@ class Student extends User{
     constructor(firstName,lastName,phoneNumber,emailId,userName,password){
 
         super(firstName,lastName,phoneNumber,emailId,userName,password,false,true)
-        this.examsEnrolled = Array(Exam)
+        this.examsEnrolled =[]
     }
     toJSON = () => {
         return {

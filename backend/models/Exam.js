@@ -11,7 +11,7 @@ class Exam{
         this.examStartTime = examStartTime;
         this.examEndTime = examEndTime
         this.questionPaper = QuestionPaper
-        this.studentsList = Array(Student)
+        this.studentsList = []
         this.createdAt = new Date().toISOString().toString()
     }
 

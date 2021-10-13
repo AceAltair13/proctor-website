@@ -15,7 +15,9 @@ import { uid } from "../helpers/other.js";
 
 const registerStudent = async (req, res) => {
     try {
-        console.log(req.body.userExists)
+        
+
+    
 
         if (req.body.userExists !== false) {
             return res.status(400).json("EmailId already used")
@@ -37,7 +39,7 @@ const registerStudent = async (req, res) => {
 
 const registerSupervisor = async (req, res) => {
     try {
-        console.log(req.body.userExists)
+       
         if (req.body.userExists !== false) {
             return res.status(400).json("EmailId already used")
         }
@@ -75,13 +77,13 @@ const login = async (req, res) => {
             return res.status(401).json("Wrong Password")
         }
 
-        // const accessToken = jwt.sign({
-        //     id: user.user_id, isStudent: user.isStudent ?? false,isSupervisor:user.isSupervisor??false,isAdmin:user.isAdmin??false
-        // }, config.jwt_passKey, { expiresIn: "3d" })
-
         const accessToken = jwt.sign({
-            user
+            userId: user.userId, isStudent: user.isStudent ?? false,isSupervisor:user.isSupervisor??false,isAdmin:user.isAdmin??false,emailId:user.emailId
         }, config.jwt_passKey, { expiresIn: "3d" })
+       
+        // const accessToken = jwt.sign({
+        //     user
+        // }, config.jwt_passKey, { expiresIn: "3d" })
 
 
         const { password, ...others } = user
@@ -89,6 +91,11 @@ const login = async (req, res) => {
     } catch (err) {
         res.status(500).json(err)
     }
+}
+
+const logout = async(req,res)=>{
+
+
 }
 
 export {
