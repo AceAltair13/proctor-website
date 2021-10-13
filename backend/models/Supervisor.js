@@ -6,7 +6,7 @@ class Supervisor extends User{
     constructor(firstName,lastName,phoneNumber,emailId,userName,password){
 
         super(firstName,lastName,phoneNumber,emailId,userName,password,true,false)
-        this.examsCreated = Array(Exam)
+        this.examsCreated = []
     }
     toJSON = () => {
         return {

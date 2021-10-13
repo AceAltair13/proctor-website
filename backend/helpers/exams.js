@@ -13,3 +13,14 @@ export const questionPaperExists = async(questionPaperId,examId)=>{
 
     })
 }
+export const examExists = async(userId,examId)=>{
+    const examsCreated = (await firebase_firestore.collection("users").doc(userId).get()).data()["examsCreated"]
+    console.log(examsCreated)
+    for(var i=0;i<examsCreated.length;i++){
+        if(examsCreated[i] === examId){
+            return true
+        }
+    }
+    return false;
+
+}
