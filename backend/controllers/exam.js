@@ -59,7 +59,7 @@ const changeExamSettings = async (req, res) => {
 
 }
 
-const assignQuestionPpaer = async (req,res) => {
+const assignQuestionPaper = async (req,res) => {
     try {
         const newId = uid()
         const questionPaper = new QuestionPaper(req.body.examId,req.body.questionAnswers)
@@ -143,7 +143,10 @@ const enrollStudent = async(req,res)=>{
 
 
 }
+const getQuestionPaper = async(req,res)=>{
+
+}
 
 export {
-    createExam,assignQuestionPpaer,enrollStudent
+    createExam,assignQuestionPaper,enrollStudent,getQuestionPaper
 }

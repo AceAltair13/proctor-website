@@ -22,7 +22,7 @@ export const verifyToken = (req, res, next) => {
 
 export const verifyTokenAndAuthorization = (req, res, next) => {
     verifyToken(req, res, () => {
-        if (req.user.id === req.params.id || req.user.isAdmin) {
+        if (req.user.userId === req.params.id || req.user.isAdmin) {
             next();
         } else {
             return res.status(403).json("You are not allowed to do that")
@@ -43,7 +43,7 @@ export const verifyTokenAndSupervisor = (req, res, next) => {
 
 export const verifyTokenAndStudent = (req, res, next) => {
     verifyToken(req, res, () => {
-        if (req.user.id === req.params.id && (req.user.isStudent || req.user.isAdmin)) {
+        if ( req.user.isStudent || req.user.isAdmin) {
             next();
         } else {
             return res.status(403).json("You are not allowed to do that")
@@ -85,9 +85,17 @@ export const verifyExamAndSupervisor = async(req,res,next)=>{
 }
 
 export const verifyQuestionPaperAndExam = async(req,res,next)=>{
-    verifyExamAndSupervisor(req,res,async()=>{
+    verifyTokenAndStudent(req,res,async()=>{
+        
+    
         
     })
+    
+}
+
+export const verifyStudentAndExam = async(req,res,next)=>{
+    verifyStudentAndExam
+
 }
 export const authenticateExamChanges = (req, res, next) => {
 

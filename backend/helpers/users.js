@@ -20,30 +20,6 @@ const userExists = async(req,res,next)=>{
     next()
     
 
-
-    // await firebase_firestore.collection("users").get().then((querySnapshot)=>{
-    //     var userExists = false
-    //     if(querySnapshot){
-
-    //     }
-    //     querySnapshot.forEach((doc)=>{
-    //         console.log(doc.data())
-    //        if(doc.data()["emailId"] === req.body.emailId){
-
-    //            userExists = doc.data()
-               
-    //        }else{
-    //            userExists = false
-    //        }
-    //     })
-    //     req.body.userExists = userExists;
-    // });
-    // // if(user===true){
-    //     //     return res.status(400).json("User already exists with the given email ID")
-        
-    //     // }
-    //     console.log("xecuting ahead")
-    //     next();
         
     } catch (error) {
         res.status(400).json(error)
