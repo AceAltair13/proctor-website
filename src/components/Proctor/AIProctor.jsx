@@ -10,7 +10,7 @@ export default function AIProctor() {
     };
 
     useEffect(() => {
-        // runObjectDetection(webcamRef);
+        runObjectDetection(webcamRef);
         irisTracking();
     }, []);
 

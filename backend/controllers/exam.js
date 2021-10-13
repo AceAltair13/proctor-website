@@ -94,22 +94,26 @@ const assignQuestionPpaer = async (req,res) => {
 
 const enrollStudent = async(req,res)=>{
     try{
+        var firestorePromises = [];
         const studentsList = req.body.studentsList;
+        var filteredStudentsList = []
 
         for(var i=0;i<studentsList.length;i++){
             
             req.body.emailId = studentsList[i]
 
-             userExists(req,res,async()=>{
+             await userExists(req,res,async()=>{
                 if(req.body.userExists){
+                    filteredStudentsList.push(req.body.userExists)
                     console.log(req.body.emailId)
+                    try {
+                       await Promise.resolve(firebase_firestore.collection("users").doc(req.body.userExists.userId).update({examsEnrolled:admin.firestore.FieldValue.arrayUnion(req.body.examId)}))
+                    } catch (error) {
+                        console.log("Something went wrong")
+                    }
 
-                    await firebase_firestore.collection("exams").doc(req.body.examId).update({studentsList:admin.firestore.FieldValue.arrayUnion(req.body.userExists.userId)});
-                    await firebase_firestore.collection("users").doc(req.body.userExists.userId).update({examsEnrolled:admin.firestore.FieldValue.arrayUnion(req.body.examId)});
-                    console.log("here")
             }
-
-                
+   
             })
             // const data = await userExistsFunction(studentsList[i])
             // if(data!==false){
@@ -120,6 +124,16 @@ const enrollStudent = async(req,res)=>{
             // }
     
         }
+        for(var i=0;i<filteredStudentsList.length;i++){
+            try {
+                await firebase_firestore.collection("exams").doc(req.body.examId).update({studentsList:admin.firestore.FieldValue.arrayUnion(filteredStudentsList[i].userId)});
+            } catch (error) {
+                console.log(error)
+                
+            }
+        }
+            
+    
         res.status(200).json("Students enrolled successfully")
 
     }catch(error){
