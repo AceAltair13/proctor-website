@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import runObjectDetection from "./modules/object";
 import Webcam from "react-webcam";
+import irisTracking from "./modules/webgazer";
 
 export default function AIProctor() {
     const webcamRef = useRef(null);
@@ -9,7 +10,8 @@ export default function AIProctor() {
     };
 
     useEffect(() => {
-        runObjectDetection(webcamRef);
+        // runObjectDetection(webcamRef);
+        irisTracking();
     }, []);
 
     return (
