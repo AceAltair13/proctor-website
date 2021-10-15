@@ -16,7 +16,9 @@ const{
     APP_ID,
     MEASUREMENT_ID,
     PASS_SECRET_KEY,
-    JWT_SECRET_KEY
+    JWT_SECRET_KEY,
+    SESSION_KEY,
+    TOKEN_ENCRYPT_KEY,
 } = process.env
 
 
@@ -37,3 +39,5 @@ export const firebaseConfig = {
 }
 export const passKey = PASS_SECRET_KEY
 export const jwt_passKey = JWT_SECRET_KEY
+export const session_key = SESSION_KEY
+export const token_encrypt_key = TOKEN_ENCRYPT_KEY

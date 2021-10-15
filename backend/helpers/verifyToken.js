@@ -3,19 +3,28 @@ import * as config from "../config.js";
 import {
     firebase_firestore
 } from "../db.js";
+import CryptoJs from "crypto-js";
 
 
 export const verifyToken = (req, res, next) => {
 
     const authHeader = req.headers.token
     if (authHeader) {
-        jwt.verify(authHeader, config.jwt_passKey, (err, user) => {
+        // decrypt the token
+        const authHeaderDecrypt = CryptoJs.AES.decrypt(authHeader, config.token_encrypt_key);
+        const authHeaderDecryptString = authHeaderDecrypt.toString(CryptoJs.enc.Utf8);
+        jwt.verify(authHeaderDecryptString, config.jwt_passKey, (err, user) => {
             if (err) {
                 return res.status(403).json("invalid token")
             }
-            req.user = user;
-            console.log(req.user)
-            next()
+            if(req.session.userId === user.userId){
+                req.user = user;
+                console.log(req.user)
+                next()
+
+            }else{
+                return res.status(403).json("Invalid Session")
+            }
         })
     } else {
         return res.status(401).json("You are not authenticated")

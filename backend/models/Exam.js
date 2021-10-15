@@ -1,8 +1,6 @@
 import Supervisor from "./Supervisor.js";
 import Student from "./Student.js";
-import {
-  defaults
-} from "gh-pages";
+
 import QuestionPaper from "./QuestionPaper.js";
 
 class Exam {

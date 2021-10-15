@@ -7,7 +7,6 @@ import CryptoJs from "crypto-js";
 import User from "../models/User.js";
 import Student from "../models/Student.js";
 import Supervisor from "../models/Supervisor.js";
-
 import {
     userExists
 } from "../helpers/users.js";
@@ -15,6 +14,7 @@ import jwt from "jsonwebtoken";
 import {
     uid
 } from "../helpers/other.js";
+import session from "express-session";
 
 const registerStudent = async (req, res) => {
     try {
@@ -96,9 +96,9 @@ const login = async (req, res) => {
         if (req.body.userExists === false) {
             return res.status(200).json("User does not exists");
         }
+      
 
         const user = req.body.userExists;
-
         const hasedPassword = CryptoJs.AES.decrypt(user.password, config.passKey);
         const OriginalPassword = hasedPassword.toString(CryptoJs.enc.Utf8);
         if (OriginalPassword !== req.body.password) {
@@ -116,6 +116,14 @@ const login = async (req, res) => {
                 expiresIn: "3d"
             }
         );
+        req.session.userId = user.userId
+
+        const sessionId = uid().toString()
+        await firebase_firestore.collection("users").doc(user.userId).update({sessionId:sessionId});
+
+
+        // encrypt the token here
+        const accessTokenEncrypt = CryptoJs.AES.encrypt(accessToken,config.token_encrypt_key).toString();
 
         // const accessToken = jwt.sign({
         //     user
@@ -127,7 +135,7 @@ const login = async (req, res) => {
         } = user;
         res.status(200).json({
             ...others,
-            accessToken
+            accessTokenEncrypt
         });
     } catch (err) {
         res.status(500).json(err);

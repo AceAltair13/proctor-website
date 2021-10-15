@@ -24,7 +24,5 @@ yarn-error.log*
 
 
 
-/backend/node_modules
-/backend/firebase_key.json
-/backend/.env
+
 
