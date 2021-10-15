@@ -113,7 +113,7 @@ const login = async (req, res) => {
                 emailId: user.emailId,
             },
             config.jwt_passKey, {
-                expiresIn: "3d"
+                expiresIn: "1d"
             }
         );
         req.session.userId = user.userId
@@ -142,10 +142,19 @@ const login = async (req, res) => {
     }
 };
 
-const logout = async (req, res) => {};
+const logout = (req, res) => {
+
+
+    req.session.destroy( err => {
+        return res.status(400).json(err)
+    })
+    return res.status(200).json("Logged out successfully")
+    
+};
 
 export {
     registerStudent,
     registerSupervisor,
-    login
+    login,
+    logout
 };

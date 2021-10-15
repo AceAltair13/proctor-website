@@ -8,27 +8,34 @@ import CryptoJs from "crypto-js";
 
 export const verifyToken = (req, res, next) => {
 
-    const authHeader = req.headers.token
-    if (authHeader) {
-        // decrypt the token
-        const authHeaderDecrypt = CryptoJs.AES.decrypt(authHeader, config.token_encrypt_key);
-        const authHeaderDecryptString = authHeaderDecrypt.toString(CryptoJs.enc.Utf8);
-        jwt.verify(authHeaderDecryptString, config.jwt_passKey, (err, user) => {
-            if (err) {
-                return res.status(403).json("invalid token")
-            }
-            if(req.session.userId === user.userId){
-                req.user = user;
-                console.log(req.user)
-                next()
+    if (req.session.userId) {
+        const authHeader = req.headers.token
+        if (authHeader) {
+            // decrypt the token
+            const authHeaderDecrypt = CryptoJs.AES.decrypt(authHeader, config.token_encrypt_key);
+            const authHeaderDecryptString = authHeaderDecrypt.toString(CryptoJs.enc.Utf8);
+            jwt.verify(authHeaderDecryptString, config.jwt_passKey, (err, user) => {
+                if (err) {
+                    return res.status(403).json("invalid token")
+                }
+                if (req.session.userId === user.userId) {
+                    req.user = user;
+                    console.log(req.user)
+                    next()
 
-            }else{
-                return res.status(403).json("Invalid Session")
-            }
-        })
+                } else {
+                    return res.status(403).json("you are not authenticated")
+                }
+            })
+        } else {
+            return res.status(401).json("No token provided")
+
+        }
     } else {
-        return res.status(401).json("You are not authenticated")
+        res.status(403).json("Session invalid")
     }
+
+
 }
 
 export const verifyTokenAndAuthorization = (req, res, next) => {
