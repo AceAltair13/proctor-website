@@ -118,8 +118,8 @@ const login = async (req, res) => {
         );
         req.session.userId = user.userId
 
-        const sessionId = uid().toString()
-        await firebase_firestore.collection("users").doc(user.userId).update({sessionId:sessionId});
+
+        // await firebase_firestore.collection("users").doc(user.userId).update({sessionId:sessionId});
 
 
         // encrypt the token here
