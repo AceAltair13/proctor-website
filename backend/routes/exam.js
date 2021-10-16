@@ -6,8 +6,10 @@ import {
   registerSupervisor,
 } from "../controllers/user.js";
 import {
+  verifyToken,
   verifyExamAndSupervisor,
   verifyQuestionPaperAndExam,
+  verifyTokenAndStudent,
   verifyTokenAndSupervisor,
 } from "../helpers/verifyToken.js";
 import {
@@ -21,6 +23,6 @@ const router = Router();
 router.post("/create", verifyTokenAndSupervisor, createExam);
 router.post("/question-paper", verifyExamAndSupervisor, assignQuestionPaper);
 router.post("/enroll-students", verifyExamAndSupervisor, enrollStudent);
-router.get("/question-paper", verifyQuestionPaperAndExam, getQuestionPaper);
+router.get("/question-paper/:examId",getQuestionPaper);
 
 export const routes = router;

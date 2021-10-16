@@ -15,7 +15,7 @@ export const questionPaperExists = async (questionPaperId, examId) => {
 
     })
 }
-export const examExists = async (userId, examId) => {
+export const examCreatedBySupervisor = async (userId, examId) => {
     const examsCreated = (await firebase_firestore.collection("users").doc(userId).get()).data()["examsCreated"]
     console.log(examsCreated)
     for (var i = 0; i < examsCreated.length; i++) {
@@ -24,5 +24,11 @@ export const examExists = async (userId, examId) => {
         }
     }
     return false;
+
+}
+
+
+export const isStudentEnrolled = async(req,res,next)=>{
+    
 
 }

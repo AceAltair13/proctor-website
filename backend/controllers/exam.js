@@ -17,7 +17,7 @@ import {
 import admin from "firebase-admin";
 import QuestionPaper from "../models/QuestionPaper.js";
 import {
-    examExists,
+    examCreatedBySupervisor,
     questionPaperExists
 } from "../helpers/exams.js";
 const fieldValue = admin.firestore.FieldValue;
@@ -34,7 +34,7 @@ const createExam = async (req, res) => {
             res.status(400).json("User doesn't exists")
         }
         if (req.body.examId) {
-            if (await examExists(req.user.userId, req.body.examId)) {
+            if (await examCreatedBySupervisor(req.user.userId, req.body.examId)) {
                 console.log("examId exists")
                 const newExam = new Exam(req.body.examId, req.user.userId, req.body.examName, req.body.examStarttime, req.body.examEndTime)
                 const examJson = JSON.parse(JSON.stringify(newExam))
@@ -163,6 +163,39 @@ const enrollStudent = async (req, res) => {
 
 }
 const getQuestionPaper = async (req, res) => {
+    try {
+        // does exam exists
+        console.log(req.params.examId)
+        const exam = await firebase_firestore.collection("exams").doc(req.params.examId).get();
+        console.log(exam)
+        if(!exam.exists){
+            return res.status(400).json("Exam doesn't exists")
+        }
+
+    // is user authentic to get questionPaper
+        var studentEligible = false
+        const studentsList = exam.data()["studentsList"]
+        var studentEligible = false
+        console.log(studentsList)
+        for(var i=0;i<studentsList.length;i++){
+            if(studentsList[i] === req.session.userId){
+                studentEligible = true
+                break;
+            }
+        }
+        if(!studentEligible){
+            return res.status(400).json("You are not eligible for the exam")
+        }
+        var questionPaper;
+        const questionPaperAnswers =  (await firebase_firestore.collection('questionPapers').doc(exam.data()["questionPaperId"]).get()).data()["QuestionAnswers"];
+        for(var i =0;i<questionPaperAnswers.length;i++){
+            console.log(questionPaperAnswers[i])
+
+        }
+    } catch (error) {
+        return res.status(500).json(error)
+    }
+
 
 }
 
