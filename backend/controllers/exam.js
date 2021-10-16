@@ -36,7 +36,9 @@ const createExam = async (req, res) => {
         if (req.body.examId) {
             if (await examCreatedBySupervisor(req.user.userId, req.body.examId)) {
                 console.log("examId exists")
+                const studentsList = await (await firebase_firestore.collection("exams").doc(req.body.examId).get()).data()["studentsList"]
                 const newExam = new Exam(req.body.examId, req.user.userId, req.body.examName, req.body.examStarttime, req.body.examEndTime)
+                newExam.studentsList = studentsList;
                 const examJson = JSON.parse(JSON.stringify(newExam))
                 const result = await firebase_firestore.collection('exams').doc(req.body.examId).update(examJson);
                 // await firebase_firestore.collection('users').doc(req.user.userId).set({examsCreated:presentExamsCreated},{merge:true})
@@ -206,11 +208,10 @@ const getQuestionPaper = async (req, res) => {
             }
             question.options = options
 
-            // console.log(questionPaperAnswers[i])
             questionPaper.push(question)
 
         }
-        console.log(questionPaper)
+     
         return res.status(200).json(questionPaper)
     } catch (error) {
         return res.status(500).json(error)

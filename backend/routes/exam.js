@@ -20,7 +20,7 @@ import {
 } from "../controllers/exam.js";
 const router = Router();
 
-router.post("/create", verifyTokenAndSupervisor, createExam);
+router.post("/", verifyTokenAndSupervisor, createExam);
 router.post("/question-paper", verifyExamAndSupervisor, assignQuestionPaper);
 router.post("/enroll-students", verifyExamAndSupervisor, enrollStudent);
 router.get("/question-paper/:examId",verifyToken,getQuestionPaper);
