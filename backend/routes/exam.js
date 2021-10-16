@@ -23,6 +23,6 @@ const router = Router();
 router.post("/create", verifyTokenAndSupervisor, createExam);
 router.post("/question-paper", verifyExamAndSupervisor, assignQuestionPaper);
 router.post("/enroll-students", verifyExamAndSupervisor, enrollStudent);
-router.get("/question-paper/:examId",getQuestionPaper);
+router.get("/question-paper/:examId",verifyToken,getQuestionPaper);
 
 export const routes = router;

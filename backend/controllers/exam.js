@@ -167,7 +167,7 @@ const getQuestionPaper = async (req, res) => {
         // does exam exists
         console.log(req.params.examId)
         const exam = await firebase_firestore.collection("exams").doc(req.params.examId).get();
-        console.log(exam)
+        console.log(exam.data())
         if(!exam.exists){
             return res.status(400).json("Exam doesn't exists")
         }
@@ -176,7 +176,7 @@ const getQuestionPaper = async (req, res) => {
         var studentEligible = false
         const studentsList = exam.data()["studentsList"]
         var studentEligible = false
-        console.log(studentsList)
+     
         for(var i=0;i<studentsList.length;i++){
             if(studentsList[i] === req.session.userId){
                 studentEligible = true
@@ -186,12 +186,32 @@ const getQuestionPaper = async (req, res) => {
         if(!studentEligible){
             return res.status(400).json("You are not eligible for the exam")
         }
-        var questionPaper;
-        const questionPaperAnswers =  (await firebase_firestore.collection('questionPapers').doc(exam.data()["questionPaperId"]).get()).data()["QuestionAnswers"];
+        var questionPaper=[];
+        const questionPaperAnswers =  (await firebase_firestore.collection('questionPapers').doc(exam.data()["questionPaperId"]).get()).data()["questionAnswers"];
         for(var i =0;i<questionPaperAnswers.length;i++){
             console.log(questionPaperAnswers[i])
+            var question = {
+                "questionId":questionPaperAnswers[i]["questionId"],
+                "question":questionPaperAnswers[i]["question"]
+
+            }
+            var options = []
+            for(var j=0;j<questionPaperAnswers[i]["options"].length;j++){
+                var option = {
+                    "optionId":questionPaperAnswers[i]["options"][j]["optionId"],
+                    "optionDesc":questionPaperAnswers[i]["options"][j]["optionDesc"],
+
+                }
+                options.push(option)
+            }
+            question.options = options
+
+            // console.log(questionPaperAnswers[i])
+            questionPaper.push(question)
 
         }
+        console.log(questionPaper)
+        return res.status(200).json(questionPaper)
     } catch (error) {
         return res.status(500).json(error)
     }
