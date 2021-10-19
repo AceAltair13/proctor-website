@@ -13,4 +13,4 @@ const firebase_firestore = app.firestore()
 const firebase_storage = app.storage()
 
 
-export  {firebase_firestore,firebase_storage};    
+export  {firebase_firestore,firebase_storage,app as firebase_app};    

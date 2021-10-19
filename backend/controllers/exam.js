@@ -167,31 +167,32 @@ const enrollStudent = async (req, res) => {
 const getQuestionPaper = async (req, res) => {
     try {
         // does exam exists
-        console.log(req.params.examId)
+     
         const exam = await firebase_firestore.collection("exams").doc(req.params.examId).get();
-        console.log(exam.data())
+      
         if(!exam.exists){
             return res.status(400).json("Exam doesn't exists")
         }
 
     // is user authentic to get questionPaper
-        var studentEligible = false
-        const studentsList = exam.data()["studentsList"]
-        var studentEligible = false
+        var userEligible = false
+        const usersList = exam.data()["studentsList"]
+        usersList.push(exam.data()["supervisorId"])
+        var userEligible = false
      
-        for(var i=0;i<studentsList.length;i++){
-            if(studentsList[i] === req.session.userId){
-                studentEligible = true
+        for(var i=0;i<usersList.length;i++){
+            if(usersList[i] === req.session.userId){
+                userEligible = true
                 break;
             }
         }
-        if(!studentEligible){
-            return res.status(400).json("You are not eligible for the exam")
+        if(!userEligible){
+            return res.status(400).json("You are not eligible to access questionPaper")
         }
         var questionPaper=[];
         const questionPaperAnswers =  (await firebase_firestore.collection('questionPapers').doc(exam.data()["questionPaperId"]).get()).data()["questionAnswers"];
         for(var i =0;i<questionPaperAnswers.length;i++){
-            console.log(questionPaperAnswers[i])
+         
             var question = {
                 "questionId":questionPaperAnswers[i]["questionId"],
                 "question":questionPaperAnswers[i]["question"]

@@ -10,11 +10,18 @@ import session from 'express-session'
 
 
 
+
+
+
+
+
 const app = express()
 app.use(express.json())
 // app.use(json())
 app.use(cors())
 // app.use(bodyParser.json())
+
+
 
 //session use 
 app.use(session({secret: session_key,resave: false,saveUninitialized: true,cookie: {}}))

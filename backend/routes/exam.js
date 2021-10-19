@@ -1,17 +1,8 @@
 import { Router } from "express";
 import { userExists } from "../helpers/users.js";
-import {
-  login,
-  registerStudent,
-  registerSupervisor,
-} from "../controllers/user.js";
-import {
-  verifyToken,
-  verifyExamAndSupervisor,
-  verifyQuestionPaperAndExam,
-  verifyTokenAndStudent,
-  verifyTokenAndSupervisor,
-} from "../helpers/verifyToken.js";
+
+
+import * as auth from "../helpers/auth.js"
 import {
   assignQuestionPaper,
   createExam,
@@ -20,9 +11,9 @@ import {
 } from "../controllers/exam.js";
 const router = Router();
 
-router.post("/", verifyTokenAndSupervisor, createExam);
-router.post("/question-paper", verifyExamAndSupervisor, assignQuestionPaper);
-router.post("/enroll-students", verifyExamAndSupervisor, enrollStudent);
-router.get("/question-paper/:examId",verifyToken,getQuestionPaper);
+router.post("/", [auth.SessionId,auth.Token,auth.matchTokenAndSSession,auth.Supervisor], createExam);
+router.post("/question-paper", [auth.SessionId,auth.Token,auth.matchTokenAndSSession,auth.Supervisor,auth.ExamAndSupervisor], assignQuestionPaper);
+router.post("/enroll-students", [auth.SessionId,auth.Token,auth.matchTokenAndSSession,auth.Supervisor,auth.ExamAndSupervisor], enrollStudent);
+router.get("/question-paper/:examId",[auth.SessionId,auth.Token,auth.matchTokenAndSSession],getQuestionPaper);
 
 export const routes = router;
