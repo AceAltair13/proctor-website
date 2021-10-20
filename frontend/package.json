@@ -1,32 +1,25 @@
 {
-  "name": "proctor-website",
+  "name": "frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "^4.12.3",
-    "@material-ui/icons": "^4.11.2",
+    "@emotion/react": "^11.4.1",
+    "@emotion/styled": "^11.3.0",
+    "@mui/icons-material": "^5.0.4",
+    "@mui/material": "^5.0.4",
     "@reduxjs/toolkit": "^1.6.2",
-    "@tensorflow-models/coco-ssd": "^2.1.0",
-    "@tensorflow/tfjs": "^2.4.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
-    "clsx": "^1.1.1",
-    "lottie-web": "^5.7.13",
+    "axios": "^0.23.0",
     "react": "^17.0.2",
-    "react-device-detect": "^1.17.0",
     "react-dom": "^17.0.2",
-    "react-hot-keys": "^2.7.0",
     "react-redux": "^7.2.5",
-    "react-router-dom": "^5.2.0",
+    "react-router-dom": "^5.3.0",
     "react-scripts": "4.0.3",
-    "react-webcam": "^6.0.0",
-    "redux": "^4.1.1",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -49,11 +42,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "gh-pages": "^3.2.3"
-  },
-  "peerDependencies": {
-    "@tensorflow/tfjs": "^2.4.0"
   }
 }
