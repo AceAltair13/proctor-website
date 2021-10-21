@@ -32,12 +32,8 @@ const registerStudent = async (req, res) => {
     student.password = hashedPassword;
     const studentJson = JSON.parse(JSON.stringify(student));
 
-    const result = await firebase_firestore
-      .collection("users")
-      .add(studentJson);
-    await firebase_firestore.collection("users").doc(result.id).update({
-      userId: result.id,
-    });
+    const result = await firebase_firestore.collection("users").add(studentJson);
+    await firebase_firestore.collection("users").doc(result.id).update({userId: result.id,sessionId:""});
     return res.status(200).json(result);
   } catch (error) {
     return res.status(400).json("Failed to create the Student" + error);
@@ -71,10 +67,8 @@ const registerSupervisor = async (req, res) => {
     delete supervisorJson.examsCreated;
     // const result = await firebase_firestore.collection('users').add(supervisorJson)
     // await firebase_firestore.collection("users").doc(result.id).update({ user_id: result.id });
-    const result = await firebase_firestore
-      .collection("users")
-      .doc(newId)
-      .create(supervisorJson);
+    const result = await firebase_firestore.collection("users").doc(newId).create(supervisorJson);
+    await firebase_firestore.collection("users").doc(result.id).update({sessionId:""});
 
     return res.status(200).json(result);
   } catch (error) {
@@ -87,7 +81,11 @@ const login = async (req, res) => {
     if (req.body.userExists === false) {
       return res.status(200).json("User does not exists");
     }
+    if(req.body.userExists.sessionId!="")
+    {
+        return res.status(400).json("chodo account login hai kahi")
 
+    }
     const user = req.body.userExists;
     const hasedPassword = CryptoJs.AES.decrypt(user.password, config.passKey);
     const OriginalPassword = hasedPassword.toString(CryptoJs.enc.Utf8);
@@ -109,7 +107,9 @@ const login = async (req, res) => {
       }
     );
     req.session.userId = user.userId;
-
+    const sessionid = req.session.id
+    console.log(sessionid)
+    await firebase_firestore.collection("users").doc(user.userId).update({ sessionId: sessionid});
     // await firebase_firestore.collection("users").doc(user.userId).update({sessionId:sessionId});
 
     // encrypt the token here
@@ -135,10 +135,11 @@ const login = async (req, res) => {
 };
 
 const logout = (req, res) => {
-    if(req.session.userId){
+    if(req.session.userId && req.session.id){
         req.session.destroy((err) => {
             return res.status(400).json(err);
           });
+          firebase_firestore.collection("users").doc(req.session.userId).update({ sessionId:""});
           return res.status(200).json("Logged out successfully");
     }else{
         return res.status(401).json("No user was logged in")

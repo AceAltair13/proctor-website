@@ -2,7 +2,7 @@
 import { config } from "dotenv"
 import assert from "assert"
 
-config()
+config({path:"env"})
 
 const{
     PORT,
