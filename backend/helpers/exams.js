@@ -7,14 +7,25 @@ import {
 
 
 export const questionPaperExists = async (questionPaperId, examId) => {
-    await firebase_firestore.collection("exams").doc(examId).get(questionPaperId).then((snapshot) => {
-        if (snapshot.exists) {
-            return true
-        } else {
-            return false
-        }
 
-    })
+    try {
+        await firebase_firestore.collection("exams").doc(examId).get("questionPaperId").then((snapshot) => {
+            if (snapshot.exists) {
+                if(snapshot.data()["questionPaperId"] === questionPaperId){
+                   
+                    return true
+                }else{
+                    return false
+                }
+            } else {
+                return false
+            }
+    
+        })
+    } catch (error) {
+        return false
+    }
+
 }
 export const examCreatedBySupervisor = async (userId, examId, res) => {
     var examsCreated

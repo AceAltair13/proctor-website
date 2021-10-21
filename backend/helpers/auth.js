@@ -88,7 +88,7 @@ export const Admin = (req, res, next) => {
 
 
 export const ExamAndSupervisor = async (req, res, next) => {
-    
+    try {
         const examsCreatedList = (await firebase_firestore.collection("users").doc(req.user.userId).get()).data()["examsCreated"]
         if(!examsCreatedList){
             return res.status(404).json("No exams created by the user")
@@ -96,7 +96,7 @@ export const ExamAndSupervisor = async (req, res, next) => {
         req.examIdmatch = false
 
         for (var i = 0; i < examsCreatedList.length; i++) {
-            console.log(examsCreatedList[i])
+            console.log(" exam no "+i+examsCreatedList[i])
             if (examsCreatedList[i] === req.body.examId) {
                 req.examIdmatch = true
                 break;
@@ -106,8 +106,14 @@ export const ExamAndSupervisor = async (req, res, next) => {
             next()
         } else {
 
-            res.status(400).json("Exam doesn't exists")
+            res.status(400).json("You are not authenticated to modify this exam")
         }
+        
+    } catch (error) {
+        res.status(500).json("Something went wrong while authenticating supervisor and exam")
+    }
+    
+
    
 
 }

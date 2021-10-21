@@ -9,7 +9,8 @@ class QuestionPaper {
             const questionAnswer = new QuestionAnswer(
                 qa.question,
                 qa.options,
-                questionId
+                questionId,
+                qa.weightage
             );
             this.questionAnswers.push(questionAnswer);
             questionId++;

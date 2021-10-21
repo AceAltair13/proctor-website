@@ -80,13 +80,14 @@ const assignQuestionPaper = async (req, res) => {
         const questionPaper = new QuestionPaper(req.body.examId, req.body.questionAnswers)
         const questionPaperJson = JSON.parse(JSON.stringify(questionPaper))
         if (req.body.questionPaperId) {
-            if (await questionPaperExists(req.body.questionPaperId, req.body.examId)) {
+            if (questionPaperExists(req.body.questionPaperId, req.body.examId)) {
+                console.log("here")
                 const result1 = await firebase_firestore.collection("questionPapers").doc(req.body.questionPaperId).update(questionPaperJson);
                 // const result2 = await firebase_firestore.collection("exams").doc(req.body.examId).update({questionPaperId:req.questionPaperId})
-                res.status(200).json("Question Paper updated successfullu" + result1)
+                return res.status(200).json("Question Paper updated successfullu" + result1)
 
             } else {
-                res.status(400).json("The question paper you are trying to edit doesn't exists")
+                return res.status(400).json("The question paper you are trying to edit doesn't exists")
             }
 
         } else {
@@ -94,7 +95,7 @@ const assignQuestionPaper = async (req, res) => {
             const result2 = await firebase_firestore.collection("exams").doc(req.body.examId).update({
                 questionPaperId: newId
             })
-            res.status(200).json("Question Paper created successfullu" + result1 + result2)
+            return res.status(200).json("Question Paper created successfull" + result1 + result2)
 
 
         }
@@ -103,7 +104,7 @@ const assignQuestionPaper = async (req, res) => {
 
 
     } catch (error) {
-        res.status(400).json("Failed to create questionPaper" + error)
+        return res.status(400).json("Failed to create questionPaper" + error)
     }
 
 
@@ -263,7 +264,8 @@ const getQuestionPaper = async (req, res) => {
 
             var question = {
                 "questionId": questionPaperAnswers[i]["questionId"],
-                "question": questionPaperAnswers[i]["question"]
+                "question": questionPaperAnswers[i]["question"],
+                "weightage":questionPaperAnswers[i]["weightage"]
 
             }
             var options = []
