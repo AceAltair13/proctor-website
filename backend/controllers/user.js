@@ -68,7 +68,8 @@ const registerSupervisor = async (req, res) => {
     // const result = await firebase_firestore.collection('users').add(supervisorJson)
     // await firebase_firestore.collection("users").doc(result.id).update({ user_id: result.id });
     const result = await firebase_firestore.collection("users").doc(newId).create(supervisorJson);
-    await firebase_firestore.collection("users").doc(result.id).update({sessionId:""});
+  
+    await firebase_firestore.collection("users").doc(newId).update({sessionId:""});
 
     return res.status(200).json(result);
   } catch (error) {
@@ -136,10 +137,10 @@ const login = async (req, res) => {
 
 const logout = (req, res) => {
     if(req.session.userId && req.session.id){
+      firebase_firestore.collection("users").doc(req.session.userId).update({ sessionId:""});
         req.session.destroy((err) => {
             return res.status(400).json(err);
           });
-          firebase_firestore.collection("users").doc(req.session.userId).update({ sessionId:""});
           return res.status(200).json("Logged out successfully");
     }else{
         return res.status(401).json("No user was logged in")

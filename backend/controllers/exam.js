@@ -109,11 +109,71 @@ const assignQuestionPaper = async (req, res) => {
 
 }
 
+// const enrollStudent = async (req, res) => {
+//     try {
+//         var firestorePromises = [];
+//         const studentsList = req.body.studentsList;
+//         var filteredStudentsList = []
+
+//         for (var i = 0; i < studentsList.length; i++) {
+
+//             req.body.emailId = studentsList[i]
+
+//             await userExists(req, res, async () => {
+//                 if (req.body.userExists) {
+//                     filteredStudentsList.push(req.body.userExists)
+//                     console.log(req.body.emailId)
+//                     try {
+//                         await Promise.resolve(firebase_firestore.collection("users").doc(req.body.userExists.userId).update({
+//                             examsEnrolled: admin.firestore.FieldValue.arrayUnion(req.body.examId)
+//                         }))
+//                     } catch (error) {
+//                         console.log("Something went wrong")
+//                     }
+
+//                 }
+
+//             })
+
+
+//         }
+//         for (var i = 0; i < filteredStudentsList.length; i++) {
+//             try {
+//                 await firebase_firestore.collection("exams").doc(req.body.examId).update({
+//                     studentsList: admin.firestore.FieldValue.arrayUnion(filteredStudentsList[i].userId)
+//                 });
+//             } catch (error) {
+//                 console.log(error)
+
+//             }
+//         }
+
+
+//         res.status(200).json("Students enrolled successfully")
+
+//     } catch (error) {
+//         res.status(500).json("Something went wrong try again later" + error)
+//     }
+
+
+
+// }
+
+
+
+
+
+
+
 const enrollStudent = async (req, res) => {
     try {
-        var firestorePromises = [];
+        if(!examCreatedBySupervisor(req.user.userId,req.body.examId,res)){
+            res.status(400).json("You are not authenticated for changing this exam settings")
+        }
+     
         const studentsList = req.body.studentsList;
         var filteredStudentsList = []
+        var invalidUsers = [];
 
         for (var i = 0; i < studentsList.length; i++) {
 
@@ -129,20 +189,18 @@ const enrollStudent = async (req, res) => {
                         }))
                     } catch (error) {
                         console.log("Something went wrong")
-                    }
+                    } 
 
+
+                }else{
+                    invalidUsers.push(req.body.emailId)
                 }
 
             })
-            // const data = await userExistsFunction(studentsList[i])
-            // if(data!==false){
-            //     console.log(data)
-            //     await firebase_firestore.collection("exams").doc(req.body.examId).update({studentsList:admin.firestore.FieldValue.arrayUnion(data.userId)});
-            //     await firebase_firestore.collection("users").doc(data.userId).update({examsEnrolled:admin.firestore.FieldValue.arrayUnion(req.body.examId)});
 
-            // }
 
         }
+
         for (var i = 0; i < filteredStudentsList.length; i++) {
             try {
                 await firebase_firestore.collection("exams").doc(req.body.examId).update({
@@ -155,7 +213,7 @@ const enrollStudent = async (req, res) => {
         }
 
 
-        res.status(200).json("Students enrolled successfully")
+        res.status(200).json("Students enrolled successfully and users:- "+ invalidUsers+" doesn't exists")
 
     } catch (error) {
         res.status(500).json("Something went wrong try again later" + error)
@@ -164,46 +222,55 @@ const enrollStudent = async (req, res) => {
 
 
 }
+
+
+
+
+
+
+
+
+
 const getQuestionPaper = async (req, res) => {
     try {
         console.log(req.query.examId)
         // does exam exists
-     
+
         const exam = await firebase_firestore.collection("exams").doc(req.query.examId).get();
-      
-        if(!exam.exists){
+
+        if (!exam.exists) {
             return res.status(400).json("Exam doesn't exist")
         }
 
-    // is user authentic to get questionPaper
+        // is user authentic to get questionPaper
         var userEligible = false
         const usersList = exam.data()["studentsList"]
         usersList.push(exam.data()["supervisorId"])
         var userEligible = false
-     
-        for(var i=0;i<usersList.length;i++){
-            if(usersList[i] === req.session.userId){
+
+        for (var i = 0; i < usersList.length; i++) {
+            if (usersList[i] === req.session.userId) {
                 userEligible = true
                 break;
             }
         }
-        if(!userEligible){
+        if (!userEligible) {
             return res.status(400).json("You are not eligible to access the questionPaper")
         }
-        var questionPaper=[];
-        const questionPaperAnswers =  (await firebase_firestore.collection('questionPapers').doc(exam.data()["questionPaperId"]).get()).data()["questionAnswers"];
-        for(var i =0;i<questionPaperAnswers.length;i++){
-         
+        var questionPaper = [];
+        const questionPaperAnswers = (await firebase_firestore.collection('questionPapers').doc(exam.data()["questionPaperId"]).get()).data()["questionAnswers"];
+        for (var i = 0; i < questionPaperAnswers.length; i++) {
+
             var question = {
-                "questionId":questionPaperAnswers[i]["questionId"],
-                "question":questionPaperAnswers[i]["question"]
+                "questionId": questionPaperAnswers[i]["questionId"],
+                "question": questionPaperAnswers[i]["question"]
 
             }
             var options = []
-            for(var j=0;j<questionPaperAnswers[i]["options"].length;j++){
+            for (var j = 0; j < questionPaperAnswers[i]["options"].length; j++) {
                 var option = {
-                    "optionId":questionPaperAnswers[i]["options"][j]["optionId"],
-                    "optionDesc":questionPaperAnswers[i]["options"][j]["optionDesc"],
+                    "optionId": questionPaperAnswers[i]["options"][j]["optionId"],
+                    "optionDesc": questionPaperAnswers[i]["options"][j]["optionDesc"],
 
                 }
                 options.push(option)
@@ -213,7 +280,7 @@ const getQuestionPaper = async (req, res) => {
             questionPaper.push(question)
 
         }
-     
+
         return res.status(200).json(questionPaper)
     } catch (error) {
         console.log(error)

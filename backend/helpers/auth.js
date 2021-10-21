@@ -88,8 +88,11 @@ export const Admin = (req, res, next) => {
 
 
 export const ExamAndSupervisor = async (req, res, next) => {
- 
+    
         const examsCreatedList = (await firebase_firestore.collection("users").doc(req.user.userId).get()).data()["examsCreated"]
+        if(!examsCreatedList){
+            return res.status(404).json("No exams created by the user")
+        }
         req.examIdmatch = false
 
         for (var i = 0; i < examsCreatedList.length; i++) {

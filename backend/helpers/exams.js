@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken"
+
 import * as config from "../config.js";
 import {
     firebase_firestore
@@ -15,15 +16,24 @@ export const questionPaperExists = async (questionPaperId, examId) => {
 
     })
 }
-export const examCreatedBySupervisor = async (userId, examId) => {
-    const examsCreated = (await firebase_firestore.collection("users").doc(userId).get()).data()["examsCreated"]
+export const examCreatedBySupervisor = async (userId, examId, res) => {
+    var examsCreated
+    try {
+        examsCreated = (await firebase_firestore.collection("users").doc(userId).get()).data()["examsCreated"]
+        
+    } catch (error) {
+        res.status(400).json("User doesn't have any exams created")
+    }
     console.log(examsCreated)
-    for (var i = 0; i < examsCreated.length; i++) {
-        if (examsCreated[i] === examId) {
-            return true
+    if(examsCreated){
+
+        for (var i = 0; i < examsCreated.length; i++) {
+            if (examsCreated[i] === examId) {
+                return true
+            }
         }
     }
-    return false;
+        return false;
 
 }
 

@@ -1,10 +1,12 @@
 'use strict'
-import { config } from "dotenv"
+import {
+    config
+} from "dotenv"
 import assert from "assert"
 
-config({path:"env"})
+config()
 
-const{
+const {
     PORT,
     HOST,
     HOST_URL,
@@ -22,8 +24,8 @@ const{
 } = process.env
 
 
-assert(PORT,"Port is required")
-assert(HOST,"Host is required")
+assert(PORT, "Port is required")
+assert(HOST, "Host is required")
 
 export const port = PORT
 export const host = HOST
