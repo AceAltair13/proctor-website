@@ -9,7 +9,7 @@ export const SessionId = (req,res,next)=>{
     if(req.session.userId){
         next()
     }else{
-        res.status(401).json("Login first")
+        return res.status(401).json("Login first")
     }
 }
 export const Token = (req, res, next) => {
@@ -81,7 +81,7 @@ export const Admin = (req, res, next) => {
         if (req.user.isAdmin) {
             next();
         } else {
-            res.status(403).json("You are not alowed to do that!");
+            return res.status(403).json("You are not alowed to do that!");
         }
 
 };
@@ -113,10 +113,10 @@ export const ExamAndSupervisor = async (req, res, next) => {
         res.status(500).json("Something went wrong while authenticating supervisor and exam")
     }
     
-
-   
-
 }
+
+
+
 
 
 
