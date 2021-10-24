@@ -36,17 +36,17 @@ export default function Register() {
         const data = new FormData(event.currentTarget);
         const firstName = data.get("firstName");
         const lastName = data.get("lastName");
-        // const username = data.get("username");
         const email = data.get("email");
         const password = data.get("password");
         const reenterPassword = data.get("reenter-password");
+        const phone = data.get("phone");
         const role = data.get("role");
 
         if (password !== reenterPassword) {
             setError([true, "Password does not match"]);
         } else {
             setError([false, ""]);
-            console.log(firstName, lastName, email, password, role);
+            console.log(firstName, lastName, email, password, phone, role);
         }
     };
 
@@ -133,6 +133,16 @@ export default function Register() {
                                 type="password"
                                 id="reenter-password"
                                 helperText={error[1]}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                required
+                                fullWidth
+                                name="phone"
+                                label="Phone Number"
+                                type="tel"
+                                id="phone"
                             />
                         </Grid>
                         <Grid item xs={12}>
