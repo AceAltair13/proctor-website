@@ -19,7 +19,9 @@ import QuestionPaper from "../models/QuestionPaper.js";
 import {
  
     examAccess,
-    questionPaperExists
+    inTime,
+    questionPaperExists,
+    questionPaperFromExam
 } from "../helpers/exams.js";
 import { ExamAndSupervisor } from "../helpers/auth.js";
 const fieldValue = admin.firestore.FieldValue;
@@ -95,18 +97,21 @@ const deleteExam = async(req,res)=>{
             const exam = await firebase_firestore.collection("exams").doc(req.body.examId).get()
             const examSup = exam.data()["supervisorId"];
             const studentsList = exam.data()["studentsList"]
-            console.log("examSup="+examSup+" StudentsList= "+studentsList)
-            await firebase_firestore.collection('users').doc(examSup).update({examCreated: admin.firestore.FieldValue.arrayRemove(exam.data()["examId"])});
-            studentsList.map((student)=>async()=>{
+            console.log("examSup= "+examSup)
+
+            await firebase_firestore.collection("users").doc(examSup).update({examsCreated: admin.firestore.FieldValue.arrayRemove(exam.data()["examId"])});
+            studentsList.map(async(student) =>{
+                console.log("student=> "+student)
             await firebase_firestore.collection("users").doc(student).update({examsEnrolled:admin.firestore.FieldValue.arrayRemove(exam.data()["examId"])});
             })
+            await firebase_firestore.collection("exams").doc(exam.id).delete()
      
           
 
-            return res.status(200).json("exam deleted ")``
+            return res.status(200).json("exam deleted ")
             
         }else{
-            res.status(400).json("Provide examId")
+           return res.status(400).json("Provide examId")
         }
         
     } catch (error) {
@@ -118,6 +123,12 @@ const deleteExam = async(req,res)=>{
 // CRUD QUESTION PAPER
 const assignQuestionPaper = async (req, res) => {
     try {
+        if(!req.body.examId){
+            return res.status(400).json("Provide examId in request body")
+        }
+        if(questionPaperFromExam(req.body.examId,res)){
+            return res.status(400).json("Question Paper already exists for the exam ")
+        }
         const questionPaper = new QuestionPaper(req.body.examId, req.body.questionAnswers)
         const questionPaperJson = JSON.parse(JSON.stringify(questionPaper))
         const newId = uid()
@@ -134,6 +145,7 @@ const assignQuestionPaper = async (req, res) => {
 
 }
 
+
 const updateQuestionPaper = async (req,res)=>{
     try {
         if (req.body.questionPaperId && req.body.examId) {
@@ -143,7 +155,7 @@ const updateQuestionPaper = async (req,res)=>{
                 console.log("here")
                 const result1 = await firebase_firestore.collection("questionPapers").doc(req.body.questionPaperId).update(questionPaperJson);
                 // const result2 = await firebase_firestore.collection("exams").doc(req.body.examId).update({questionPaperId:req.questionPaperId})
-                return res.status(200).json("Question Paper updated successfullu" + result1)
+                return res.status(200).json("Question Paper updated successfully" + result1)
 
             } else {
                 return res.status(400).json("The question paper you are trying to edit doesn't exists")
@@ -159,9 +171,17 @@ const updateQuestionPaper = async (req,res)=>{
     }
 }
 
-const deleteQuestionPaper = async(req,res)=>[
-
-]
+const deleteQuestionPaper = async(req,res)=>{
+    if(req.body.questionPaperId && req.body.examId){
+        if(questionPaperExists(req.body.questionPaperId,req.body.examId)){
+            await firebase_firestore.collection("questionPaper").doc(req.questionPaperId).delete()
+            await firebase_firestore.collection("exams").doc(req.body.examId).update({questionPaperId:fieldValue.delete()})
+            return res.status(200).json("Question Paper deleted")
+        }
+    }else{
+        return res.status(400).json("Provide proper exam and question Paper")
+    }
+}
 
 // const enrollStudent = async (req, res) => {
 //     try {
@@ -298,6 +318,9 @@ const getQuestionPaper = async (req, res) => {
         if(!examAccess(exam,req.session.userId)){
             return res.status(400).json("Permission denied to access the exam")
         }
+        if(!inTime(exam,req.session.userId)){
+            return res.status(400).json("Exam Time out")
+        }
 
 
         var questionPaper = [];
@@ -336,11 +359,12 @@ const getQuestionPaper = async (req, res) => {
 
 export {
     createExam,
-    assignQuestionPaper,
     updateExam,
-    updateQuestionPaper,
-    enrollStudent,
-    getQuestionPaper,
     getExam,
-    deleteExam
+    deleteExam,
+    enrollStudent,
+    assignQuestionPaper,
+    updateQuestionPaper,
+    getQuestionPaper,
+    deleteQuestionPaper
 }

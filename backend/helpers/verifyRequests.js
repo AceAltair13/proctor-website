@@ -1,16 +1,16 @@
 
 
-export const Post = (data,req,res,next)=>{
+export const postExists = (data,req,res,next)=>{
     if(`req.body.${data}`){
         next()
     }else{
-        res.status(400).json("Provide "+data+" in request body")
+        return res.status(400).json("Provide "+data+" in request body")
     }
 }
 
-export const Get = (data,req,res,next)=>{
+export const getExists = (data)=>{
     if(`req.query.${data}`){
-        next()
+        return true
     }else{
         res.status(400).json("Provide "+data+" in url")
     }
