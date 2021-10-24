@@ -95,18 +95,21 @@ const deleteExam = async(req,res)=>{
             const exam = await firebase_firestore.collection("exams").doc(req.body.examId).get()
             const examSup = exam.data()["supervisorId"];
             const studentsList = exam.data()["studentsList"]
-            console.log("examSup="+examSup+" StudentsList= "+studentsList)
-            await firebase_firestore.collection('users').doc(examSup).update({examCreated: admin.firestore.FieldValue.arrayRemove(exam.data()["examId"])});
-            studentsList.map((student)=>async()=>{
+            console.log("examSup= "+examSup)
+
+            await firebase_firestore.collection("users").doc(examSup).update({examsCreated: admin.firestore.FieldValue.arrayRemove(exam.data()["examId"])});
+            studentsList.map(async(student) =>{
+                console.log("student=> "+student)
             await firebase_firestore.collection("users").doc(student).update({examsEnrolled:admin.firestore.FieldValue.arrayRemove(exam.data()["examId"])});
             })
+            await firebase_firestore.collection("exams").doc(exam.id).delete()
      
           
 
-            return res.status(200).json("exam deleted ")``
+            return res.status(200).json("exam deleted ")
             
         }else{
-            res.status(400).json("Provide examId")
+           return res.status(400).json("Provide examId")
         }
         
     } catch (error) {
