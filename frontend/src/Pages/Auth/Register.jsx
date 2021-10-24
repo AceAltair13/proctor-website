@@ -2,15 +2,20 @@ import React, { useState } from "react";
 import {
     MenuItem,
     Container,
-    Avatar,
     Button,
     TextField,
     Link,
     Grid,
     Box,
     Typography,
+    InputAdornment,
 } from "@mui/material";
+import EmailIcon from "@mui/icons-material/Email";
+import LockIcon from "@mui/icons-material/Lock";
+import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
+import SchoolIcon from "@mui/icons-material/School";
 import { Link as _Link } from "react-router-dom";
+import Logo from "../../Components/Logo";
 
 const roles = [
     {
@@ -61,10 +66,8 @@ export default function Register() {
                     alignItems: "center",
                 }}
             >
-                <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}></Avatar>
-                <Typography component="h1" variant="h5">
-                    EXAMINATOR | Sign Up
-                </Typography>
+                <Logo variant="h4" />
+                <Typography variant="h6">Sign Up</Typography>
                 <Box
                     component="form"
                     noValidate
@@ -110,6 +113,13 @@ export default function Register() {
                                 label="Email Address"
                                 name="email"
                                 autoComplete="email"
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <EmailIcon />
+                                        </InputAdornment>
+                                    ),
+                                }}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -121,6 +131,13 @@ export default function Register() {
                                 type="password"
                                 id="password"
                                 autoComplete="new-password"
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <LockIcon />
+                                        </InputAdornment>
+                                    ),
+                                }}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -132,6 +149,13 @@ export default function Register() {
                                 label="Re-Enter Password"
                                 type="password"
                                 id="reenter-password"
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <LockIcon />
+                                        </InputAdornment>
+                                    ),
+                                }}
                                 helperText={error[1]}
                             />
                         </Grid>
@@ -143,6 +167,13 @@ export default function Register() {
                                 label="Phone Number"
                                 type="tel"
                                 id="phone"
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <LocalPhoneIcon />
+                                        </InputAdornment>
+                                    ),
+                                }}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -155,6 +186,13 @@ export default function Register() {
                                 label="Role"
                                 value={role}
                                 onChange={handleChange}
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <SchoolIcon />
+                                        </InputAdornment>
+                                    ),
+                                }}
                             >
                                 {roles.map((option) => (
                                     <MenuItem

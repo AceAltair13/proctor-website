@@ -1,17 +1,20 @@
 import React from "react";
 import {
     Container,
-    Avatar,
     Button,
     TextField,
     Link,
     Grid,
     Box,
     Typography,
+    InputAdornment,
 } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 import LoginIcon from "@mui/icons-material/Login";
+import EmailIcon from "@mui/icons-material/Email";
+import LockIcon from "@mui/icons-material/Lock";
 import { Link as _Link } from "react-router-dom";
+import Logo from "../../Components/Logo";
 
 function Login() {
     const handleSubmit = (event) => {
@@ -33,10 +36,8 @@ function Login() {
                     alignItems: "center",
                 }}
             >
-                <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}></Avatar>
-                <Typography component="h1" variant="h5">
-                    EXAMINATOR | Sign In
-                </Typography>
+                <Logo variant="h4" />
+                <Typography variant="h6">Sign In</Typography>
                 <Box
                     component="form"
                     noValidate
@@ -52,6 +53,14 @@ function Login() {
                                 label="Email Address"
                                 name="email"
                                 autoComplete="email"
+                                type="email"
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <EmailIcon />
+                                        </InputAdornment>
+                                    ),
+                                }}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -63,6 +72,13 @@ function Login() {
                                 type="password"
                                 id="password"
                                 autoComplete="new-password"
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <LockIcon />
+                                        </InputAdornment>
+                                    ),
+                                }}
                             />
                         </Grid>
                     </Grid>
@@ -75,7 +91,7 @@ function Login() {
                         startIcon={<GoogleIcon />}
                         color="error"
                     >
-                        Google Sign In
+                        Sign In With Google
                     </Button>
                     <Button
                         type="submit"
@@ -85,7 +101,7 @@ function Login() {
                         sx={{ mt: 1, mb: 2 }}
                         startIcon={<LoginIcon />}
                     >
-                        Sign In
+                        Sign In To Examinator
                     </Button>
                     <Grid container justifyContent="flex-end">
                         <Grid item>
