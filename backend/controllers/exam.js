@@ -101,8 +101,12 @@ const deleteExam = async(req,res)=>{
             const exam = await firebase_firestore.collection("exams").doc(req.body.examId).get()
             const examSup = exam.data()["supervisorId"];
             const studentsList = exam.data()["studentsList"]
-       
+            try{
+                await firebase_firestore.collection("questionPapers").doc(exam.data()["questionPaperId"]).delete()
 
+            }catch(error){
+                console.log("Question Paper was not created")
+            }
             await firebase_firestore.collection("users").doc(examSup).update({examsCreated: admin.firestore.FieldValue.arrayRemove(exam.data()["examId"])});
             studentsList.map(async(student) =>{
               
