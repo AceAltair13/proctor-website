@@ -1,7 +1,5 @@
 import { Router } from "express";
 import { userExists } from "../helpers/users.js";
-
-
 import * as auth from "../helpers/auth.js"
 import * as exam from "../helpers/exams.js"
 import {
@@ -15,9 +13,11 @@ import {
   deleteExam,
   deleteQuestionPaper
 } from "../controllers/exam.js";
-
 import * as verifyRequests from "../helpers/verifyRequests.js"
 const router = Router();
+
+
+
 // CRUD EXAM
 router.post("/", [auth.SessionId,auth.Token,auth.matchTokenAndSSession,auth.Supervisor], createExam);
 router.put("/", [auth.SessionId,auth.Token,auth.matchTokenAndSSession,auth.Supervisor,exam.examCreatedBySupervisor], updateExam);

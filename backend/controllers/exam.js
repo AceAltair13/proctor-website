@@ -19,7 +19,9 @@ import QuestionPaper from "../models/QuestionPaper.js";
 import {
  
     examAccess,
-    questionPaperExists
+    inTime,
+    questionPaperExists,
+    questionPaperFromExam
 } from "../helpers/exams.js";
 import { ExamAndSupervisor } from "../helpers/auth.js";
 const fieldValue = admin.firestore.FieldValue;
@@ -124,7 +126,7 @@ const assignQuestionPaper = async (req, res) => {
         if(!req.body.examId){
             return res.status(400).json("Provide examId in request body")
         }
-        if(questionPaperExists(req.body.examId,res)){
+        if(questionPaperFromExam(req.body.examId,res)){
             return res.status(400).json("Question Paper already exists for the exam ")
         }
         const questionPaper = new QuestionPaper(req.body.examId, req.body.questionAnswers)
@@ -315,6 +317,9 @@ const getQuestionPaper = async (req, res) => {
         // is user authentic to get questionPaper
         if(!examAccess(exam,req.session.userId)){
             return res.status(400).json("Permission denied to access the exam")
+        }
+        if(!inTime(exam,req.session.userId)){
+            return res.status(400).json("Exam Time out")
         }
 
 

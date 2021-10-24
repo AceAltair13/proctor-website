@@ -1,3 +1,4 @@
+import e from "express";
 import jwt from "jsonwebtoken"
 
 import * as config from "../config.js";
@@ -79,7 +80,25 @@ export const examAccess = (exam,userId)=>{
     return userEligible
 }
 
-export const questionPaperExists = async(examId,res)=>{
+export const inTime = async(exam,userId)=>{
+    const startTime = exam.data()["startTime"]
+    const endTime = exam.data()["endTime"]
+    const supervisorId = exam.data()["supervisorId"]
+    if(userId === supervisorId){
+        return true
+    }else{
+        const currTime = new Date()
+        if(currTime>=startTime && currTime<=endTime){
+            return true
+        }else{
+            return false
+        }
+    }
+
+
+}
+
+export const questionPaperFromExam = async(examId,res)=>{
     try {
         const data = await (await firebase_firestore.collection("exam").doc(examId).get()).data()["questionPaperId"]
         if(data){
