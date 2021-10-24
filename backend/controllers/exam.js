@@ -121,6 +121,12 @@ const deleteExam = async(req,res)=>{
 // CRUD QUESTION PAPER
 const assignQuestionPaper = async (req, res) => {
     try {
+        if(!req.body.examId){
+            return res.status(400).json("Provide examId in request body")
+        }
+        if(questionPaperExists(req.body.examId,res)){
+            return res.status(400).json("Question Paper already exists for the exam ")
+        }
         const questionPaper = new QuestionPaper(req.body.examId, req.body.questionAnswers)
         const questionPaperJson = JSON.parse(JSON.stringify(questionPaper))
         const newId = uid()
@@ -137,6 +143,7 @@ const assignQuestionPaper = async (req, res) => {
 
 }
 
+
 const updateQuestionPaper = async (req,res)=>{
     try {
         if (req.body.questionPaperId && req.body.examId) {
@@ -146,7 +153,7 @@ const updateQuestionPaper = async (req,res)=>{
                 console.log("here")
                 const result1 = await firebase_firestore.collection("questionPapers").doc(req.body.questionPaperId).update(questionPaperJson);
                 // const result2 = await firebase_firestore.collection("exams").doc(req.body.examId).update({questionPaperId:req.questionPaperId})
-                return res.status(200).json("Question Paper updated successfullu" + result1)
+                return res.status(200).json("Question Paper updated successfully" + result1)
 
             } else {
                 return res.status(400).json("The question paper you are trying to edit doesn't exists")
@@ -162,9 +169,17 @@ const updateQuestionPaper = async (req,res)=>{
     }
 }
 
-const deleteQuestionPaper = async(req,res)=>[
-
-]
+const deleteQuestionPaper = async(req,res)=>{
+    if(req.body.questionPaperId && req.body.examId){
+        if(questionPaperExists(req.body.questionPaperId,req.body.examId)){
+            await firebase_firestore.collection("questionPaper").doc(req.questionPaperId).delete()
+            await firebase_firestore.collection("exams").doc(req.body.examId).update({questionPaperId:fieldValue.delete()})
+            return res.status(200).json("Question Paper deleted")
+        }
+    }else{
+        return res.status(400).json("Provide proper exam and question Paper")
+    }
+}
 
 // const enrollStudent = async (req, res) => {
 //     try {
@@ -339,11 +354,12 @@ const getQuestionPaper = async (req, res) => {
 
 export {
     createExam,
-    assignQuestionPaper,
     updateExam,
-    updateQuestionPaper,
-    enrollStudent,
-    getQuestionPaper,
     getExam,
-    deleteExam
+    deleteExam,
+    enrollStudent,
+    assignQuestionPaper,
+    updateQuestionPaper,
+    getQuestionPaper,
+    deleteQuestionPaper
 }

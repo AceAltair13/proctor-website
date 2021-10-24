@@ -79,6 +79,19 @@ export const examAccess = (exam,userId)=>{
     return userEligible
 }
 
+export const questionPaperExists = async(examId,res)=>{
+    try {
+        const data = await (await firebase_firestore.collection("exam").doc(examId).get()).data()["questionPaperId"]
+        if(data){
+            return true
+        }else{
+            return false
+        }
+    } catch (error) {
+        return res.status(500).json(error)
+    }
+}
+
 export const isStudentEnrolled = async (req, res, next) => {
 
 
