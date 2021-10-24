@@ -40,7 +40,7 @@ export const examCreatedBySupervisor = async (req, res, next) => {
         } catch (error) {
             return res.status(400).json("User doesn't have any exams created")
         }
-        console.log(examsCreated)
+     
         if (examsCreated) {
             for (var i = 0; i < examsCreated.length; i++) {
                 if (examsCreated[i] === examId) {
@@ -81,33 +81,45 @@ export const examAccess = (exam,userId)=>{
 }
 
 export const inTime = async(exam,userId)=>{
-    const startTime = exam.data()["startTime"]
-    const endTime = exam.data()["endTime"]
+    const startTime = new Date(exam.data()["examStartTime"]).toISOString()
+    const endTime = new Date(exam.data()["examEndTime"]).toISOString()
     const supervisorId = exam.data()["supervisorId"]
+
+
+    var allow = false
     if(userId === supervisorId){
-        return true
+        allow = true
     }else{
-        const currTime = new Date()
+        const currTime = new Date().toISOString()
+
         if(currTime>=startTime && currTime<=endTime){
-            return true
+            allow = true
         }else{
-            return false
+            allow = false
         }
     }
+    console.log("inTime "+ allow)
+    return allow
 
 
 }
 
-export const questionPaperFromExam = async(examId,res)=>{
+export const questionPaperFromExam = async(examId)=>{
     try {
-        const data = await (await firebase_firestore.collection("exam").doc(examId).get()).data()["questionPaperId"]
-        if(data){
+        const questionPaperId = await (await firebase_firestore.collection("exams").doc(examId).get()).data()["questionPaperId"]
+
+        if(questionPaperId){
+            console.log(questionPaperId)
             return true
         }else{
             return false
         }
+
+
+
     } catch (error) {
-        return res.status(500).json(error)
+
+         return false
     }
 }
 

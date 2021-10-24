@@ -35,7 +35,7 @@ const createExam = async (req, res) => {
 
  
             const newId = uid()
-            const newExam = new Exam(newId, req.user.userId, req.body.examName, req.body.examStarttime, req.body.examEndTime)
+            const newExam = new Exam(newId, req.user.userId, req.body.examName, req.body.examStartTime, req.body.examEndTime)
             const examJson = JSON.parse(JSON.stringify(newExam))
             const result = await firebase_firestore.collection('exams').doc(newId).create(examJson);
             // await firebase_firestore.collection('users').doc(req.user.userId).set({examsCreated:presentExamsCreated},{merge:true})
@@ -55,9 +55,9 @@ const createExam = async (req, res) => {
 }
 const updateExam = async (req, res) => {
     try {
-        console.log("examId exists")
+    
         const studentsList = await (await firebase_firestore.collection("exams").doc(req.body.examId).get()).data()["studentsList"]
-        const newExam = new Exam(req.body.examId, req.user.userId, req.body.examName, req.body.examStarttime, req.body.examEndTime)
+        const newExam = new Exam(req.body.examId, req.user.userId, req.body.examName, req.body.examStartTime, req.body.examEndTime)
         newExam.studentsList = studentsList;
         const examJson = JSON.parse(JSON.stringify(newExam))
         const result = await firebase_firestore.collection('exams').doc(req.body.examId).update(examJson);
@@ -76,11 +76,15 @@ const getExam = async(req,res)=>{
     try {
         if(req.query.examId){
             const exam = await firebase_firestore.collection("exams").doc(req.query.examId).get()
-            console.log("exam:"+exam)
-            if(!examAccess(exam,req.session.userId)){
-                return res.status(400).json("Permission denied to access the exam")
+            if(exam){
+                if(!examAccess(exam,req.session.userId)){
+                    return res.status(400).json("Permission denied to access the exam")
+                }
+                return res.status(200).json(exam.data())
+            }else{
+                return res.status(400).json("Invalid examId")
             }
-            return res.status(200).json(exam.data())
+
             
         }else{
             res.status(400).json("Provide examId")
@@ -97,11 +101,11 @@ const deleteExam = async(req,res)=>{
             const exam = await firebase_firestore.collection("exams").doc(req.body.examId).get()
             const examSup = exam.data()["supervisorId"];
             const studentsList = exam.data()["studentsList"]
-            console.log("examSup= "+examSup)
+       
 
             await firebase_firestore.collection("users").doc(examSup).update({examsCreated: admin.firestore.FieldValue.arrayRemove(exam.data()["examId"])});
             studentsList.map(async(student) =>{
-                console.log("student=> "+student)
+              
             await firebase_firestore.collection("users").doc(student).update({examsEnrolled:admin.firestore.FieldValue.arrayRemove(exam.data()["examId"])});
             })
             await firebase_firestore.collection("exams").doc(exam.id).delete()
@@ -126,7 +130,9 @@ const assignQuestionPaper = async (req, res) => {
         if(!req.body.examId){
             return res.status(400).json("Provide examId in request body")
         }
-        if(questionPaperFromExam(req.body.examId,res)){
+        const qpe = await questionPaperFromExam(req.body.examId)
+  
+        if(qpe){
             return res.status(400).json("Question Paper already exists for the exam ")
         }
         const questionPaper = new QuestionPaper(req.body.examId, req.body.questionAnswers)
@@ -152,7 +158,7 @@ const updateQuestionPaper = async (req,res)=>{
             const questionPaper = new QuestionPaper(req.body.examId, req.body.questionAnswers)
             const questionPaperJson = JSON.parse(JSON.stringify(questionPaper))
             if (questionPaperExists(req.body.questionPaperId, req.body.examId)) {
-                console.log("here")
+            
                 const result1 = await firebase_firestore.collection("questionPapers").doc(req.body.questionPaperId).update(questionPaperJson);
                 // const result2 = await firebase_firestore.collection("exams").doc(req.body.examId).update({questionPaperId:req.questionPaperId})
                 return res.status(200).json("Question Paper updated successfully" + result1)
@@ -174,7 +180,7 @@ const updateQuestionPaper = async (req,res)=>{
 const deleteQuestionPaper = async(req,res)=>{
     if(req.body.questionPaperId && req.body.examId){
         if(questionPaperExists(req.body.questionPaperId,req.body.examId)){
-            await firebase_firestore.collection("questionPaper").doc(req.questionPaperId).delete()
+            await firebase_firestore.collection("questionPapers").doc(req.body.questionPaperId).delete()
             await firebase_firestore.collection("exams").doc(req.body.examId).update({questionPaperId:fieldValue.delete()})
             return res.status(200).json("Question Paper deleted")
         }
@@ -255,13 +261,13 @@ const enrollStudent = async (req, res) => {
             await userExists(req, res, async () => {
                 if (req.body.userExists) {
                     filteredStudentsList.push(req.body.userExists)
-                    console.log(req.body.emailId)
+                   
                     try {
                         await Promise.resolve(firebase_firestore.collection("users").doc(req.body.userExists.userId).update({
                             examsEnrolled: admin.firestore.FieldValue.arrayUnion(req.body.examId)
                         }))
                     } catch (error) {
-                        console.log("Something went wrong")
+                      
                     } 
 
 
@@ -280,7 +286,7 @@ const enrollStudent = async (req, res) => {
                     studentsList: admin.firestore.FieldValue.arrayUnion(filteredStudentsList[i].userId)
                 });
             } catch (error) {
-                console.log(error)
+                
 
             }
         }
@@ -318,13 +324,19 @@ const getQuestionPaper = async (req, res) => {
         if(!examAccess(exam,req.session.userId)){
             return res.status(400).json("Permission denied to access the exam")
         }
-        if(!inTime(exam,req.session.userId)){
+        if(!await inTime(exam,req.session.userId)){
             return res.status(400).json("Exam Time out")
         }
 
 
         var questionPaper = [];
-        const questionPaperAnswers = (await firebase_firestore.collection('questionPapers').doc(exam.data()["questionPaperId"]).get()).data()["questionAnswers"];
+        var questionPaperAnswers
+        try {
+            
+            questionPaperAnswers = (await firebase_firestore.collection('questionPapers').doc(exam.data()["questionPaperId"]).get()).data()["questionAnswers"];
+        } catch (error) {
+            return res.status(400).json("Please create a question Paper first")
+        }
         for (var i = 0; i < questionPaperAnswers.length; i++) {
 
             var question = {

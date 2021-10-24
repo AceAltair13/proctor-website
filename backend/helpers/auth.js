@@ -25,7 +25,7 @@ export const Token = (req, res, next) => {
                     return res.status(403).json("invalid token")
                 }
                 req.user = user
-                console.log("verified")
+      
                 next()
             })
         } else {
@@ -37,11 +37,11 @@ export const Token = (req, res, next) => {
 export const matchTokenAndSSession = (req,res,next)=>{
     if (req.session.userId === req.user.userId) {
         
-        console.log(req.user)
+  
         next()
     }else {
         delete req.user
-        console.log(req.user)
+
         return res.status(403).json("you are not authenticated")
     }
 }
@@ -96,21 +96,25 @@ export const ExamAndSupervisor = async (req, res, next) => {
         req.examIdmatch = false
 
         for (var i = 0; i < examsCreatedList.length; i++) {
-            console.log(" exam no "+i+examsCreatedList[i])
+ 
+
             if (examsCreatedList[i] === req.body.examId) {
+ 
+
                 req.examIdmatch = true
                 break;
             }
         }
         if (req.examIdmatch) {
+      
             next()
         } else {
 
-            res.status(400).json("You are not authenticated to modify this exam")
+            return res.status(400).json("You are not authenticated to modify this exam")
         }
         
     } catch (error) {
-        res.status(500).json("Something went wrong while authenticating supervisor and exam")
+        return res.status(500).json("Something went wrong while authenticating supervisor and exam")
     }
     
 }

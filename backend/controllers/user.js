@@ -79,6 +79,7 @@ const registerSupervisor = async (req, res) => {
 
 const login = async (req, res) => {
   try {
+    console.log(req.body)
 
     if (req.body.userExists === false) {
       return res.status(400).json("User does not exists");
