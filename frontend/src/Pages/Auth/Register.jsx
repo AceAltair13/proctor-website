@@ -16,6 +16,7 @@ import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import SchoolIcon from "@mui/icons-material/School";
 import { Link as _Link } from "react-router-dom";
 import Logo from "../../Components/Logo";
+import axios from "axios"
 
 const roles = [
     {
@@ -52,6 +53,33 @@ export default function Register() {
         } else {
             setError([false, ""]);
             console.log(firstName, lastName, email, password, phone, role);
+        }
+        if (role === "student") {
+            console.log("student")
+            const senddata = { firstName: firstName, lastName: lastName, emailId: email, password: password }
+            const endpoint = 'http://localhost:8080/api/user/register-student'
+            axios({
+                method: 'post',
+                url: endpoint,
+                data:senddata,
+            }).then(function (response) {
+                console.log(response.data);
+            }).catch(function (error) {
+                console.log(error.data);
+            });
+        }
+        else {
+            const senddata = { firstName: firstName, lastName: lastName, emailId: email, password: password, phoneNumber: phone }
+            const endpoint = 'http://localhost:8080/api/user/register-supervisor'
+            axios({
+                method: 'post',
+                url: endpoint,
+                data: senddata
+            }).then(function (response) {
+                console.log(response.data);
+            }).catch(function (error) {
+                console.log(error.data);
+            });
         }
     };
 

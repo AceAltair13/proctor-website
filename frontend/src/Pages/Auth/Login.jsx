@@ -15,7 +15,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
 import { Link as _Link } from "react-router-dom";
 import Logo from "../../Components/Logo";
-
+import axios from "axios";
 function Login() {
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -23,8 +23,19 @@ function Login() {
         const email = data.get("email");
         const password = data.get("password");
         console.log(email, password);
+        const senddata = { emailId: email, password: password }
+        const endpoint = 'http://localhost:8080/api/user/login'
+        axios({
+            method: 'post',
+            url: endpoint,
+            data:senddata,
+            // headers: { "Content-Type": "application/json; charset=utf-8"},
+        }).then(function (response) {
+            console.log(response.data);
+        }).catch(function (error) {
+            console.log(error.data);
+        });
     };
-
     return (
         <Container component="main" maxWidth="xs">
             <Box

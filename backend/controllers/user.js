@@ -110,7 +110,8 @@ const login = async (req, res) => {
     );
     req.session.userId = user.userId;
     const sessionid = req.session.id
-    console.log(sessionid)
+    req.session.sessid=sessionid
+    session.save
     await firebase_firestore.collection("users").doc(user.userId).update({ sessionId: sessionid});
     // await firebase_firestore.collection("users").doc(user.userId).update({sessionId:sessionId});
 
@@ -137,8 +138,10 @@ const login = async (req, res) => {
 };
 
 const logout = (req, res) => {
-    if(req.session.userId && req.session.id){
-      firebase_firestore.collection("users").doc(req.session.userId).update({ sessionId:""});
+  const se=JSON.parse(Object.values(req.sessionStore.sessions)[0])
+  console.log(se.userId,se.sessid)
+    if(se.userId && se.sessid){
+      firebase_firestore.collection("users").doc(se.userId).update({ sessionId:""});
         req.session.destroy((err) => {
             return res.status(400).json(err);
           });
