@@ -2,15 +2,21 @@ import React, { useState } from "react";
 import {
     MenuItem,
     Container,
-    Avatar,
     Button,
     TextField,
     Link,
     Grid,
     Box,
     Typography,
+    InputAdornment,
 } from "@mui/material";
+import EmailIcon from "@mui/icons-material/Email";
+import LockIcon from "@mui/icons-material/Lock";
+import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
+import SchoolIcon from "@mui/icons-material/School";
 import { Link as _Link } from "react-router-dom";
+import Logo from "../../Components/Logo";
+import axios from "axios"
 
 const roles = [
     {
@@ -36,17 +42,44 @@ export default function Register() {
         const data = new FormData(event.currentTarget);
         const firstName = data.get("firstName");
         const lastName = data.get("lastName");
-        // const username = data.get("username");
         const email = data.get("email");
         const password = data.get("password");
         const reenterPassword = data.get("reenter-password");
+        const phone = data.get("phone");
         const role = data.get("role");
 
         if (password !== reenterPassword) {
             setError([true, "Password does not match"]);
         } else {
             setError([false, ""]);
-            console.log(firstName, lastName, email, password, role);
+            console.log(firstName, lastName, email, password, phone, role);
+        }
+        if (role === "student") {
+            console.log("student")
+            const senddata = { firstName: firstName, lastName: lastName, emailId: email, password: password }
+            const endpoint = 'http://localhost:8080/api/user/register-student'
+            axios({
+                method: 'post',
+                url: endpoint,
+                data:senddata,
+            }).then(function (response) {
+                console.log(response.data);
+            }).catch(function (error) {
+                console.log(error.data);
+            });
+        }
+        else {
+            const senddata = { firstName: firstName, lastName: lastName, emailId: email, password: password, phoneNumber: phone }
+            const endpoint = 'http://localhost:8080/api/user/register-supervisor'
+            axios({
+                method: 'post',
+                url: endpoint,
+                data: senddata
+            }).then(function (response) {
+                console.log(response.data);
+            }).catch(function (error) {
+                console.log(error.data);
+            });
         }
     };
 
@@ -61,10 +94,8 @@ export default function Register() {
                     alignItems: "center",
                 }}
             >
-                <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}></Avatar>
-                <Typography component="h1" variant="h5">
-                    EXAMINATOR | Sign Up
-                </Typography>
+                <Logo variant="h4" />
+                <Typography variant="h6">Sign Up</Typography>
                 <Box
                     component="form"
                     noValidate
@@ -110,6 +141,13 @@ export default function Register() {
                                 label="Email Address"
                                 name="email"
                                 autoComplete="email"
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <EmailIcon />
+                                        </InputAdornment>
+                                    ),
+                                }}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -121,6 +159,13 @@ export default function Register() {
                                 type="password"
                                 id="password"
                                 autoComplete="new-password"
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <LockIcon />
+                                        </InputAdornment>
+                                    ),
+                                }}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -132,7 +177,31 @@ export default function Register() {
                                 label="Re-Enter Password"
                                 type="password"
                                 id="reenter-password"
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <LockIcon />
+                                        </InputAdornment>
+                                    ),
+                                }}
                                 helperText={error[1]}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                required
+                                fullWidth
+                                name="phone"
+                                label="Phone Number"
+                                type="tel"
+                                id="phone"
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <LocalPhoneIcon />
+                                        </InputAdornment>
+                                    ),
+                                }}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -145,6 +214,13 @@ export default function Register() {
                                 label="Role"
                                 value={role}
                                 onChange={handleChange}
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <SchoolIcon />
+                                        </InputAdornment>
+                                    ),
+                                }}
                             >
                                 {roles.map((option) => (
                                     <MenuItem
