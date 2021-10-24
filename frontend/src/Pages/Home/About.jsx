@@ -69,7 +69,7 @@ function About() {
                         color="text.secondary"
                     >
                         We are a group of three students from Shah & Anchor
-                        Kutchhi Engineering College. The project was mentored
+                        Kutchhi Engineering College. The project was developed
                         under the guidance of Prof. Swati Nadkarni and Prof.
                         Komal Patil.
                     </Typography>
