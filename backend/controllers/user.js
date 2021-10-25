@@ -139,7 +139,14 @@ const login = async (req, res) => {
 };
 
 const logout = (req, res) => {
-  const se=JSON.parse(Object.values(req.sessionStore.sessions)[0])
+  var se
+  try {
+     se=JSON.parse(Object.values(req.sessionStore.sessions)[0])
+    
+  } catch (error) {
+    return res.status(401).json("No user was logged in")
+    
+  }
   console.log(se.userId,se.sessid)
     if(se.userId && se.sessid){
       firebase_firestore.collection("users").doc(se.userId).update({ sessionId:""});

@@ -9,7 +9,7 @@ const userExists = async (req, res, next) => {
         var userExists = false
         if (snapshot.empty) {
             userExists = false
-         
+
 
         } else {
             snapshot.forEach((doc) => {

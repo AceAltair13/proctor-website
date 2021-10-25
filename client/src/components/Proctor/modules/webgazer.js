@@ -6,7 +6,7 @@ function irisTracking() {
             if (data == null) {
                 return;
             }
-            console.log(data, elapsedTime); //elapsed time is based on time since begin was called
+            // console.log(data, elapsedTime); //elapsed time is based on time since begin was called
         })
         .begin();
 }

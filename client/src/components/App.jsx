@@ -28,24 +28,21 @@ function App() {
     return (
         <MuiThemeProvider theme={theme}>
             <Switch>
-                <Route exact path="/">
-                    <Homepage />
-                </Route>
                 <Route path="/admin">
                     <AdminDashboard />
-                </Route>
-                <Route path="/exam">
-                    {!(isChrome && isDesktop) ? (
-                        <Unavailable />
-                    ) : (
-                        <Examination />
-                    )}
                 </Route>
                 <Route exact path="/signup">
                     <SignUp />
                 </Route>
                 <Route exact path="/signin">
                     <SignIn />
+                </Route>
+                <Route path="/">
+                    {!(isChrome && isDesktop) ? (
+                        <Unavailable />
+                    ) : (
+                        <Examination />
+                    )}
                 </Route>
             </Switch>
         </MuiThemeProvider>

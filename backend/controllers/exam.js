@@ -103,7 +103,7 @@ const deleteExam = async(req,res)=>{
             const studentsList = exam.data()["studentsList"]
             try{
                 await firebase_firestore.collection("questionPapers").doc(exam.data()["questionPaperId"]).delete()
-
+p
             }catch(error){
                 console.log("Question Paper was not created")
             }

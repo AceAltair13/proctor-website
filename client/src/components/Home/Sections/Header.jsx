@@ -7,7 +7,7 @@ import {
     makeStyles,
     Typography,
 } from "@material-ui/core";
-import HeaderImage from "../../../images/time.json";
+import HeaderImage from "../../../Assets/Lottie/time.json";
 import lottie from "lottie-web";
 
 const useStyles = makeStyles((theme) => ({

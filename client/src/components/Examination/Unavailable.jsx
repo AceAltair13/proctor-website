@@ -1,6 +1,6 @@
 import { Typography } from "@material-ui/core";
 import React from "react";
-import MobileDenied from "../../images/mobiledenied.svg";
+import MobileDenied from "../../Assets/Images/mobiledenied.svg";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
