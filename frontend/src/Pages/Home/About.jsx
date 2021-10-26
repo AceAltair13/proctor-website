@@ -5,7 +5,6 @@ import {
     Avatar,
     Paper,
     IconButton,
-    Divider,
 } from "@mui/material";
 import { GitHub, LinkedIn } from "@mui/icons-material";
 import RushilPhoto from "../../Assets/Images/rushil.png";

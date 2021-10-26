@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from "react";
-import { Button, Grid, Typography, Container, Box } from "@mui/material";
+import { Button, Grid, Typography, Container } from "@mui/material";
 import lottie from "lottie-web";
 import HeaderImage from "../../Assets/LottieFiles/time.json";
-import { Dialpad, Add } from "@mui/icons-material";
+import SchoolIcon from "@mui/icons-material/School";
+import { Link } from "react-router-dom";
 
 function Landing() {
     const container = useRef(null);
@@ -44,21 +45,15 @@ function Landing() {
                                 it's own Web Based AI Proctoring
                             </Typography>
                         </Grid>
-                        <Grid item container spacing={2} sx={{ mt: 3 }}>
-                            <Grid item>
-                                <Button size="large" startIcon={<Dialpad />}>
-                                    Enter Examination ID
-                                </Button>
-                            </Grid>
-                            <Grid item>
-                                <Button
-                                    size="large"
-                                    variant="outlined"
-                                    startIcon={<Add />}
-                                >
-                                    Create Examination
-                                </Button>
-                            </Grid>
+                        <Grid item sx={{ mt: 5 }}>
+                            <Button
+                                size="large"
+                                startIcon={<SchoolIcon />}
+                                component={Link}
+                                to="/login"
+                            >
+                                Get Started with EXAMINATOR
+                            </Button>
                         </Grid>
                     </Grid>
                 </Grid>

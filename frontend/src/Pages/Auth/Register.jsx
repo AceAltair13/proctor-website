@@ -14,9 +14,13 @@ import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import SchoolIcon from "@mui/icons-material/School";
-import { Link as _Link } from "react-router-dom";
+import { Link as _Link, Redirect } from "react-router-dom";
 import Logo from "../../Components/Logo";
-import axios from "axios"
+import axios from "axios";
+import {
+    STUDENT_REGISTER_URL,
+    SUPERVISOR_REGISTER_URL,
+} from "../../Constants/urls";
 
 const roles = [
     {
@@ -32,6 +36,7 @@ const roles = [
 export default function Register() {
     const [role, setRole] = useState(roles[0].value);
     const [error, setError] = useState([false, ""]);
+    const [redirect, setRedirect] = useState(false);
 
     const handleChange = (event) => {
         setRole(event.target.value);
@@ -55,33 +60,52 @@ export default function Register() {
             console.log(firstName, lastName, email, password, phone, role);
         }
         if (role === "student") {
-            console.log("student")
-            const senddata = { firstName: firstName, lastName: lastName, emailId: email, password: password }
-            const endpoint = 'http://localhost:8080/api/user/register-student'
+            console.log("student");
+            const senddata = {
+                firstName: firstName,
+                lastName: lastName,
+                emailId: email,
+                password: password,
+            };
+
             axios({
-                method: 'post',
-                url: endpoint,
-                data:senddata,
-            }).then(function (response) {
-                console.log(response.data);
-            }).catch(function (error) {
-                console.log(error.data);
-            });
-        }
-        else {
-            const senddata = { firstName: firstName, lastName: lastName, emailId: email, password: password, phoneNumber: phone }
-            const endpoint = 'http://localhost:8080/api/user/register-supervisor'
+                method: "post",
+                url: STUDENT_REGISTER_URL,
+                data: senddata,
+            })
+                .then(function (response) {
+                    console.log(response.data);
+                    setRedirect(true);
+                })
+                .catch(function (error) {
+                    console.log(error.data);
+                });
+        } else {
+            const senddata = {
+                firstName: firstName,
+                lastName: lastName,
+                emailId: email,
+                password: password,
+                phoneNumber: phone,
+            };
             axios({
-                method: 'post',
-                url: endpoint,
-                data: senddata
-            }).then(function (response) {
-                console.log(response.data);
-            }).catch(function (error) {
-                console.log(error.data);
-            });
+                method: "post",
+                url: SUPERVISOR_REGISTER_URL,
+                data: senddata,
+            })
+                .then(function (response) {
+                    console.log(response.data);
+                    setRedirect(true);
+                })
+                .catch(function (error) {
+                    console.log(error.data);
+                });
         }
     };
+
+    if (redirect) {
+        return <Redirect to="/login" />;
+    }
 
     return (
         <Container component="main" maxWidth="xs">
