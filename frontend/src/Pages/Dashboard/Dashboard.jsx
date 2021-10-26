@@ -8,14 +8,14 @@ function Dashboard() {
     const [redirect, setRedirect] = React.useState(false);
     const logout = () => {
         axios
-            .get(LOGOUT_URL)
+            .post(LOGOUT_URL)
             .then((res) => {
-                console.log(res);
+                console.log(res.data);
                 if (res.status === 200) {
                     setRedirect(true);
                 }
             })
-            .catch((err) => console.log(err));
+            .catch((err) => console.log(err.response.data));
     };
 
     if (redirect) {

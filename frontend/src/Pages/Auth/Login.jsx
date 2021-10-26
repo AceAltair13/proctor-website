@@ -39,7 +39,7 @@ function Login() {
                     setRedirect(true);
                 }
             })
-            .catch((err) => console.log(err));
+            .catch((err) => console.log(err.response.data));
     };
 
     if (redirect) {

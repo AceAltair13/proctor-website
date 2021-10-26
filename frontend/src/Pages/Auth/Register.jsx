@@ -64,6 +64,7 @@ export default function Register() {
             const senddata = {
                 firstName: firstName,
                 lastName: lastName,
+                phoneNumber:phone,
                 emailId: email,
                 password: password,
             };
@@ -72,21 +73,19 @@ export default function Register() {
                 method: "post",
                 url: STUDENT_REGISTER_URL,
                 data: senddata,
-            })
-                .then(function (response) {
+            }).then(function (response) {
                     console.log(response.data);
                     setRedirect(true);
-                })
-                .catch(function (error) {
-                    console.log(error.data);
-                });
+            }).catch(function (error) {
+                    console.log(error.response.data);
+            });
         } else {
             const senddata = {
                 firstName: firstName,
                 lastName: lastName,
+                phoneNumber:phone,
                 emailId: email,
-                password: password,
-                phoneNumber: phone,
+                password: password
             };
             axios({
                 method: "post",
@@ -98,7 +97,7 @@ export default function Register() {
                     setRedirect(true);
                 })
                 .catch(function (error) {
-                    console.log(error.data);
+                    console.log(error.response.data);
                 });
         }
     };
