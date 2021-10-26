@@ -1,6 +1,8 @@
 import React from "react";
 import { Button, Container, Grid, Typography } from "@mui/material";
 import SupervisorGetStarted from "../../Assets/Images/supervisor.svg";
+import { Link } from "react-router-dom";
+import AddIcon from "@mui/icons-material/Add";
 
 function GetStarted() {
     return (
@@ -51,13 +53,15 @@ function GetStarted() {
                 </Grid>
                 <Grid item container spacing={3} justifyContent="center">
                     <Grid item>
-                        <Button fullWidth size="large" color="secondary">
-                            Sign In To Your Account
-                        </Button>
-                    </Grid>
-                    <Grid item>
-                        <Button fullWidth size="large">
-                            Create A New Account
+                        <Button
+                            fullWidth
+                            size="large"
+                            color="secondary"
+                            component={Link}
+                            to="/register"
+                            startIcon={<AddIcon />}
+                        >
+                            Create a new account Now
                         </Button>
                     </Grid>
                 </Grid>

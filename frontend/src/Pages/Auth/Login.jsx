@@ -13,29 +13,39 @@ import GoogleIcon from "@mui/icons-material/Google";
 import LoginIcon from "@mui/icons-material/Login";
 import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
-import { Link as _Link } from "react-router-dom";
+import { Link as _Link, Redirect } from "react-router-dom";
 import Logo from "../../Components/Logo";
 import axios from "axios";
+import { LOGIN_URL } from "../../Constants/urls";
+
 function Login() {
+    const [redirect, setRedirect] = React.useState(false);
+
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
+
         const email = data.get("email");
         const password = data.get("password");
+
         console.log(email, password);
-        const senddata = { emailId: email, password: password }
-        const endpoint = 'http://localhost:8080/api/user/login'
-        axios({
-            method: 'post',
-            url: endpoint,
-            data:senddata,
-            // headers: { "Content-Type": "application/json; charset=utf-8"},
-        }).then(function (response) {
-            console.log(response.data);
-        }).catch(function (error) {
-            console.log(error.data);
-        });
+        const senddata = { emailId: email, password: password };
+
+        axios
+            .post(LOGIN_URL, senddata)
+            .then((res) => {
+                console.log(res);
+                if (res.status === 200) {
+                    setRedirect(true);
+                }
+            })
+            .catch((err) => console.log(err.response.data));
     };
+
+    if (redirect) {
+        return <Redirect to="/dashboard" />;
+    }
+
     return (
         <Container component="main" maxWidth="xs">
             <Box

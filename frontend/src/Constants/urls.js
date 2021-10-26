@@ -2,10 +2,10 @@
 const URL = "http://localhost:8080/api";
 
 // Child URLs
-const STUDENT_REGISTER_URL = URL + "/register-student";
-const SUPERVISOR_REGISTER_URL = URL + "/register-supervisor";
-const LOGIN_URL = URL + "/login";
-const LOGOUT_URL = URL + "/logout";
+const STUDENT_REGISTER_URL = URL + "/user/register-student";
+const SUPERVISOR_REGISTER_URL = URL + "/user/register-supervisor";
+const LOGIN_URL = URL + "/user/login";
+const LOGOUT_URL = URL + "/user/logout";
 
 // Module Exports
 export {
