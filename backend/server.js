@@ -8,6 +8,12 @@ import { routes as examRoutes } from "./routes/exam.js"
 
 import session from 'express-session'
 
+import {FirestoreStore} from "@google-cloud/connect-firestore"
+import {Firestore} from "@google-cloud/firestore"
+import { firebase_firestore } from './db.js'
+
+
+
 
 
 
@@ -24,7 +30,11 @@ app.use(cors())
 
 
 //session use 
-app.use(session({secret: session_key,resave: false,saveUninitialized: true,cookie: {}}))
+app.use(session({store:new FirestoreStore({
+    dataset:firebase_firestore,
+    // dataset:new Firestore(),
+    kind:'express-sessions'
+}),secret: session_key,resave: false,saveUninitialized: true,cookie: {}}))
 app.use("/api/user", userRoutes)
 app.use("/api/exam", examRoutes)
 

@@ -272,12 +272,6 @@ const removeStudents = async(req,res)=>{
 
 
 
-
-
-
-
-
-
 const getQuestionPaper = async (req, res) => {
     try {
        

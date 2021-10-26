@@ -150,6 +150,7 @@ const logout = (req, res) => {
       break;
     }
   }
+
   // console.log(Object.keys(req.sessionStore.sessions).length)
   // var se;
   // try {
@@ -159,6 +160,20 @@ const logout = (req, res) => {
   //   return res.status(401).json("No user was logged in")
 
   // }
+
+
+  // console.log("logout sai",req.session.userId, req.session.sessid)
+  // if (req.session.userId && req.session.sessid) {
+  //   firebase_firestore.collection("users").doc(req.session.userId).update({ sessionId: "" });
+  //   req.session.destroy((err) => {
+  //     return res.status(400).json(err);
+  //   });
+  //   return res.status(200).json("Logged out successfully");
+  // } else {
+  //   return res.status(401).json("No user was logged in")
+  // }
+
+
   console.log("logout sai",se.userId, se.sessid)
   if (se.userId && se.sessid) {
     firebase_firestore.collection("users").doc(se.userId).update({ sessionId: "" });
