@@ -164,8 +164,8 @@ const logout = (req, res) => {
   // }
 
 
-  console.log("logout sai",req.session.userId, req.cookies.sessid)
-  if (req.session.userId && req.cookies.sessid) {
+  console.log("logout sai",req.session.userId, req.session.sessid)
+  if (req.session.userId && req.session.sessid) {
     firebase_firestore.collection("users").doc(req.session.userId).update({ sessionId: "" });
     req.session.destroy((err) => {
       if(err){

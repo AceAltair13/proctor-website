@@ -50,23 +50,24 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 //session use 
-app.use(session({
-    store: new FirestoreStore({
-        dataset: firebase_firestore,
-        // dataset:new Firestore(),
-        kind: 'express-sessions'
-    }),
-    name: "sessid",
-    resave: false,
-    secret: session_key,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        maxAge: 1000 * 60 * 60 * 2,
-        sameSite: true,
-        secure: false
-    }
-}))
+// app.use(session({
+//     store: new FirestoreStore({
+//         dataset: firebase_firestore,
+//         // dataset:new Firestore(),
+//         kind: 'express-sessions'
+//     }),
+//     name: "sessid",
+//     resave: false,
+//     secret: session_key,
+//     resave: false,
+//     saveUninitialized: false,
+//     cookie: {
+//         maxAge: 1000 * 60 * 60 * 2,
+//         sameSite: true,
+//         secure: false
+//     }
+// }))
+app.use(session({secret: session_key,resave:true,saveUninitialized: true,httponly:false,cookie: {}}))
 app.use("/api/user", userRoutes)
 app.use("/api/exam", examRoutes)
 
