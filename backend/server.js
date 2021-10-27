@@ -24,7 +24,7 @@ app.use(cors())
 
 
 //session use 
-app.use(session({secret: session_key,resave: false,saveUninitialized: true,cookie: {}}))
+app.use(session({secret: session_key,resave:true,saveUninitialized: true,httponly:false,cookie: {}}))
 app.use("/api/user", userRoutes)
 app.use("/api/exam", examRoutes)
 
