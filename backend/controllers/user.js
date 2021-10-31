@@ -141,18 +141,17 @@ const login = async (req, res) => {
 };
 
 const logout = (req, res) => {
-  // console.log("logout sai",req);
-  // console.log(Object.keys(req.sessionStore.sessions).length);
+  console.log("logout sai",req);
+  console.log(Object.keys(req.sessionStore.sessions).length);
 
-  // for(var i=0;i<Object.keys(req.sessionStore.sessions).length;i++)
-  // {
-  //   var se = JSON.parse(Object.values(req.sessionStore.sessions)[i]);
-  //   if(se.userId!==undefined && se.sessid!==undefined)
-  //   {
-  //     break;
-  //   }
-  // }
-
+  for(var i=0;i<Object.keys(req.sessionStore.sessions).length;i++)
+  {
+    var se = JSON.parse(Object.values(req.sessionStore.sessions)[i]);
+    if(se.userId!==undefined && se.sessid!==undefined)
+    {
+      break;
+    }
+  }
   // console.log(Object.keys(req.sessionStore.sessions).length)
   // var se;
   // try {
@@ -162,34 +161,16 @@ const logout = (req, res) => {
   //   return res.status(401).json("No user was logged in")
 
   // }
-
-
-  console.log("logout sai",req.session.userId, req.session.sessid)
-  if (req.session.userId && req.session.sessid) {
-    firebase_firestore.collection("users").doc(req.session.userId).update({ sessionId: "" });
+  console.log("logout sai",se.userId, se.sessid)
+  if (se.userId && se.sessid) {
+    firebase_firestore.collection("users").doc(se.userId).update({ sessionId: "" });
     req.session.destroy((err) => {
-      if(err){
-        return res.status(400).json(err);
-      }
-      
-      
+      return res.status(400).json(err);
     });
     return res.status(200).json("Logged out successfully");
   } else {
     return res.status(401).json("No user was logged in")
   }
-
-
-  // console.log("logout sai",se.userId, se.sessid)
-  // if (se.userId && se.sessid) {
-  //   firebase_firestore.collection("users").doc(se.userId).update({ sessionId: "" });
-  //   req.session.destroy((err) => {
-  //     return res.status(400).json(err);
-  //   });
-  //   return res.status(200).json("Logged out successfully");
-  // } else {
-  //   return res.status(401).json("No user was logged in")
-  // }
 
 };
 
