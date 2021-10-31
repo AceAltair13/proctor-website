@@ -1,6 +1,6 @@
 import React from "react";
 import Navbar from "./Navbar";
-import { Switch, Route } from "react-router-dom";
+// import { Switch, Route } from "react-router-dom";
 import Landing from "./Landing";
 import About from "./About";
 import Features from "./Features";

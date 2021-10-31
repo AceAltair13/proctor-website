@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     Container,
     Button,
@@ -18,9 +18,12 @@ import { Link as _Link, Redirect } from "react-router-dom";
 import Logo from "../../Components/Logo";
 import axios from "axios";
 import { LOGIN_URL } from "../../Constants/urls";
+import { useDispatch } from "react-redux"
+import { login } from "../../Features/userSlice";
 
 function Login() {
-    const [redirect, setRedirect] = React.useState(false);
+    const dispatch = useDispatch();
+    const [redirect, setRedirect] = useState(false);
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -35,8 +38,9 @@ function Login() {
         axios
             .post(LOGIN_URL, senddata)
             .then((res) => {
-                console.log(res);
+                console.log(res.data);
                 if (res.status === 200) {
+                    dispatch(login(res.data))
                     setRedirect(true);
                 }
             })

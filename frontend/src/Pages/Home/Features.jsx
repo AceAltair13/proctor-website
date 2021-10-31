@@ -86,8 +86,8 @@ function Features() {
                     justifyContent="center"
                     sx={{ mt: 2 }}
                 >
-                    {features.map((feature) => (
-                        <Grid item md={6} lg={4}>
+                    {features.map((feature, index) => (
+                        <Grid item md={6} lg={4} key={index}>
                             <Paper variant="outlined" sx={{ p: 5 }}>
                                 <Grid
                                     container
