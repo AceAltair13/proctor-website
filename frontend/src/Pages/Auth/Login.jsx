@@ -8,7 +8,6 @@ import {
     Box,
     Typography,
     InputAdornment,
-    Alert,
 } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 import LoginIcon from "@mui/icons-material/Login";
@@ -20,11 +19,13 @@ import axios from "axios";
 import { LOGIN_URL } from "../../Constants/urls";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../Features/userSlice";
+import { useSnackbar } from "notistack";
 
 function Login() {
     const dispatch = useDispatch();
     const [redirect, setRedirect] = useState(false);
     const user = useSelector((state) => state.user.value);
+    const { enqueueSnackbar } = useSnackbar();
 
     if (user) {
         return <Redirect to="/dashboard" />;
@@ -49,7 +50,13 @@ function Login() {
                     setRedirect(true);
                 }
             })
-            .catch((err) => alert(err.response.data));
+            .catch((err) => {
+                console.log(err);
+                enqueueSnackbar(err.response.data, {
+                    variant: "error",
+                    autoHideDuration: 3000,
+                });
+            });
     };
 
     if (redirect) {
