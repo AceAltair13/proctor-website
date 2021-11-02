@@ -30,6 +30,7 @@ import {
 
 import bodyParser from "body-parser"
 import cookieParser from 'cookie-parser'
+import {routes as proctorRoutes} from "./routes/proctor.js"
 
 
 
@@ -70,6 +71,8 @@ app.use(cookieParser());
 app.use(session({secret: session_key,resave:true,saveUninitialized: true,httponly:false,cookie: {}}))
 app.use("/api/user", userRoutes)
 app.use("/api/exam", examRoutes)
+app.use("/api/proctor", proctorRoutes)
+
 
 
 app.listen(port, () => {
