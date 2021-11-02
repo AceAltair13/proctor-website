@@ -7,7 +7,7 @@ function Logo(props) {
     return (
         <Typography
             variant={props.variant}
-            sx={{ flexGrow: 1, color: "primary.main", textDecoration: "none" }}
+            sx={{ color: "primary.main", textDecoration: "none" }}
             fontWeight="fontWeightBold"
             component={Link}
             to="/"

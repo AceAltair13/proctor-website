@@ -5,6 +5,7 @@ import { Switch, Route } from "react-router-dom";
 import { Dashboard, Exam, Home, Login, Register } from "./Pages/index";
 
 function App() {
+
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />

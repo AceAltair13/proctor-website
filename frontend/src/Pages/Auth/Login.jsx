@@ -17,12 +17,17 @@ import { Link as _Link, Redirect } from "react-router-dom";
 import Logo from "../../Components/Logo";
 import axios from "axios";
 import { LOGIN_URL } from "../../Constants/urls";
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../Features/userSlice";
 
 function Login() {
     const dispatch = useDispatch();
     const [redirect, setRedirect] = useState(false);
+    const user = useSelector((state) => state.user.value);
+
+    if (user) {
+        return <Redirect to="/dashboard" />;
+    }
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -39,7 +44,7 @@ function Login() {
             .then((res) => {
                 console.log(res.data);
                 if (res.status === 200) {
-                    dispatch(login(res.data))
+                    dispatch(login(res.data));
                     setRedirect(true);
                 }
             })

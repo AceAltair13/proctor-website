@@ -21,6 +21,7 @@ import {
     STUDENT_REGISTER_URL,
     SUPERVISOR_REGISTER_URL,
 } from "../../Constants/urls";
+import { useSelector } from "react-redux";
 
 const roles = [
     {
@@ -37,6 +38,12 @@ export default function Register() {
     const [role, setRole] = useState(roles[0].value);
     const [error, setError] = useState([false, ""]);
     const [redirect, setRedirect] = useState(false);
+
+    const user = useSelector((state) => state.user.value);
+
+    if (user) {
+        return <Redirect to="/dashboard" />;
+    }
 
     const handleChange = (event) => {
         setRole(event.target.value);
@@ -110,7 +117,7 @@ export default function Register() {
         <Container component="main" maxWidth="xs">
             <Box
                 sx={{
-                    marginTop: 8,
+                    marginTop: {xs: 0, md: 8},
                     paddingY: 2,
                     display: "flex",
                     flexDirection: "column",

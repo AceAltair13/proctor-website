@@ -3,8 +3,26 @@ import { Button, Container, Grid, Typography } from "@mui/material";
 import SupervisorGetStarted from "../../Assets/Images/supervisor.svg";
 import { Link } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
+import { useSelector } from "react-redux";
 
 function GetStarted() {
+    const user = useSelector((state) => state.user.value);
+
+    const getStarted = (
+        <Grid item>
+            <Button
+                fullWidth
+                size="large"
+                color="secondary"
+                component={Link}
+                to="/register"
+                startIcon={<AddIcon />}
+            >
+                Create a new account Now
+            </Button>
+        </Grid>
+    );
+
     return (
         <>
             <Grid
@@ -51,20 +69,7 @@ function GetStarted() {
                         />
                     </Container>
                 </Grid>
-                <Grid item container spacing={3} justifyContent="center">
-                    <Grid item>
-                        <Button
-                            fullWidth
-                            size="large"
-                            color="secondary"
-                            component={Link}
-                            to="/register"
-                            startIcon={<AddIcon />}
-                        >
-                            Create a new account Now
-                        </Button>
-                    </Grid>
-                </Grid>
+                {!user && getStarted}
             </Grid>
         </>
     );

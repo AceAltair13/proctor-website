@@ -45,7 +45,7 @@ function Landing() {
                                 it's own Web Based AI Proctoring
                             </Typography>
                         </Grid>
-                        <Grid item sx={{ mt: 5 }}>
+                        <Grid item sx={{ my: 5 }}>
                             <Button
                                 size="large"
                                 startIcon={<SchoolIcon />}
