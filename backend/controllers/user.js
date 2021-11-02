@@ -10,6 +10,7 @@ import { uid } from "../helpers/other.js";
 import session from "express-session";
 import e from "express";
 
+
 const registerStudent = async (req, res) => {
   try {
     if (req.body.userExists !== false) {
@@ -85,7 +86,7 @@ const login = async (req, res) => {
       return res.status(400).json("User does not exists");
     }
     if (req.body.userExists.sessionId != "") {
-      return res.status(400).json("Account is logged in alerday")
+      return res.status(400).json("Account is logged in already")
 
     }
     const user = req.body.userExists;
@@ -127,6 +128,7 @@ const login = async (req, res) => {
     // }, config.jwt_passKey, { expiresIn: "3d" })
 
     const { password, ...others } = user;
+    res.locals = req.session.userId;
     res.status(200).json({
       ...others,
       //   accessTokenEncrypt,

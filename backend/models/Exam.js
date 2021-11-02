@@ -4,7 +4,7 @@ import Student from "./Student.js";
 import QuestionPaper from "./QuestionPaper.js";
 
 class Exam {
-  constructor(examId, supervisorId, examName, examStartTime, examEndTime) {
+  constructor(examId, supervisorId, examName, examStartTime, examEndTime,examDesc) {
     this.examId = examId;
     this.supervisorId = supervisorId;
     this.examName = examName;
@@ -13,6 +13,7 @@ class Exam {
     this.questionPaper = QuestionPaper;
     this.studentsList = [];
     this.createdAt = new Date().toISOString().toString();
+    this.examDesc = examDesc
   }
 
   toJson = () => {
@@ -25,6 +26,7 @@ class Exam {
       questionPaper: this.questionPaper,
       studentsList: this.studentsList,
       createdAt: this.createdAt,
+      examDesc:this.examDesc 
     };
   };
 }

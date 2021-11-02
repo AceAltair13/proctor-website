@@ -84,7 +84,7 @@ export default function Register() {
                     console.log(response.data);
                     setRedirect(true);
             }).catch(function (error) {
-                    console.log(error.response.data);
+                    alert(error.response.data);
             });
         } else {
             const senddata = {
@@ -104,7 +104,7 @@ export default function Register() {
                     setRedirect(true);
                 })
                 .catch(function (error) {
-                    console.log(error.response.data);
+                    alert(error.response.data);
                 });
         }
     };

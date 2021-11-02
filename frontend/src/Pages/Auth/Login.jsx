@@ -8,6 +8,7 @@ import {
     Box,
     Typography,
     InputAdornment,
+    Alert,
 } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 import LoginIcon from "@mui/icons-material/Login";
@@ -48,7 +49,7 @@ function Login() {
                     setRedirect(true);
                 }
             })
-            .catch((err) => console.log(err.response.data));
+            .catch((err) => alert(err.response.data));
     };
 
     if (redirect) {

@@ -35,7 +35,7 @@ const createExam = async (req, res) => {
 
  
             const newId = uid()
-            const newExam = new Exam(newId, req.user.userId, req.body.examName, req.body.examStartTime, req.body.examEndTime)
+            const newExam = new Exam(newId, req.user.userId, req.body.examName, req.body.examStartTime, req.body.examEndTime,req.body.examDesc)
             const examJson = JSON.parse(JSON.stringify(newExam))
             const result = await firebase_firestore.collection('exams').doc(newId).create(examJson);
             // await firebase_firestore.collection('users').doc(req.user.userId).set({examsCreated:presentExamsCreated},{merge:true})
@@ -57,7 +57,7 @@ const updateExam = async (req, res) => {
     try {
     
         const studentsList = await (await firebase_firestore.collection("exams").doc(req.body.examId).get()).data()["studentsList"]
-        const newExam = new Exam(req.body.examId, req.user.userId, req.body.examName, req.body.examStartTime, req.body.examEndTime)
+        const newExam = new Exam(req.body.examId, req.user.userId, req.body.examName, req.body.examStartTime, req.body.examEndTime,req.body.examDesc)
         newExam.studentsList = studentsList;
         const examJson = JSON.parse(JSON.stringify(newExam))
         const result = await firebase_firestore.collection('exams').doc(req.body.examId).update(examJson);
@@ -193,124 +193,82 @@ const deleteQuestionPaper = async(req,res)=>{
     }
 }
 
-// const enrollStudent = async (req, res) => {
-//     try {
-//         var firestorePromises = [];
-//         const studentsList = req.body.studentsList;
-//         var filteredStudentsList = []
-
-//         for (var i = 0; i < studentsList.length; i++) {
-
-//             req.body.emailId = studentsList[i]
-
-//             await userExists(req, res, async () => {
-//                 if (req.body.userExists) {
-//                     filteredStudentsList.push(req.body.userExists)
-//                     console.log(req.body.emailId)
-//                     try {
-//                         await Promise.resolve(firebase_firestore.collection("users").doc(req.body.userExists.userId).update({
-//                             examsEnrolled: admin.firestore.FieldValue.arrayUnion(req.body.examId)
-//                         }))
-//                     } catch (error) {
-//                         console.log("Something went wrong")
-//                     }
-
-//                 }
-
-//             })
-
-
-//         }
-//         for (var i = 0; i < filteredStudentsList.length; i++) {
-//             try {
-//                 await firebase_firestore.collection("exams").doc(req.body.examId).update({
-//                     studentsList: admin.firestore.FieldValue.arrayUnion(filteredStudentsList[i].userId)
-//                 });
-//             } catch (error) {
-//                 console.log(error)
-
-//             }
-//         }
-
-
-//         res.status(200).json("Students enrolled successfully")
-
-//     } catch (error) {
-//         res.status(500).json("Something went wrong try again later" + error)
-//     }
-
-
-
-// }
-
-
-
-
-
-
 
 const enrollStudent = async (req, res) => {
     try {
-      
-
-     
         const studentsList = req.body.studentsList;
         var filteredStudentsList = []
         var invalidUsers = [];
-
         for (var i = 0; i < studentsList.length; i++) {
-
             req.body.emailId = studentsList[i]
-
             await userExists(req, res, async () => {
                 if (req.body.userExists) {
-                    filteredStudentsList.push(req.body.userExists)
-                   
+                    filteredStudentsList.push(req.body.userExists)     
                     try {
                         await Promise.resolve(firebase_firestore.collection("users").doc(req.body.userExists.userId).update({
                             examsEnrolled: admin.firestore.FieldValue.arrayUnion(req.body.examId)
                         }))
-                    } catch (error) {
-                      
+                    } catch (error) {                     
                     } 
-
-
                 }else{
                     invalidUsers.push(req.body.emailId)
                 }
-
             })
-
-
         }
-
         for (var i = 0; i < filteredStudentsList.length; i++) {
             try {
                 await firebase_firestore.collection("exams").doc(req.body.examId).update({
                     studentsList: admin.firestore.FieldValue.arrayUnion(filteredStudentsList[i].userId)
                 });
             } catch (error) {
-                
-
             }
         }
 
-
-        res.status(200).json("Students enrolled successfully and users:- "+ invalidUsers+" doesn't exists")
+        return res.status(200).json("Students enrolled successfully and users:- "+ invalidUsers+" doesn't exists")
 
     } catch (error) {
         res.status(500).json("Something went wrong try again later" + error)
     }
 
-
-
 }
 
+const removeStudents = async(req,res)=>{
+    try {
+        const studentsList = req.body.studentsList;
+        var filteredStudentsList = []
+        var invalidUsers = [];
+        for (var i = 0; i < studentsList.length; i++) {
+            req.body.emailId = studentsList[i]
+            await userExists(req, res, async () => {
+                if (req.body.userExists) {
+                    filteredStudentsList.push(req.body.userExists)     
+                    try {
+                        await Promise.resolve(firebase_firestore.collection("users").doc(req.body.userExists.userId).update({
+                            examsEnrolled: admin.firestore.FieldValue.arrayRemove(req.body.examId)
+                        }))
+                    } catch (error) {                     
+                    } 
+                }else{
+                    invalidUsers.push(req.body.emailId)
+                }
+            })
+        }
+        for (var i = 0; i < filteredStudentsList.length; i++) {
+            try {
+                await firebase_firestore.collection("exams").doc(req.body.examId).update({
+                    studentsList: admin.firestore.FieldValue.arrayRemove(filteredStudentsList[i].userId)
+                });
+            } catch (error) {
+            }
+        }
 
+        return res.status(200).json("Students removed from exam successfully and users:- "+ invalidUsers+" doesn't exists")
 
+    } catch (error) {
+        res.status(500).json("Something went wrong try again later" + error)
+    }
 
-
-
+}
 
 
 
@@ -382,5 +340,6 @@ export {
     assignQuestionPaper,
     updateQuestionPaper,
     getQuestionPaper,
-    deleteQuestionPaper
+    deleteQuestionPaper,
+    removeStudents
 }

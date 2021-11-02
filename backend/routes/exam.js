@@ -11,7 +11,8 @@ import {
   updateExam,
   getExam,
   deleteExam,
-  deleteQuestionPaper
+  deleteQuestionPaper,
+  removeStudents
 } from "../controllers/exam.js";
 import * as verifyRequests from "../helpers/verifyRequests.js"
 const router = Router();
@@ -23,7 +24,9 @@ router.post("/", [auth.SessionId,auth.Token,auth.matchTokenAndSSession,auth.Supe
 router.put("/", [auth.SessionId,auth.Token,auth.matchTokenAndSSession,auth.Supervisor,exam.examCreatedBySupervisor], updateExam);
 router.get("/", [auth.SessionId,auth.Token,auth.matchTokenAndSSession], getExam);
 router.delete("/", [auth.SessionId,auth.Token,auth.matchTokenAndSSession,auth.ExamAndSupervisor], deleteExam);
-router.post("/enroll-students", [auth.SessionId,auth.Token,auth.matchTokenAndSSession,auth.Supervisor,auth.ExamAndSupervisor,exam.examCreatedBySupervisor], enrollStudent);
+router.post("/students", [auth.SessionId,auth.Token,auth.matchTokenAndSSession,auth.Supervisor,auth.ExamAndSupervisor,exam.examCreatedBySupervisor], enrollStudent);
+router.delete("/students", [auth.SessionId,auth.Token,auth.matchTokenAndSSession,auth.Supervisor,auth.ExamAndSupervisor,exam.examCreatedBySupervisor], removeStudents);
+
 
 
 // CRUD QUESTION PAPER

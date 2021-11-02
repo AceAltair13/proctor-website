@@ -25,7 +25,7 @@ function Dashboard() {
                     setRedirect(true);
                 }
             })
-            .catch((err) => console.log(err.response.data));
+            .catch((err) => alert(err.response.data));
     };
 
     if (redirect) {
