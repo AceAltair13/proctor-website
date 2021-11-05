@@ -127,28 +127,34 @@ p
     }   
 }
 
-const getAllExams = async(req,res)=>{
+const getAllExamsofSupervisor = async(req,res)=>{
     const supervisorId = req.user.userId;
 
     try {
         var examsList=[];
-        const examIdsList = await (await firebase_firestore.collection("users").doc(supervisorId).get()).data()["examsCreated"]
+        var examIdsList
+        try {
+            examIdsList = await (await firebase_firestore.collection("users").doc(supervisorId).get()).data()["examsCreated"]
+            
+        } catch (error) {
+            return res.status.json("No exams available")
+        }
         if(examIdsList){
             for(var i=0;i<examIdsList.length;i++){
                 var exam = await firebase_firestore.collection("exams").doc(examIdsList[i]).get()
                 if(exam){
                     let examData = exam.data()
-                    let {studentsList,...other} = examData;
-                    console.log(other);
-                    examsList.push(other)
+                    // let {studentsList,...other} = examData;
+                    
+                    examsList.push(examData)
                 }                
             }
 
 
         }else{
-            res.status(400).json("Exam or user doesn't exists")
+           return res.status(400).json("Exam or user doesn't exists")
         }
-        console.log(examsList);
+       
         if(examsList.length>0){
 
             return res.status(200).json(examsList)
@@ -377,5 +383,5 @@ export {
     getQuestionPaper,
     deleteQuestionPaper,
     removeStudents,
-    getAllExams
+    getAllExamsofSupervisor
 }

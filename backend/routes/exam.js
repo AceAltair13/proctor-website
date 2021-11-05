@@ -13,7 +13,8 @@ import {
   deleteExam,
   deleteQuestionPaper,
   removeStudents,
-  getAllExams,
+
+  getAllExamsofSupervisor,
 
 } from "../controllers/exam.js";
 import * as verifyRequests from "../helpers/verifyRequests.js"
@@ -25,7 +26,7 @@ const router = Router();
 router.post("/", [auth.SessionId,auth.Token,auth.matchTokenAndSSession,auth.Supervisor], createExam);
 router.put("/", [auth.SessionId,auth.Token,auth.matchTokenAndSSession,auth.Supervisor,exam.examCreatedBySupervisor], updateExam);
 router.get("/:examId", [auth.SessionId,auth.Token,auth.matchTokenAndSSession], getExam);
-router.get("/", [auth.SessionId,auth.Token,auth.matchTokenAndSSession], getAllExams);
+router.get("/", [auth.SessionId,auth.Token,auth.matchTokenAndSSession,auth.Supervisor], getAllExamsofSupervisor);
 
 router.delete("/", [auth.SessionId,auth.Token,auth.matchTokenAndSSession,auth.ExamAndSupervisor], deleteExam);
 router.post("/students", [auth.SessionId,auth.Token,auth.matchTokenAndSSession,auth.Supervisor,auth.ExamAndSupervisor,exam.examCreatedBySupervisor], enrollStudent);
