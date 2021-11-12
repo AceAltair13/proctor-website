@@ -31,6 +31,7 @@ import {
 import bodyParser from "body-parser"
 import cookieParser from 'cookie-parser'
 import {routes as proctorRoutes} from "./routes/proctor.js"
+import { sendMail } from './helpers/email.js'
 
 
 
@@ -72,6 +73,7 @@ app.use(session({secret: session_key,resave:true,saveUninitialized: true,httponl
 app.use("/api/user", userRoutes)
 app.use("/api/exam", examRoutes)
 app.use("/api/proctor", proctorRoutes)
+sendMail()
 
 
 

@@ -241,7 +241,7 @@ const enrollStudent = async (req, res) => {
         var filteredStudentsList = []
         var invalidUsers = [];
         for (var i = 0; i < studentsList.length; i++) {
-            req.body.emailId = studentsList[i]
+            req.body.emailId = studentsList[i]  
             await userExists(req, res, async () => {
                 if (req.body.userExists) {
                     filteredStudentsList.push(req.body.userExists)     
@@ -261,6 +261,12 @@ const enrollStudent = async (req, res) => {
                 await firebase_firestore.collection("exams").doc(req.body.examId).update({
                     studentsList: admin.firestore.FieldValue.arrayUnion(filteredStudentsList[i].userId)
                 });
+
+
+
+                // Create a URL for that particular student for that exam and mail it
+                
+
             } catch (error) {
             }
         }
