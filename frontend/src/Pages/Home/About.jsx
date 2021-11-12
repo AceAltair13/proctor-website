@@ -1,11 +1,5 @@
 import React from "react";
-import {
-    Grid,
-    Typography,
-    Avatar,
-    Paper,
-    IconButton,
-} from "@mui/material";
+import { Grid, Typography, Avatar, Paper, IconButton } from "@mui/material";
 import { GitHub, LinkedIn } from "@mui/icons-material";
 import RushilPhoto from "../../Assets/Images/rushil.png";
 import TirthPhoto from "../../Assets/Images/tirth.png";

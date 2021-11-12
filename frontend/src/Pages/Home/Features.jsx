@@ -88,7 +88,12 @@ function Features() {
                 >
                     {features.map((feature, index) => (
                         <Grid item md={6} lg={4} key={index}>
-                            <Paper variant="outlined" sx={{ p: 5 }}>
+                            <Paper
+                                variant="outline"
+                                sx={{
+                                    p: 5,
+                                }}
+                            >
                                 <Grid
                                     container
                                     direction="column"
