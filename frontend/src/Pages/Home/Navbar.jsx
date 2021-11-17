@@ -111,7 +111,6 @@ function Navbar() {
         <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton
                 size="large"
-                onClick={() => {}}
                 color="inherit"
                 {...bindTrigger(popupState)}
             >

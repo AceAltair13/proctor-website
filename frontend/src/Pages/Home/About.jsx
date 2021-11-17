@@ -67,10 +67,15 @@ function About() {
                         Komal Patil.
                     </Typography>
                 </Grid>
-                <Grid item sx={{ my: 2 }} spacing={4} container>
+                <Grid item sx={{ my: 2 }} spacing={5} container>
                     {teamMembers.map((member, index) => (
                         <Grid item md={4} key={index}>
-                            <Paper variant="outlined" sx={{ p: 5 }}>
+                            <Paper
+                                variant="outlined"
+                                sx={{
+                                    p: 5,
+                                }}
+                            >
                                 <Grid
                                     direction="column"
                                     alignItems="center"

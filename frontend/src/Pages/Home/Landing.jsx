@@ -52,7 +52,7 @@ function Landing() {
                                 component={Link}
                                 to="/login"
                             >
-                                Get Started with EXAMINATOR
+                                Get Started
                             </Button>
                         </Grid>
                     </Grid>

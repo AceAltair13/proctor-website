@@ -2,7 +2,16 @@ import React from "react";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import theme from "./Themes/theme";
 import { Switch, Route } from "react-router-dom";
-import { Dashboard, Exam, Home, Login, Register } from "./Pages/index";
+import {
+    Dashboard,
+    Exam,
+    Home,
+    Login,
+    Register,
+    MobileExamError,
+    NotFoundError,
+    ExamPermissionError,
+} from "./Pages/index";
 import { SnackbarProvider } from "notistack";
 
 function App() {
@@ -26,8 +35,17 @@ function App() {
                     <Route path="/register">
                         <Register />
                     </Route>
-                    <Route path="/">
+                    <Route path="/error1">
+                        <MobileExamError />
+                    </Route>
+                    <Route path="/error2">
+                        <ExamPermissionError />
+                    </Route>
+                    <Route exact path="/">
                         <Home />
+                    </Route>
+                    <Route>
+                        <NotFoundError />
                     </Route>
                 </Switch>
             </SnackbarProvider>

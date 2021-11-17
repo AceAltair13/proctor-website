@@ -8,6 +8,8 @@ import {
     Box,
     Typography,
     InputAdornment,
+    Backdrop,
+    CircularProgress,
 } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 import LoginIcon from "@mui/icons-material/Login";
@@ -24,6 +26,7 @@ import { useSnackbar } from "notistack";
 function Login() {
     const dispatch = useDispatch();
     const [redirect, setRedirect] = useState(false);
+    const [loading, setLoading] = useState(false);
     const user = useSelector((state) => state.user.value);
     const { enqueueSnackbar } = useSnackbar();
 
@@ -32,31 +35,33 @@ function Login() {
     }
 
     const handleSubmit = (event) => {
+        setLoading(true);
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-
         const email = data.get("email");
         const password = data.get("password");
-
         console.log(email, password);
         const senddata = { emailId: email, password: password };
 
-        axios
-            .post(LOGIN_URL, senddata)
-            .then((res) => {
-                console.log(res.data);
-                if (res.status === 200) {
-                    dispatch(login(res.data));
-                    setRedirect(true);
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-                enqueueSnackbar(err.response.data, {
-                    variant: "error",
-                    autoHideDuration: 3000,
+        setTimeout(() => {
+            axios
+                .post(LOGIN_URL, senddata)
+                .then((res) => {
+                    console.log(res.data);
+                    if (res.status === 200) {
+                        dispatch(login(res.data));
+                        setRedirect(true);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                    enqueueSnackbar(err.response.data, {
+                        variant: "error",
+                        autoHideDuration: 3000,
+                    });
                 });
-            });
+            setLoading(false);
+        }, 1000);
     };
 
     if (redirect) {
@@ -155,6 +160,9 @@ function Login() {
                     </Grid>
                 </Box>
             </Box>
+            <Backdrop open={loading}>
+                <CircularProgress color="warning" />
+            </Backdrop>
         </Container>
     );
 }

@@ -5,22 +5,30 @@ function ExamNavigation() {
     return (
         <Grid container direction="column">
             <Grid item xs>
-                <Typography variant="body1">
+                <Typography variant="body1" fontWeight="fontWeightBold">
                     Question Summary
                 </Typography>
-                <Grid container spacing={2} sx={{maxHeight: "35vh", overflow: "auto", mt: 1}}>
+                <Grid
+                    container
+                    spacing={2}
+                    sx={{ maxHeight: "40vh", overflow: "auto", mt: 1 }}
+                >
                     {Array.from({ length: 50 }, (_, k) => k + 1).map((item) => (
                         <Grid item>
-                            <Button color="error" disableElevation>{item}</Button>
+                            <Button color="error" disableElevation>
+                                {item}
+                            </Button>
                         </Grid>
                     ))}
                 </Grid>
                 <Divider sx={{ my: 2, width: "85%" }} />
             </Grid>
             <Grid item xs>
-                <Typography variant="body1" mb={2}>Legend</Typography>
+                <Typography variant="body1" mb={2} fontWeight="fontWeightBold">
+                    Legend
+                </Typography>
                 <Grid container spacing={1}>
-                    <Grid item container>
+                    <Grid item container alignItems="center">
                         <Grid item xs={4}>
                             <Button
                                 color="error"
@@ -36,7 +44,7 @@ function ExamNavigation() {
                             </Typography>
                         </Grid>
                     </Grid>
-                    <Grid item container>
+                    <Grid item container alignItems="center">
                         <Grid item xs={4}>
                             <Button
                                 color="success"
@@ -50,7 +58,7 @@ function ExamNavigation() {
                             <Typography variant="body1">Attempted</Typography>
                         </Grid>
                     </Grid>
-                    <Grid item container>
+                    <Grid item container alignItems="center">
                         <Grid item xs={4}>
                             <Button color="info" disableElevation disableRipple>
                                 3

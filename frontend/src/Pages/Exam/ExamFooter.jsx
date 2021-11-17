@@ -34,7 +34,7 @@ function ExamFooter() {
                             sx={{ ml: 3 }}
                             endIcon={<ArrowForwardIcon />}
                         >
-                            Next
+                            Save & Next
                         </Button>
                     </Container>
                 </Grid>

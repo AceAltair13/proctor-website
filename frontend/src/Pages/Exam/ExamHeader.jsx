@@ -1,8 +1,57 @@
-import React from "react";
-import { AppBar, Box, Button, Grid, Toolbar, Typography } from "@mui/material";
+import React, { useState } from "react";
+import {
+    AppBar,
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Grid,
+    Toolbar,
+    Typography,
+} from "@mui/material";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 
 function ExamHeader() {
+    const [open, setOpen] = useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const alertDialog = (
+        <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+        >
+            <DialogTitle id="alert-dialog-title">
+                {"Save and exit?"}
+            </DialogTitle>
+            <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    You will not be able to return to this page. Are you sure
+                    you want to save and exit the test?
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleClose} variant="text">
+                    No
+                </Button>
+                <Button onClick={handleClose} variant="text" autoFocus>
+                    Yes
+                </Button>
+            </DialogActions>
+        </Dialog>
+    );
+
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar
@@ -52,13 +101,18 @@ function ExamHeader() {
                             </Grid>
                         </Grid>
                         <Grid item xs={4} textAlign="end">
-                            <Button color="success" size="large">
+                            <Button
+                                color="success"
+                                size="large"
+                                onClick={handleClickOpen}
+                            >
                                 Finish Test
                             </Button>
                         </Grid>
                     </Grid>
                 </Toolbar>
             </AppBar>
+            {alertDialog}
         </Box>
     );
 }

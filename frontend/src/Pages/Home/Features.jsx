@@ -82,14 +82,14 @@ function Features() {
                 <Grid
                     item
                     container
-                    spacing={3}
+                    spacing={5}
                     justifyContent="center"
                     sx={{ mt: 2 }}
                 >
                     {features.map((feature, index) => (
                         <Grid item md={6} lg={4} key={index}>
                             <Paper
-                                variant="outline"
+                                variant="outlined"
                                 sx={{
                                     p: 5,
                                 }}
