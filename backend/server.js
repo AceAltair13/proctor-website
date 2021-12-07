@@ -30,45 +30,42 @@ import {
 
 import bodyParser from "body-parser"
 import cookieParser from 'cookie-parser'
-import {routes as proctorRoutes} from "./routes/proctor.js"
+import { routes as proctorRoutes } from "./routes/proctor.js"
+// import { routes as proctorRoutes } from "./routes/proctor.js"
+import { sendMail } from './helpers/email.js'
 
 
 
-
-
-
-
-
-
+var store = new FirestoreStore({
+    dataset: firebase_firestore,
+    // dataset:new Firestore(),
+    kind: 'session'
+})
 
 const app = express()
 app.use(express.json())
 // app.use(json())
-app.use(cors())
+app.use(cors({ credentials: true }))
 // app.use(bodyParser.json())
 
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 //session use 
-// app.use(session({
-//     store: new FirestoreStore({
-//         dataset: firebase_firestore,
-//         // dataset:new Firestore(),
-//         kind: 'express-sessions'
-//     }),
-//     name: "sessid",
-//     resave: false,
-//     secret: session_key,
-//     resave: false,
-//     saveUninitialized: false,
-//     cookie: {
-//         maxAge: 1000 * 60 * 60 * 2,
-//         sameSite: true,
-//         secure: false
-//     }
-// }))
-app.use(session({secret: session_key,resave:true,saveUninitialized: true,httponly:false,cookie: {}}))
+app.use(session({
+    store: store,
+    name: "session",
+    resave: false,
+    secret: session_key,
+    saveUninitialized: true,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 2,
+        sameSite: true,
+        secure: true,
+        HttpOnly: true
+    }
+}))
+// app.use(session({secret: session_key,resave:true,saveUninitialized: true,httponly:false,cookie: {}}))
 app.use("/api/user", userRoutes)
 app.use("/api/exam", examRoutes)
 app.use("/api/proctor", proctorRoutes)

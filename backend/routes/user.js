@@ -6,12 +6,13 @@ import {
   registerSupervisor,
   logout
 } from "../controllers/user.js";
+import * as auth from "../helpers/auth.js"
 const router = Router();
 
 router.post("/register-student", userExists, registerStudent);
 router.post("/register-supervisor", userExists, registerSupervisor);
 router.post("/login", userExists, login);
-router.post("/logout", logout);
+router.post("/logout",auth.Token, logout);
 
 // router.put("/update-supervisor",registerSupervisor)
 // router.put("/update-student",registerStudent)

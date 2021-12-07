@@ -13,6 +13,7 @@ export const SessionId = (req,res,next)=>{
     }
 }
 export const Token = (req, res, next) => {
+        console.log(req)
         const authHeader = req.headers.token
         if (authHeader) {
             // decrypt the token

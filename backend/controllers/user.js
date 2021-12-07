@@ -8,9 +8,14 @@ import { userExists } from "../helpers/users.js";
 import jwt from "jsonwebtoken";
 import { uid } from "../helpers/other.js";
 import session from "express-session";
-import e from "express";
 
 
+const sess = (userId, sessionid) => {
+  const userid = userId
+  const session = sessionid
+}
+
+var session_id;
 const registerStudent = async (req, res) => {
   try {
     if (req.body.userExists !== false) {
@@ -109,12 +114,15 @@ const login = async (req, res) => {
         expiresIn: "1d",
       }
     );
+
     req.session.userId = user.userId;
     const sessionid = req.session.id;
     req.session.sessid = sessionid;
-    req.session.save();
-    console.log("logon sai",req.session.userId,req.session.sessid);
+    session_id = sessionid;
+    sess(req.session.userId, sessionid)
+    req.session.save()
     await firebase_firestore.collection("users").doc(user.userId).update({ sessionId: sessionid });
+    // await firebase_firestore.collection("users").doc(user.userId).update({ sessionId: sessionid });
     // await firebase_firestore.collection("users").doc(user.userId).update({sessionId:sessionId});
 
     // encrypt the token here
@@ -140,35 +148,26 @@ const login = async (req, res) => {
   }
 };
 
-const logout = (req, res) => {
-  console.log("logout sai",req);
-  console.log(Object.keys(req.sessionStore.sessions).length);
-
-  for(var i=0;i<Object.keys(req.sessionStore.sessions).length;i++)
-  {
-    var se = JSON.parse(Object.values(req.sessionStore.sessions)[i]);
-    if(se.userId!==undefined && se.sessid!==undefined)
-    {
-      break;
-    }
-  }
-  // console.log(Object.keys(req.sessionStore.sessions).length)
-  // var se;
-  // try {
-  //   se = JSON.parse(Object.values(req.sessionStore.sessions)[0])
-
-  // } catch (error) {
-  //   return res.status(401).json("No user was logged in")
-
+const logout = async (req, res) => {
+  // console.log(req)
+  // console.log(req.sessid)
+  console.log(req.headers.token)
+  
+  // const session_data= await firebase_firestore.collection("session").doc(session_id).get()
+  // console.log("session data",JSON.parse(session_data.data().data).sessid)
+  // if (JSON.parse(session_data.data().data).sessid)
+  // {
+  //   await firebase_firestore.collection("users").doc(JSON.parse(session_data.data().data).userId).update({ sessionId: "" });
+  //   await firebase_firestore.collection("session").doc(JSON.parse(session_data.data().data).sessid).delete()
+  //   return res.status(200).json("Logged out successfully");
   // }
-  console.log("logout sai",se.userId, se.sessid)
-  if (se.userId && se.sessid) {
-    firebase_firestore.collection("users").doc(se.userId).update({ sessionId: "" });
-    req.session.destroy((err) => {
-      return res.status(400).json(err);
-    });
+  if (req.headers.token) {
+    await firebase_firestore.collection("users").doc(req.user.userId).update({ sessionId: "" });
+    // await firebase_firestore.collection("session").doc(JSON.parse(session_data.data().data).sessid).delete()
     return res.status(200).json("Logged out successfully");
-  } else {
+
+  }
+  else {
     return res.status(401).json("No user was logged in")
   }
 

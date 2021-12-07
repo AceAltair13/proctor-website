@@ -18,11 +18,10 @@ import LockIcon from "@mui/icons-material/Lock";
 import { Link as _Link, Redirect } from "react-router-dom";
 import Logo from "../../Components/Logo";
 import axios from "axios";
-import { LOGIN_URL } from "../../Constants/urls";
+import { LOGIN_URL,cookies} from "../../Constants/urls";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../Features/userSlice";
 import { useSnackbar } from "notistack";
-
 function Login() {
     const dispatch = useDispatch();
     const [redirect, setRedirect] = useState(false);
@@ -44,16 +43,24 @@ function Login() {
         const senddata = { emailId: email, password: password };
 
         setTimeout(() => {
-            axios
-                .post(LOGIN_URL, senddata)
+            // axios
+            //     .post(LOGIN_URL, senddata)
+            //     .then((res) => {
+            //         console.log(res.data);
+            //         if (res.status === 200) {
+            //             dispatch(login(res.data));
+            //             setRedirect(true);
+            //         }
+            //     })
+            axios.post(LOGIN_URL, senddata)
                 .then((res) => {
+                    cookies.set('token', res.data.accessToken, { path: '/' });
                     console.log(res.data);
                     if (res.status === 200) {
                         dispatch(login(res.data));
                         setRedirect(true);
                     }
-                })
-                .catch((err) => {
+                }).catch((err) => {
                     console.log(err);
                     enqueueSnackbar(err.response.data, {
                         variant: "error",
