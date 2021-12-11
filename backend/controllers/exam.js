@@ -396,6 +396,75 @@ const getQuestionPaper = async (req, res) => {
 
 }
 
+const receiveAnswer = async(req,res)=>{
+    try{
+        const exam = await firebase_firestore.collection("exams").doc(req.body.examId).get();
+        if(exam){
+            if(!examAccess(exam,req.user.userId)){
+                return res.status(400).json("You are not allowed to access the exam")
+
+            }
+            // GET FULL QUESTION PAPER
+        
+            const questionPaperDoc = await firebase_firestore.collection("questionPapers").doc(exam.data()["questionPaperId"]).get();
+            const questionPaper = questionPaperDoc.data()["questionAnswers"];
+            console.log(questionPaper[0].options)
+            var totalMarks = 0;
+            const answers = req.body.answers;
+            console.log("answers length "+answers.length)
+            console.log("answers server length "+questionPaper.length)
+
+            var submitCount = 0;
+            
+            try {
+                for(var i=0;i<answers.length;i++){
+                    // for(var j=0;j< questionPaper[i]["options"];j++){
+                    //     if()
+                    // } 
+                    if(answers[i]["userSelection"]){
+                        submitCount++;
+                        console.log("here 1")
+                        console.log("questionId "+answers[i].questionId)
+                        console.log("questionId questPaper "+questionPaper[i].questionId)
+
+                        console.log("user Select "+questionPaper[i].options[answers[i]["userSelection"]]["isCorrect"])
+                        if(questionPaper[i].options[answers[i]["userSelection"]]["isCorrect"] === true && questionPaper[i].questionId === answers[i].questionId ){
+                            totalMarks = totalMarks+questionPaper[i]["weightage"]
+                        }
+                    }
+                }
+                console.log("marks scored "+totalMarks);
+                if(submitCount == questionPaper.length){
+                    
+                    console.log("here 2")
+                    req.body.answers.marksScored = totalMarks;
+                    // await firebase_firestore.collection("responses").doc(req.body.examId).create(req.body.answers)
+
+                    await firebase_firestore.collection("exams").doc(req.body.examId).collection("responses").doc(req.user.userId).create(req.body.answers)
+                }else{
+                    return res.status(400).json("Attempt all questions and then submit")
+                }
+
+            } catch (error) {
+                return res.status(400).json("Something went wrong while submiting the response")
+            }
+
+
+
+
+
+
+
+            return res.status(200).json("You scored "+totalMarks)
+
+        }else{
+            return res.status(404).json("Exam doesn't exists")
+        }
+    }catch(err){
+        return res.status(500).json("Something went wrong. Try again later.")
+    }
+}
+
 export {
     createExam,
     updateExam,
@@ -407,5 +476,6 @@ export {
     getQuestionPaper,
     deleteQuestionPaper,
     removeStudents,
-    getAllExamsofSupervisor
+    getAllExamsofSupervisor,
+    receiveAnswer
 }

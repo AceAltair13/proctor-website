@@ -43,16 +43,9 @@ function Login() {
         const senddata = { emailId: email, password: password };
 
         setTimeout(() => {
-            // axios
-            //     .post(LOGIN_URL, senddata)
-            //     .then((res) => {
-            //         console.log(res.data);
-            //         if (res.status === 200) {
-            //             dispatch(login(res.data));
-            //             setRedirect(true);
-            //         }
-            //     })
-            axios.post(LOGIN_URL, senddata)
+
+            axios
+                .post(LOGIN_URL, senddata)
                 .then((res) => {
                     cookies.set('token', res.data.accessToken, { path: '/' });
                     console.log(res.data);

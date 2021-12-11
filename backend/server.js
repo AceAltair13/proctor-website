@@ -45,7 +45,13 @@ var store = new FirestoreStore({
 const app = express()
 app.use(express.json())
 // app.use(json())
-app.use(cors({ credentials: true }))
+app.use(cors({
+    origin:"http://localhost:3000",
+    methods:"GET,POST,DELETE,PUT",
+    credentials:true,
+    exposedHeaders:["set-cookie"]
+}
+))
 // app.use(bodyParser.json())
 
 // app.use(bodyParser.urlencoded({ extended: true }));
@@ -65,6 +71,7 @@ app.use(session({
         HttpOnly: true
     }
 }))
+
 // app.use(session({secret: session_key,resave:true,saveUninitialized: true,httponly:false,cookie: {}}))
 app.use("/api/user", userRoutes)
 app.use("/api/exam", examRoutes)

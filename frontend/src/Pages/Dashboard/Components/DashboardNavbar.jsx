@@ -29,16 +29,19 @@ function DashboardNavbar(props) {
     const dispatch = useDispatch();
     const [redirect, setRedirect] = useState(false);
 
+    // const logoutUser = () => {
+    //     axios
+    //         .post(LOGOUT_URL, {}, config)
+    //         .then((res) => {
+    //             console.log(res.data);
+    //             if (res.status === 200) {
+    //                 dispatch(logout());
+    //                 setRedirect(true);
+    //             }
+    //         })
+    //         .catch((err) => alert(err.response.data));
+    // };
     const logoutUser = () => {
-        // axios
-        //     .post(LOGOUT_URL)
-        //     .then((res) => {
-        //         console.log(res.data);
-        //         if (res.status === 200) {
-        //             dispatch(logout());
-        //             setRedirect(true);
-        //         }
-        //     })
         console.log(cookies.get('token'))
         let config = {
             headers: {
@@ -54,24 +57,7 @@ function DashboardNavbar(props) {
                     setRedirect(true);
                 }
             })
-            .catch((err) => alert(err.response.data));
-    };
-    // const logoutUser = () => {
-    //     console.log(cookies.get('token'))
-    //     let config = {
-    //         headers: {
-    //             'token': cookies.get('token'),
-    //         }
-    //     }
-    //     axios
-    //         .post(LOGOUT_URL, {}, config)
-    //         .then((res) => {
-    //             console.log(res.data);
-    //             if (res.status === 200) {
-    //                 dispatch(logout());
-    //                 setRedirect(true);
-    //             }
-    //         })
+        }
 
         const popupState = usePopupState({
             variant: "popover",

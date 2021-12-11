@@ -77,6 +77,7 @@ export const examAccess = (exam,userId)=>{
             break;
         }
     }
+    console.log("in user eligible")
     return userEligible
 }
 
@@ -121,6 +122,10 @@ export const questionPaperFromExam = async(examId)=>{
 
          return false
     }
+}
+
+export const calculateMarks = async ()=>{
+
 }
 
 export const isStudentEnrolled = async (req, res, next) => {

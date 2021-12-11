@@ -90,17 +90,25 @@ const login = async (req, res) => {
     if (req.body.userExists === false) {
       return res.status(400).json("User does not exists");
     }
-    if (req.body.userExists.sessionId != "") {
+
+    // if (req.body.userExists.sessionId != "") {
+    //   return res.status(400).json("Account is logged in already")
+
+    // }
+  
+    const sessionExists = await (await firebase_firestore.collection("users").doc(req.body.userExists.userId).get()).data()["sessionId"];
+    console.log(sessionExists)
+    if(sessionExists === true){
       return res.status(400).json("Account is logged in already")
 
     }
+  
     const user = req.body.userExists;
-    const hasedPassword = CryptoJs.AES.decrypt(user.password, config.passKey);
-    const OriginalPassword = hasedPassword.toString(CryptoJs.enc.Utf8);
+    const hashedPassword = CryptoJs.AES.decrypt(user.password, config.passKey);
+    const OriginalPassword = hashedPassword.toString(CryptoJs.enc.Utf8);
     if (OriginalPassword !== req.body.password) {
       return res.status(401).json("Wrong Password");
     }
-
     const accessToken = jwt.sign(
       {
         userId: user.userId,
@@ -115,13 +123,14 @@ const login = async (req, res) => {
       }
     );
 
-    req.session.userId = user.userId;
-    const sessionid = req.session.id;
-    req.session.sessid = sessionid;
-    session_id = sessionid;
-    sess(req.session.userId, sessionid)
-    req.session.save()
-    await firebase_firestore.collection("users").doc(user.userId).update({ sessionId: sessionid });
+
+    // req.session.userId = user.userId;
+    // const sessionid = req.session.id;
+    // req.session.sessid = sessionid;
+    // session_id = sessionid;
+    // sess(req.session.userId, sessionid)
+    // req.session.save()
+    await firebase_firestore.collection("users").doc(user.userId).update({ sessionId: true });
     // await firebase_firestore.collection("users").doc(user.userId).update({ sessionId: sessionid });
     // await firebase_firestore.collection("users").doc(user.userId).update({sessionId:sessionId});
 
@@ -135,9 +144,19 @@ const login = async (req, res) => {
     //     user
     // }, config.jwt_passKey, { expiresIn: "3d" })
 
-    const { password, ...others } = user;
-    res.locals = req.session.userId;
-    res.status(200).json({
+    const { password,isSupervisor,isStudent,isAdmin, ...others } = user;
+    var userType;
+    if(user.isSupervisor){
+      userType = "supervisor"
+    }else if(user.isStudent){
+      userType = "student"
+    }else if(user.isAdmin){
+      userType = "admin"
+    }
+    others.role = userType;
+    // res.locals = req.session.userId;
+    req.user = req.body.userExists
+    return res.status(200).json({
       ...others,
       //   accessTokenEncrypt,
       accessToken,
@@ -162,8 +181,10 @@ const logout = async (req, res) => {
   //   return res.status(200).json("Logged out successfully");
   // }
   if (req.headers.token) {
-    await firebase_firestore.collection("users").doc(req.user.userId).update({ sessionId: "" });
+    // console.log("userId while logging out ",req.user)
+    await firebase_firestore.collection("users").doc(req.user.userId).update({ sessionId: false });
     // await firebase_firestore.collection("session").doc(JSON.parse(session_data.data().data).sessid).delete()
+
     return res.status(200).json("Logged out successfully");
 
   }
@@ -174,3 +195,4 @@ const logout = async (req, res) => {
 };
 
 export { registerStudent, registerSupervisor, login, logout };
+  
