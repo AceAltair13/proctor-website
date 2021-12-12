@@ -16,6 +16,7 @@ export const Token = (req, res, next) => {
      
         const authHeader = req.headers.token
         if (authHeader) {
+           
             // decrypt the token
             // const authHeaderDecrypt = CryptoJs.AES.decrypt(authHeader, config.token_encrypt_key);
             // console.log(authHeaderDecrypt)
@@ -30,10 +31,12 @@ export const Token = (req, res, next) => {
                 next()
             })
         } else {
-            return res.status(401).json("No token provided")
+            return res.status(412).json("No token provided")
 
         }    
 }
+
+
 
 export const matchTokenAndSSession = (req,res,next)=>{
     if (req.session.userId === req.user.userId) {

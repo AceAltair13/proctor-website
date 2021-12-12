@@ -96,12 +96,12 @@ const login = async (req, res) => {
 
     // }
   
-    const sessionExists = await (await firebase_firestore.collection("users").doc(req.body.userExists.userId).get()).data()["sessionId"];
-    console.log(sessionExists)
-    if(sessionExists === true){
-      return res.status(400).json("Account is logged in already")
+    // const sessionExists = await (await firebase_firestore.collection("users").doc(req.body.userExists.userId).get()).data()["sessionId"];
+    // console.log(sessionExists)
+    // if(sessionExists === true){
+    //   return res.status(400).json("Account is logged in already")
 
-    }
+    // }
   
     const user = req.body.userExists;
     const hashedPassword = CryptoJs.AES.decrypt(user.password, config.passKey);
@@ -119,7 +119,7 @@ const login = async (req, res) => {
       },
       config.jwt_passKey,
       {
-        expiresIn: "1d",
+        expiresIn: "40s",
       }
     );
 
@@ -130,7 +130,13 @@ const login = async (req, res) => {
     // session_id = sessionid;
     // sess(req.session.userId, sessionid)
     // req.session.save()
-    await firebase_firestore.collection("users").doc(user.userId).update({ sessionId: true });
+
+
+
+    // await firebase_firestore.collection("users").doc(user.userId).update({ sessionId: true });
+
+
+
     // await firebase_firestore.collection("users").doc(user.userId).update({ sessionId: sessionid });
     // await firebase_firestore.collection("users").doc(user.userId).update({sessionId:sessionId});
 
@@ -182,7 +188,7 @@ const logout = async (req, res) => {
   // }
   if (req.headers.token) {
     // console.log("userId while logging out ",req.user)
-    await firebase_firestore.collection("users").doc(req.user.userId).update({ sessionId: false });
+    // await firebase_firestore.collection("users").doc(req.user.userId).update({ sessionId: false });
     // await firebase_firestore.collection("session").doc(JSON.parse(session_data.data().data).sessid).delete()
 
     return res.status(200).json("Logged out successfully");
@@ -194,5 +200,10 @@ const logout = async (req, res) => {
 
 };
 
-export { registerStudent, registerSupervisor, login, logout };
+
+const refreshToken = async(req,res)=>{
+
+}
+
+export { registerStudent, registerSupervisor, login, logout, refreshToken };
   

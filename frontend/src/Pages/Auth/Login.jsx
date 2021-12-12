@@ -47,7 +47,11 @@ function Login() {
             axios
                 .post(LOGIN_URL, senddata)
                 .then((res) => {
-                    cookies.set('token', res.data.accessToken, { path: '/' });
+                    // Sset USER_EMAIL-examinatorToken in localStorage
+                    // localStorage.setItem(res.data.userId+"-token",res.data.accessToken)
+                    localStorage.setItem("token",res.data.accessToken)
+
+                    // cookies.set('token', res.data.accessToken, { path: "/"});
                     console.log(res.data);
                     if (res.status === 200) {
                         dispatch(login(res.data));

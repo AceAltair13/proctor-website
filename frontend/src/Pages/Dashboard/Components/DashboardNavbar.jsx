@@ -45,7 +45,9 @@ function DashboardNavbar(props) {
         console.log(cookies.get('token'))
         let config = {
             headers: {
-                'token': cookies.get('token'),
+                // 'token': cookies.get('token'),
+                'token': localStorage.getItem('token'),
+
             }
         }
         axios
@@ -53,6 +55,9 @@ function DashboardNavbar(props) {
             .then((res) => {
                 console.log(res.data);
                 if (res.status === 200) {
+                    // delete USER_EMAIL-examinatorToken from localStorage
+                    localStorage.removeItem("token")
+                    // cookies.remove('token', res.data.accessToken, { path: "/"+res.data.userId+"/" })
                     dispatch(logout());
                     setRedirect(true);
                 }
