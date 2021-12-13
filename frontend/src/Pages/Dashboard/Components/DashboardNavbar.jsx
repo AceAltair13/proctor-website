@@ -42,7 +42,8 @@ function DashboardNavbar(props) {
     //         .catch((err) => alert(err.response.data));
     // };
     const logoutUser = () => {
-        console.log(cookies.get('token'))
+        // console.log(cookies.get('token'))
+        console.log(localStorage.getItem('token'));
         let config = {
             headers: {
                 // 'token': cookies.get('token'),

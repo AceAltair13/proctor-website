@@ -78,7 +78,6 @@ app.use("/api/exam", examRoutes)
 app.use("/api/proctor", proctorRoutes)
 
 
-
 app.listen(port, () => {
     console.log(`Server is running on ${url}`);
 })

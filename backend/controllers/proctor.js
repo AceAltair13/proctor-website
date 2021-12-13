@@ -1,31 +1,38 @@
-import { firebase_firestore, firebase_storage } from "../db.js"
+import { storageRef } from "../db.js"
 import { examAccess } from "../helpers/exams.js"
-import multer from "multer"
-import fs from 'fs'
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import fs from "fs"
 
 const postMalpractice = async (req, res) => {
-    // console.log(req.user)
-    // console.log(req.headers.token)
-    // const dir = "./" + req.headers.token
-    // if (!fs.existsSync(dir)) {
-    //     fs.mkdirSync(dir);
+    const metadata = { contentType: 'image/jpeg; charset=utf-8' }
+    const folder = req.user.userId + "/" + req.file.filename
+    const storageRef_1 = ref(storageRef, folder);
+    fs.readFile(req.file.path, function (err, buffer) {
+        uploadBytes(storageRef_1, buffer, metadata).then((snapshot) => {
+            console.log('file is uploaded successfully!');
+        });
+    })
+    getDownloadURL(ref(storageRef_1))
+        .then((url) => {
+            console.log("download url", url)
+        })
+        .catch((error) => {
+            console.log(error)
+        });
+    res.status(200).json("file is uploaded successfully")
+    fs.unlink(req.file.path, (err) => {
+        if (err) throw err;
+        console.log('done');
+    });
+    res.end()
+    // try {
+    //     exam = await firebase_firestore.collection("users").doc(req.user.userId).get()
+    // } catch (error) {
+    //     return res.status(400).json("Exam doesn't exists")
     // }
-    // // await firebase_storage.bucket().file(req.file.originalname).createWriteStream().end(req.file.buffer)
-    // console.log(req)
-    // console.log(req.file, req.body)
-    // res.status(200).json("file is uploaded successfully")
-    // res.end()
-    // // try {
-    // //     exam = await firebase_firestore.collection("users").doc(req.user.userId).get()
-    // // } catch (error) {
-    // //     return res.status(400).json("Exam doesn't exists")
-    // // }
-    // // if(examAccess(exam,req.user.userId)){
+    // if(examAccess(exam,req.user.userId)){
 
     // // }
-
-    let img = req.file
-
 }
 
 export {

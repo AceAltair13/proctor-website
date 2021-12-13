@@ -24,6 +24,7 @@ export const Token = (req, res, next) => {
             // console.log(authHeaderDecryptString)
             jwt.verify(authHeader, config.jwt_passKey, (err, user) => {
                 if (err) {
+                    console.log(err)
                     return res.status(403).json("invalid token")
                 }
                 req.user = user

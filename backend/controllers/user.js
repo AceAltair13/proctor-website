@@ -1,4 +1,4 @@
-import { firebase_storage, firebase_firestore } from "../db.js";
+import {firebase_firestore } from "../db.js";
 import * as config from "../config.js";
 import CryptoJs from "crypto-js";
 import User from "../models/User.js";
@@ -7,15 +7,7 @@ import Supervisor from "../models/Supervisor.js";
 import { userExists } from "../helpers/users.js";
 import jwt from "jsonwebtoken";
 import { uid } from "../helpers/other.js";
-import session from "express-session";
 
-
-const sess = (userId, sessionid) => {
-  const userid = userId
-  const session = sessionid
-}
-
-var session_id;
 const registerStudent = async (req, res) => {
   try {
     if (req.body.userExists !== false) {
@@ -95,14 +87,14 @@ const login = async (req, res) => {
     //   return res.status(400).json("Account is logged in already")
 
     // }
-  
+
     // const sessionExists = await (await firebase_firestore.collection("users").doc(req.body.userExists.userId).get()).data()["sessionId"];
     // console.log(sessionExists)
     // if(sessionExists === true){
     //   return res.status(400).json("Account is logged in already")
 
     // }
-  
+
     const user = req.body.userExists;
     const hashedPassword = CryptoJs.AES.decrypt(user.password, config.passKey);
     const OriginalPassword = hashedPassword.toString(CryptoJs.enc.Utf8);
@@ -116,10 +108,12 @@ const login = async (req, res) => {
         isSupervisor: user.isSupervisor ?? false,
         isAdmin: user.isAdmin ?? false,
         emailId: user.emailId,
+        firstName:user.firstName,
+        lastName:user.lastName
       },
       config.jwt_passKey,
       {
-        expiresIn: "40s",
+        expiresIn: "1d",
       }
     );
 
@@ -150,13 +144,13 @@ const login = async (req, res) => {
     //     user
     // }, config.jwt_passKey, { expiresIn: "3d" })
 
-    const { password,isSupervisor,isStudent,isAdmin, ...others } = user;
+    const { password, isSupervisor, isStudent, isAdmin, ...others } = user;
     var userType;
-    if(user.isSupervisor){
+    if (user.isSupervisor) {
       userType = "supervisor"
-    }else if(user.isStudent){
+    } else if (user.isStudent) {
       userType = "student"
-    }else if(user.isAdmin){
+    } else if (user.isAdmin) {
       userType = "admin"
     }
     others.role = userType;
@@ -174,10 +168,10 @@ const login = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-  // console.log(req)
+  console.log(req)
   // console.log(req.sessid)
   console.log(req.headers.token)
-  
+
   // const session_data= await firebase_firestore.collection("session").doc(session_id).get()
   // console.log("session data",JSON.parse(session_data.data().data).sessid)
   // if (JSON.parse(session_data.data().data).sessid)
@@ -201,9 +195,8 @@ const logout = async (req, res) => {
 };
 
 
-const refreshToken = async(req,res)=>{
+const refreshToken = async (req, res) => {
 
 }
 
 export { registerStudent, registerSupervisor, login, logout, refreshToken };
-  
