@@ -14,6 +14,7 @@ import {
 } from "./Pages/index";
 import { SnackbarProvider } from "notistack";
 import { useSelector } from "react-redux";
+import { SnackbarUtilsConfigurator } from "./Utils/SnackBarUtils";
 
 function App() {
     const user = useSelector((state) => state.user.currentUser);
@@ -24,6 +25,7 @@ function App() {
                 maxSnack={3}
                 anchorOrigin={{ horizontal: "center", vertical: "top" }}
             >
+                <SnackbarUtilsConfigurator />
                 <CssBaseline />
                 <Switch>
                     <Route path="/dashboard">

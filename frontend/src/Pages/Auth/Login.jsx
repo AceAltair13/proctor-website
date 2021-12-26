@@ -9,17 +9,19 @@ import {
     Typography,
     Backdrop,
     CircularProgress,
+    Card,
+    Avatar,
 } from "@mui/material";
 import { Link as _Link } from "react-router-dom";
 import Logo from "../../Components/Logo";
 import { useDispatch, useSelector } from "react-redux";
-import { useSnackbar } from "notistack";
 import { login } from "../../Features/apiCalls";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import BackgroundImage from "../../Assets/Images/cubes.png";
 
 function Login() {
     const dispatch = useDispatch();
-    const { enqueueSnackbar } = useSnackbar();
-    const { isFetching, error, errorMsg } = useSelector((state) => state.user);
+    const { isFetching } = useSelector((state) => state.user);
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -32,76 +34,92 @@ function Login() {
     };
 
     return (
-        <Container component="main" maxWidth="xs">
-            <Box
-                sx={{
-                    marginTop: 8,
-                    paddingY: 2,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                }}
-            >
-                <Logo variant="h4" />
-                <Typography variant="h6">Sign In</Typography>
-                <Box
-                    component="form"
-                    noValidate
-                    onSubmit={handleSubmit}
-                    sx={{ mt: 3 }}
-                >
-                    <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                            <TextField
-                                required
-                                fullWidth
-                                id="email"
-                                label="Email Address"
-                                name="email"
-                                autoComplete="email"
-                                type="email"
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                required
-                                fullWidth
-                                name="password"
-                                label="Password"
-                                type="password"
-                                id="password"
-                                autoComplete="new-password"
-                            />
-                        </Grid>
-                    </Grid>
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        size="large"
-                        disabled={isFetching}
-                        sx={{ mt: 3, mb: 2 }}
+        <Box
+            component="main"
+            sx={{
+                height: "100vh",
+                display: "flex",
+                justifyContent: "center",
+                backgroundColor: "primary.dark",
+                backgroundImage: `url(${BackgroundImage})`,
+            }}
+        >
+            <Container maxWidth="xs">
+                <Card sx={{ p: 3, mt: 10 }} elevation={4}>
+                    <Box
+                        sx={{
+                            paddingY: 2,
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                        }}
                     >
-                        Sign In To Examinator
-                    </Button>
-                    <Grid container justifyContent="flex-end">
-                        <Grid item>
-                            <Link
-                                variant="body2"
-                                component={_Link}
-                                to="/register"
-                                underline="hover"
+                        <Avatar sx={{ m: 1, bgcolor: "secondary.dark" }}>
+                            <LockOutlinedIcon />
+                        </Avatar>
+                        <Logo variant="h4" />
+                        <Typography variant="h6">Sign In</Typography>
+                        <Box
+                            component="form"
+                            noValidate
+                            onSubmit={handleSubmit}
+                            sx={{ mt: 3 }}
+                        >
+                            <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        required
+                                        fullWidth
+                                        id="email"
+                                        label="Email Address"
+                                        name="email"
+                                        autoComplete="email"
+                                        type="email"
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        required
+                                        fullWidth
+                                        name="password"
+                                        label="Password"
+                                        type="password"
+                                        id="password"
+                                        autoComplete="new-password"
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                size="large"
+                                color="success"
+                                disabled={isFetching}
+                                sx={{ mt: 3, mb: 2 }}
                             >
-                                Don't have an account? Register here
-                            </Link>
-                        </Grid>
-                    </Grid>
-                </Box>
-            </Box>
+                                Sign In To Examinator
+                            </Button>
+                            <Grid container justifyContent="flex-end">
+                                <Grid item>
+                                    <Link
+                                        variant="body2"
+                                        component={_Link}
+                                        to="/register"
+                                        underline="hover"
+                                    >
+                                        Don't have an account? Register here
+                                    </Link>
+                                </Grid>
+                            </Grid>
+                        </Box>
+                    </Box>
+                </Card>
+            </Container>
             <Backdrop open={isFetching}>
                 <CircularProgress color="warning" />
             </Backdrop>
-        </Container>
+        </Box>
     );
 }
 

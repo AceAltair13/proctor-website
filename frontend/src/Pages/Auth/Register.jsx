@@ -8,12 +8,8 @@ import {
     Grid,
     Box,
     Typography,
-    InputAdornment,
+    Avatar,
 } from "@mui/material";
-import EmailIcon from "@mui/icons-material/Email";
-import LockIcon from "@mui/icons-material/Lock";
-import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
-import SchoolIcon from "@mui/icons-material/School";
 import { Link as _Link, Redirect } from "react-router-dom";
 import Logo from "../../Components/Logo";
 import axios from "axios";
@@ -22,6 +18,7 @@ import {
     SUPERVISOR_REGISTER_URL,
 } from "../../Constants/urls";
 import { useSelector } from "react-redux";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
 const roles = [
     {
@@ -119,13 +116,15 @@ export default function Register() {
         <Container component="main" maxWidth="xs">
             <Box
                 sx={{
-                    marginTop: { xs: 0, md: 8 },
                     paddingY: 2,
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
                 }}
             >
+                <Avatar sx={{ m: 1, bgcolor: "secondary.dark" }}>
+                    <LockOutlinedIcon />
+                </Avatar>
                 <Logo variant="h4" />
                 <Typography variant="h6">Sign Up</Typography>
                 <Box
@@ -164,13 +163,6 @@ export default function Register() {
                                 label="Email Address"
                                 name="email"
                                 autoComplete="email"
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <EmailIcon />
-                                        </InputAdornment>
-                                    ),
-                                }}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -182,13 +174,6 @@ export default function Register() {
                                 type="password"
                                 id="password"
                                 autoComplete="new-password"
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <LockIcon />
-                                        </InputAdornment>
-                                    ),
-                                }}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -200,13 +185,6 @@ export default function Register() {
                                 label="Re-Enter Password"
                                 type="password"
                                 id="reenter-password"
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <LockIcon />
-                                        </InputAdornment>
-                                    ),
-                                }}
                                 helperText={error[1]}
                             />
                         </Grid>
@@ -218,13 +196,6 @@ export default function Register() {
                                 label="Phone Number"
                                 type="tel"
                                 id="phone"
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <LocalPhoneIcon />
-                                        </InputAdornment>
-                                    ),
-                                }}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -237,13 +208,6 @@ export default function Register() {
                                 label="Role"
                                 value={role}
                                 onChange={handleChange}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <SchoolIcon />
-                                        </InputAdornment>
-                                    ),
-                                }}
                             >
                                 {roles.map((option) => (
                                     <MenuItem
