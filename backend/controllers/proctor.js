@@ -12,13 +12,15 @@ const postMalpractice = async (req, res) => {
             console.log('file is uploaded successfully!');
         });
     })
-    getDownloadURL(ref(storageRef_1))
+
+    await getDownloadURL(ref(storageRef_1))
         .then((url) => {
             console.log("download url", url)
         })
         .catch((error) => {
             console.log(error)
         });
+
     res.status(200).json("file is uploaded successfully")
     fs.unlink(req.file.path, (err) => {
         if (err) throw err;

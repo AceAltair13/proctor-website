@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
     Container,
     Button,
@@ -7,70 +7,29 @@ import {
     Grid,
     Box,
     Typography,
-    InputAdornment,
     Backdrop,
     CircularProgress,
 } from "@mui/material";
-import GoogleIcon from "@mui/icons-material/Google";
-import LoginIcon from "@mui/icons-material/Login";
-import EmailIcon from "@mui/icons-material/Email";
-import LockIcon from "@mui/icons-material/Lock";
-import { Link as _Link, Redirect } from "react-router-dom";
+import { Link as _Link } from "react-router-dom";
 import Logo from "../../Components/Logo";
-import axios from "axios";
-import { LOGIN_URL,cookies} from "../../Constants/urls";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../../Features/userSlice";
 import { useSnackbar } from "notistack";
+import { login } from "../../Features/apiCalls";
+
 function Login() {
     const dispatch = useDispatch();
-    const [redirect, setRedirect] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const user = useSelector((state) => state.user.value);
     const { enqueueSnackbar } = useSnackbar();
-
-    if (user) {
-        return <Redirect to="/dashboard" />;
-    }
+    const { isFetching, error, errorMsg } = useSelector((state) => state.user);
 
     const handleSubmit = (event) => {
-        setLoading(true);
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         const email = data.get("email");
         const password = data.get("password");
         console.log(email, password);
         const senddata = { emailId: email, password: password };
-
-        setTimeout(() => {
-
-            axios
-                .post(LOGIN_URL, senddata)
-                .then((res) => {
-                    // Sset USER_EMAIL-examinatorToken in localStorage
-                    // localStorage.setItem(res.data.userId+"-token",res.data.accessToken)
-                    localStorage.setItem("token",res.data.accessToken)
-
-                    // cookies.set('token', res.data.accessToken, { path: "/"});
-                    console.log(res.data);
-                    if (res.status === 200) {
-                        dispatch(login(res.data));
-                        setRedirect(true);
-                    }
-                }).catch((err) => {
-                    console.log(err);
-                    enqueueSnackbar(err.response.data, {
-                        variant: "error",
-                        autoHideDuration: 3000,
-                    });
-                });
-            setLoading(false);
-        }, 1000);
+        login(dispatch, senddata);
     };
-
-    if (redirect) {
-        return <Redirect to="/dashboard" />;
-    }
 
     return (
         <Container component="main" maxWidth="xs">
@@ -101,13 +60,6 @@ function Login() {
                                 name="email"
                                 autoComplete="email"
                                 type="email"
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <EmailIcon />
-                                        </InputAdornment>
-                                    ),
-                                }}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -119,13 +71,6 @@ function Login() {
                                 type="password"
                                 id="password"
                                 autoComplete="new-password"
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <LockIcon />
-                                        </InputAdornment>
-                                    ),
-                                }}
                             />
                         </Grid>
                     </Grid>
@@ -134,19 +79,8 @@ function Login() {
                         fullWidth
                         variant="contained"
                         size="large"
-                        sx={{ mt: 3 }}
-                        startIcon={<GoogleIcon />}
-                        color="error"
-                    >
-                        Sign In With Google
-                    </Button>
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        size="large"
-                        sx={{ mt: 1, mb: 2 }}
-                        startIcon={<LoginIcon />}
+                        disabled={isFetching}
+                        sx={{ mt: 3, mb: 2 }}
                     >
                         Sign In To Examinator
                     </Button>
@@ -164,7 +98,7 @@ function Login() {
                     </Grid>
                 </Box>
             </Box>
-            <Backdrop open={loading}>
+            <Backdrop open={isFetching}>
                 <CircularProgress color="warning" />
             </Backdrop>
         </Container>

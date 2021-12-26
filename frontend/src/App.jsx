@@ -1,7 +1,7 @@
 import React from "react";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import theme from "./Themes/theme";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import {
     Dashboard,
     Exam,
@@ -13,8 +13,11 @@ import {
     ExamPermissionError,
 } from "./Pages/index";
 import { SnackbarProvider } from "notistack";
+import { useSelector } from "react-redux";
 
 function App() {
+    const user = useSelector((state) => state.user.currentUser);
+
     return (
         <ThemeProvider theme={theme}>
             <SnackbarProvider
@@ -24,16 +27,16 @@ function App() {
                 <CssBaseline />
                 <Switch>
                     <Route path="/dashboard">
-                        <Dashboard />
+                        {user ? <Dashboard /> : <Redirect to="/login" />}
                     </Route>
                     <Route path="/exam">
-                        <Exam />
+                        {user ? <Exam /> : <Redirect to="/login" />}
                     </Route>
                     <Route path="/login">
-                        <Login />
+                        {user ? <Redirect to="/dashboard" /> : <Login />}
                     </Route>
                     <Route path="/register">
-                        <Register />
+                        {user ? <Redirect to="/dashboard" /> : <Register />}
                     </Route>
                     <Route path="/error1">
                         <MobileExamError />

@@ -71,7 +71,7 @@ export default function Register() {
             const senddata = {
                 firstName: firstName,
                 lastName: lastName,
-                phoneNumber:phone,
+                phoneNumber: phone,
                 emailId: email,
                 password: password,
             };
@@ -80,19 +80,21 @@ export default function Register() {
                 method: "post",
                 url: STUDENT_REGISTER_URL,
                 data: senddata,
-            }).then(function (response) {
+            })
+                .then(function (response) {
                     console.log(response.data);
                     setRedirect(true);
-            }).catch(function (error) {
+                })
+                .catch(function (error) {
                     alert(error.response.data);
-            });
+                });
         } else {
             const senddata = {
                 firstName: firstName,
                 lastName: lastName,
-                phoneNumber:phone,
+                phoneNumber: phone,
                 emailId: email,
-                password: password
+                password: password,
             };
             axios({
                 method: "post",
@@ -117,7 +119,7 @@ export default function Register() {
         <Container component="main" maxWidth="xs">
             <Box
                 sx={{
-                    marginTop: {xs: 0, md: 8},
+                    marginTop: { xs: 0, md: 8 },
                     paddingY: 2,
                     display: "flex",
                     flexDirection: "column",
@@ -154,15 +156,6 @@ export default function Register() {
                                 autoComplete="family-name"
                             />
                         </Grid>
-                        {/* <Grid item xs={12}>
-                            <TextField
-                                required
-                                fullWidth
-                                id="username"
-                                label="Username"
-                                name="username"
-                            />
-                        </Grid> */}
                         <Grid item xs={12}>
                             <TextField
                                 required

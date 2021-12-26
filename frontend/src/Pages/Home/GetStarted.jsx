@@ -6,7 +6,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { useSelector } from "react-redux";
 
 function GetStarted() {
-    const user = useSelector((state) => state.user.value);
+    const user = useSelector((state) => state.user.currentUser);
 
     const getStarted = (
         <Grid item>

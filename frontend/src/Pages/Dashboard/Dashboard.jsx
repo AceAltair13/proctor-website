@@ -6,7 +6,7 @@ import StudentDashboard from "./Student/StudentDashboard";
 import NotFoundError from "../Errors/NotFoundError"
 
 function Dashboard() {
-    const user = useSelector((state) => state.user.value);
+    const user = useSelector((state) => state.user.currentUser);
 
     if (!user) {
         return <Redirect to="/login" />;

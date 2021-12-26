@@ -17,43 +17,16 @@ import {
     bindMenu,
 } from "material-ui-popup-state/hooks";
 import MenuIcon from "@mui/icons-material/Menu";
-import HomeIcon from "@mui/icons-material/Home";
-import FeaturedPlayListIcon from "@mui/icons-material/FeaturedPlayList";
-import SchoolIcon from "@mui/icons-material/School";
-import InfoIcon from "@mui/icons-material/Info";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import { useSelector } from "react-redux";
 
 function Navbar() {
-    const user = useSelector((state) => state.user.value);
+    const user = useSelector((state) => state.user.currentUser);
 
     const popupState = usePopupState({
         variant: "popover",
         popupId: "mobileNavMenu",
     });
-
-    const navBarItems = [
-        {
-            name: "Home",
-            link: "/",
-            icon: <HomeIcon />,
-        },
-        {
-            name: "Features",
-            link: "/features",
-            icon: <FeaturedPlayListIcon />,
-        },
-        {
-            name: "Get Started",
-            link: "/get-started",
-            icon: <SchoolIcon />,
-        },
-        {
-            name: "About",
-            link: "/about",
-            icon: <InfoIcon />,
-        },
-    ];
 
     const authNavBarItems = (
         <>
@@ -91,18 +64,6 @@ function Navbar() {
 
     const desktopMenu = (
         <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            {navBarItems.map((item, index) => (
-                <Button
-                    variant="text"
-                    color="inherit"
-                    sx={{ ml: 2 }}
-                    component={Link}
-                    to={item.link}
-                    key={index}
-                >
-                    {item.name}
-                </Button>
-            ))}
             {user ? gotoDashboard : authNavBarItems}
         </Box>
     );
