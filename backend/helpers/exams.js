@@ -69,7 +69,7 @@ export const examAccess = (exam,userId)=>{
     var userEligible = false
     const usersList = exam.data()["studentsList"]
     usersList.push(exam.data()["supervisorId"])
-    var userEligible = false
+
 
     for (var i = 0; i < usersList.length; i++) {
         if (usersList[i] === userId) {
@@ -123,6 +123,30 @@ export const questionPaperFromExam = async(examId)=>{
          return false
     }
 }
+
+export const hasSubmitted = async(examId,userId)=>{
+
+    try {
+
+        const submittedList = await (await firebase_firestore.collection("users").doc(userId).get()).data()["history"];
+        
+        if(submittedList){
+     
+            for(var i=0;i<submittedList.length;i++){
+                if(submittedList[i]===examId){
+                    return true
+                }
+            }            
+        }
+        console.log("not submitted allow it")
+        return false
+
+    } catch (error) {
+
+         return false
+    }
+}
+
 
 export const calculateMarks = async ()=>{
 

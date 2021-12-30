@@ -21,4 +21,6 @@ const router = Router()
 
 router.post("/", auth.Token, upload.single('image'), postMalpractice)
 
+
+
 export const routes = router;
