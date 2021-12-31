@@ -18,6 +18,7 @@ import QuestionPaper from "../models/QuestionPaper.js";
 import {
 
     examAccess,
+    hasSubmitted,
     inTime,
     questionPaperExists,
     questionPaperFromExam
@@ -127,45 +128,88 @@ const deleteExam = async (req, res) => {
     }
 }
 
-const getAllExamsofSupervisor = async (req, res) => {
-    const supervisorId = req.user.userId;
+const getAllExams= async (req, res) => {
 
-    try {
-        var examsList = [];
-        var examIdsList
+    if(req.user.isStudent){
+        const studentId = req.user.userId;
+
         try {
-            examIdsList = await (await firebase_firestore.collection("users").doc(supervisorId).get()).data()["examsCreated"]
-
-        } catch (error) {
-            return res.status.json("No exams available")
-        }
-        if (examIdsList) {
-            for (var i = 0; i < examIdsList.length; i++) {
-                var exam = await firebase_firestore.collection("exams").doc(examIdsList[i]).get()
-                if (exam) {
-                    let examData = exam.data()
-                    // let {studentsList,...other} = examData;
-
-                    examsList.push(examData)
-                }
+            var examsList = [];
+            var examIdsList
+            try {
+                examIdsList = await (await firebase_firestore.collection("users").doc(studentId).get()).data()["examsEnrolled"]
+    
+            } catch (error) {
+                return res.status.json("No exams available")
             }
-
-
-        } else {
-            return res.status(400).json("Exam or user doesn't exists")
+            if (examIdsList) {
+                for (var i = 0; i < examIdsList.length; i++) {
+                    var exam = await firebase_firestore.collection("exams").doc(examIdsList[i]).get()
+                    if (exam) {
+                        let examData = exam.data()
+                        // let {studentsList,...other} = examData;
+    
+                        examsList.push(examData)
+                    }
+                }
+    
+    
+            } else {
+                return res.status(400).json("Exam or user doesn't exists")
+            }
+    
+            if (examsList.length > 0) {
+    
+                return res.status(200).json(examsList)
+            } else {
+                return res.status(200).json("No exams available")
+    
+            }
+    
+        } catch (error) {
+            return res.status(500).json("Something went wrong")
         }
+    }else if(req.user.isSupervisor){
+        const supervisorId = req.user.userId;
 
-        if (examsList.length > 0) {
-
-            return res.status(200).json(examsList)
-        } else {
-            return res.status(200).json("No exams available")
-
+        try {
+            var examsList = [];
+            var examIdsList
+            try {
+                examIdsList = await (await firebase_firestore.collection("users").doc(supervisorId).get()).data()["examsCreated"]
+    
+            } catch (error) {
+                return res.status.json("No exams available")
+            }
+            if (examIdsList) {
+                for (var i = 0; i < examIdsList.length; i++) {
+                    var exam = await firebase_firestore.collection("exams").doc(examIdsList[i]).get()
+                    if (exam) {
+                        let examData = exam.data()
+                        // let {studentsList,...other} = examData;
+    
+                        examsList.push(examData)
+                    }
+                }
+    
+    
+            } else {
+                return res.status(400).json("Exam or user doesn't exists")
+            }
+    
+            if (examsList.length > 0) {
+    
+                return res.status(200).json(examsList)
+            } else {
+                return res.status(200).json("No exams available")
+    
+            }
+    
+        } catch (error) {
+            return res.status(500).json("Something went wrong")
         }
-
-    } catch (error) {
-        return res.status(500).json("Something went wrong")
     }
+
 }
 
 
@@ -264,7 +308,7 @@ const enrollStudent = async (req, res) => {
                 });
                 // Create a URL for that particular student for that exam and mail it
                 const student_data = await firebase_firestore.collection("users").where("emailId", "==", filteredStudentsList[i].emailId).get()
-                const Exam_Id = await firebase_firestore.collection("exam").where("examId", "==", req.body.examId).get()
+                const Exam_Id = await firebase_firestore.collection("exams").where("examId", "==", req.body.examId).get()
 
                 var student_details
                 var Test_name
@@ -448,12 +492,6 @@ const receiveAnswer = async (req, res) => {
                 return res.status(400).json("Something went wrong while submiting the response")
             }
 
-
-
-
-
-
-
             return res.status(200).json("You scored " + totalMarks)
 
         } else {
@@ -464,7 +502,88 @@ const receiveAnswer = async (req, res) => {
     }
 
 }
-// trying local passport
+
+
+const receiveAnswers = async(req,res)=>{
+    try {
+        const exam = await firebase_firestore.collection("exams").doc(req.body.examId).get();
+
+        
+        if (exam) {
+            if (!examAccess(exam, req.user.userId)) {
+                return res.status(400).json("You are not allowed to access the exam")
+                
+            }
+            // console.log(hasSubmitted(exam.data()["examId"],req.user.userId))
+            if(await hasSubmitted(exam.data()["examId"],req.user.userId)){
+                return res.status(400).json("You have already submitted the exam")
+            }
+            
+            const questionPaperDoc = await firebase_firestore.collection("questionPapers").doc(exam.data()["questionPaperId"]).get();
+            const questionPaper = questionPaperDoc.data()["questionAnswers"];
+    
+            var totalMarks = 0;
+            const answers = req.body.answers;
+
+
+            try {
+                for(var i=0;i<answers.length;i++){
+                    var currentQuestionId = answers[i].questionId;
+                    var currentUserSelection = answers[i].userSelection;
+
+                    for(var j=0;j<questionPaper.length;j++){
+                        
+                        if(questionPaper[j].questionId === currentQuestionId){
+                            if(questionPaper[j].options[currentUserSelection].isCorrect){
+                                totalMarks = totalMarks +questionPaper[j].weightage
+                            }
+                        }
+
+                    }
+
+
+
+                }
+      
+                const answerJson = {"answers":req.body.answers,"marksScored":totalMarks}
+        //  const answerJson = JSON({answers,totalMarks})
+                // req.body.answers.marksScored = totalMarks
+              
+
+                console.log(answerJson)
+                try {
+                    // const answerResponse = [req.user.userId,req.body.answers]
+              
+                    await firebase_firestore.collection("exams").doc(req.body.examId).collection("responses").doc(req.user.userId).set({...answerJson})
+                    await firebase_firestore.collection("users").doc(req.user.userId).update({"history":fieldValue.arrayUnion(req.body.examId)});  
+                    // Send email to the student
+                    await sendMail(req.user.emailId,"Results for "+exam.data()["examName"],"Your marks for the exam "+exam.data()["examName"]+" is "+totalMarks)
+                    
+                    res.status(200).json("Response submitted successfully")
+                } catch (error) {
+                    res.status(500).json("Something went wrong. Try agin later.")
+                }
+
+            } catch (error) {
+                res.status(500).json("Something went wrong.")
+                
+            }
+
+
+
+
+
+
+
+        }
+        
+    } catch (error) {
+        res.status(500).json("Something went wrongg")
+        
+    }
+}
+
+
 export {
     createExam,
     updateExam,
@@ -476,6 +595,6 @@ export {
     getQuestionPaper,
     deleteQuestionPaper,
     removeStudents,
-    getAllExamsofSupervisor,
-    receiveAnswer
+    getAllExams,
+    receiveAnswers
 }
