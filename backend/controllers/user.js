@@ -1,4 +1,4 @@
-import {firebase_firestore } from "../db.js";
+import { firebase_firestore } from "../db.js";
 import * as config from "../config.js";
 import CryptoJs from "crypto-js";
 import User from "../models/User.js";
@@ -7,6 +7,8 @@ import Supervisor from "../models/Supervisor.js";
 import { userExists } from "../helpers/users.js";
 import jwt from "jsonwebtoken";
 import { uid } from "../helpers/other.js";
+import { sendMail } from "../helpers/email.js";
+import { async } from "@firebase/util";
 
 const registerStudent = async (req, res) => {
   try {
@@ -31,7 +33,10 @@ const registerStudent = async (req, res) => {
     const studentJson = JSON.parse(JSON.stringify(student));
 
     const result = await firebase_firestore.collection("users").add(studentJson);
-    await firebase_firestore.collection("users").doc(result.id).update({ userId: result.id, sessionId: "" });
+    await firebase_firestore.collection("users").doc(result.id).update({ userId: result.id });
+    const body = `click here to verify email address
+http://localhost:8080/api/user/emailverifivation?id=`+ result.id
+    await sendMail(student.emailId, "Email Verification", body)
     return res.status(200).json(result);
   } catch (error) {
     return res.status(400).json("Failed to create the Student" + error);
@@ -108,8 +113,8 @@ const login = async (req, res) => {
         isSupervisor: user.isSupervisor ?? false,
         isAdmin: user.isAdmin ?? false,
         emailId: user.emailId,
-        firstName:user.firstName,
-        lastName:user.lastName
+        firstName: user.firstName,
+        lastName: user.lastName
       },
       config.jwt_passKey,
       {
@@ -167,6 +172,14 @@ const login = async (req, res) => {
   }
 };
 
+
+const emailverify = async (req, res) => {
+  const id = req.query.id
+  await firebase_firestore.collection("users").doc(id).update({ "emailverified": true });
+  res.write("Email have been verified Successfully")
+  res.end()
+}
+
 const logout = async (req, res) => {
   console.log(req)
   // console.log(req.sessid)
@@ -199,4 +212,4 @@ const refreshToken = async (req, res) => {
 
 }
 
-export { registerStudent, registerSupervisor, login, logout, refreshToken };
+export { registerStudent, registerSupervisor, login, logout, refreshToken, emailverify };
