@@ -4,13 +4,12 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import fs from "fs"
 
 
-var folder
-var storageRef_1
+
 const postMalpractice = async (req, res, next) => {
-    console.log(req.body.exam)
     const metadata = { contentType: 'image/jpeg; charset=utf-8' }
-    folder = req.user.userId + "/" + req.file.filename
-    storageRef_1 = ref(storageRef, folder);
+    const type = req.body.type
+    const folder = req.user.userId + "/" + req.body.type + "/" + req.file.filename
+    const storageRef_1 = ref(storageRef, folder);
     fs.readFile(req.file.path, function (err, buffer) {
         upload(buffer)
     })
@@ -21,9 +20,8 @@ const postMalpractice = async (req, res, next) => {
     });
     res.status(200).json("file is uploaded successfully")
     res.end()
-    next()
     async function download() {
-        await firebase_firestore.collection("users").doc(req.user.userId).update({ location_1: folder });
+        await firebase_firestore.collection("users").doc(req.user.userId).update({ folder_location: folder });
     }
 
     async function upload(buffer) {
@@ -31,6 +29,26 @@ const postMalpractice = async (req, res, next) => {
             console.log('file is uploaded successfully!');
         });
     }
+
+
+    async function updating_into_firestore(type, url) {
+        if (type === "Face Recoginition")
+        {
+            await firebase_firestore.collection("users").doc(req.user.userId).update({ "Face_Recoginition": url });
+        }
+    }
+    async function download_link() {
+        await getDownloadURL(ref(storageRef_1))
+            .then((url) => {
+                console.log("download url", url);
+                updating_into_firestore(type, url);
+
+            })
+            .catch((error) => {
+                console.log("errr", error);
+            });
+    }
+    setTimeout(download_link, 1000)
     // try {
     //     exam = await firebase_firestore.collection("users").doc(req.user.userId).get()
     // } catch (error) {
@@ -40,24 +58,6 @@ const postMalpractice = async (req, res, next) => {
 
     // // }
 }
-const download_link = async (req, res) => {
-    const snapshot = await firebase_firestore.collection("users").where("userId", "==", req.user.userId).get()
-    var link
-    snapshot.forEach((doc) => {
-        storageRef_1 = ref(storageRef, doc.data().location_1);
-    })
-    await getDownloadURL(ref(storageRef_1))
-        .then((url) => {
-            console.log("download url", url);
-            link = url
-        })
-        .catch((error) => {
-            console.log("errr", error);
-        });
-    await firebase_firestore.collection("users").doc(req.user.userId).update({ download_link:link});
-
-}
-
 export {
-    postMalpractice, download_link
+    postMalpractice
 }

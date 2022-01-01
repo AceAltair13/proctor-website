@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { userExists } from "../helpers/users.js";
+import { userExists,userExistsFunction} from "../helpers/users.js";
 import {
   login,
   registerStudent,
@@ -11,8 +11,8 @@ import {
 import * as auth from "../helpers/auth.js"
 const router = Router();
 
-router.post("/register-student", userExists, registerStudent);
-router.post("/register-supervisor", userExists, registerSupervisor);
+router.post("/register-student", userExistsFunction, registerStudent);
+router.post("/register-supervisor", userExistsFunction, registerSupervisor);
 router.post("/login", userExists, login);
 router.post("/logout",auth.Token, logout);
 router.post("/refreshToken",auth.Token, refreshToken)

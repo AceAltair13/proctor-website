@@ -39,6 +39,34 @@ export const Token = (req, res, next) => {
 
 
 
+export const emailToken = (token,req,res) => {
+     
+    const authHeader =token
+    if (authHeader) {
+       
+        // decrypt the token
+        // const authHeaderDecrypt = CryptoJs.AES.decrypt(authHeader, config.token_encrypt_key);
+        // console.log(authHeaderDecrypt)
+        // const authHeaderDecryptString = authHeaderDecrypt.toString(CryptoJs.enc.Utf8);
+        // console.log(authHeaderDecryptString)
+        jwt.verify(authHeader, config.jwt_passKey, (err, user) => {
+            if (err) {
+                console.log(err)
+                res.write("Link has Expired")
+                return res.status(403).json("Link has Expired")
+            }
+            req.user = user
+  
+        })
+    }else {
+        res.write("Invalid Link")
+        return res.status(412).json("Invalid Link")
+
+    }    
+}
+
+
+
 export const matchTokenAndSSession = (req,res,next)=>{
     if (req.session.userId === req.user.userId) {
         

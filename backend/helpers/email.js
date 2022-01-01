@@ -31,7 +31,7 @@ export const sendMail = async (emailaddress, subject_details, body_content) => {
             if (err) {
                 console.log("Error " + err);
             } else {
-                console.log("Email sent successfully",data);
+                console.log("Email sent successfully");
             }
         });
     }

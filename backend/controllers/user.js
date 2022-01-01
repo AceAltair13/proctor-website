@@ -9,6 +9,8 @@ import jwt from "jsonwebtoken";
 import { uid } from "../helpers/other.js";
 import { sendMail } from "../helpers/email.js";
 import { async } from "@firebase/util";
+import * as auth from "../helpers/auth.js"
+
 
 const registerStudent = async (req, res) => {
   try {
@@ -34,8 +36,21 @@ const registerStudent = async (req, res) => {
 
     const result = await firebase_firestore.collection("users").add(studentJson);
     await firebase_firestore.collection("users").doc(result.id).update({ userId: result.id });
+    const accessToken = jwt.sign(
+      {
+        userId: result.id,
+        isSupervisor: false,
+        emailId: student.emailId,
+        firstName: student.firstName,
+        lastName: student.lastName
+      },
+      config.jwt_passKey,
+      {
+        expiresIn: 300,
+      }
+    );
     const body = `click here to verify email address
-http://localhost:8080/api/user/emailverifivation?id=`+ result.id
+http://localhost:8080/api/user/emailverifivation?id=`+ accessToken
     await sendMail(student.emailId, "Email Verification", body)
     return res.status(200).json(result);
   } catch (error) {
@@ -71,8 +86,22 @@ const registerSupervisor = async (req, res) => {
     // const result = await firebase_firestore.collection('users').add(supervisorJson)
     // await firebase_firestore.collection("users").doc(result.id).update({ user_id: result.id });
     const result = await firebase_firestore.collection("users").doc(newId).create(supervisorJson);
-
-    await firebase_firestore.collection("users").doc(newId).update({ sessionId: "" });
+    const accessToken = jwt.sign(
+      {
+        userId: newId,
+        isSupervisor: true,
+        emailId: supervisor.emailId,
+        firstName: supervisor.firstName,
+        lastName: supervisor.lastName
+      },
+      config.jwt_passKey,
+      {
+        expiresIn: 300,
+      }
+    );
+    const body = `click here to verify email address
+http://localhost:8080/api/user/emailverifivation?id=`+ accessToken
+    await sendMail(supervisor.emailId, "Email Verification", body)
 
     return res.status(200).json(result);
   } catch (error) {
@@ -175,9 +204,17 @@ const login = async (req, res) => {
 
 const emailverify = async (req, res) => {
   const id = req.query.id
-  await firebase_firestore.collection("users").doc(id).update({ "emailverified": true });
-  res.write("Email have been verified Successfully")
-  res.end()
+  auth.emailToken(id,req,res)
+  await firebase_firestore.collection("users").doc(req.user.userId).update({ "emailVerified": true }).then(result => {
+    res.write("Email have been verified Successfully")
+    res.end()
+  })
+    .catch(error => {
+      res.write("Ivalid Link")
+      console.log(error)
+      res.status(500).json(error);
+      res.end()
+    })
 }
 
 const logout = async (req, res) => {

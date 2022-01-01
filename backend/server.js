@@ -36,11 +36,11 @@ import { sendMail } from './helpers/email.js'
 
 
 
-var store = new FirestoreStore({
-    dataset: firebase_firestore,
-    // dataset:new Firestore(),
-    kind: 'session'
-})
+// var store = new FirestoreStore({
+//     dataset: firebase_firestore,
+//     // dataset:new Firestore(),
+//     kind: 'session'
+// })
 
 const app = express()
 app.use(express.json())
@@ -58,19 +58,19 @@ app.use(cors({
 app.use(cookieParser());
 
 //session use 
-app.use(session({
-    store: store,
-    name: "session",
-    resave: false,
-    secret: session_key,
-    saveUninitialized: true,
-    cookie: {
-        maxAge: 1000 * 60 * 60 * 2,
-        sameSite: true,
-        secure: true,
-        HttpOnly: true
-    }
-}))
+// app.use(session({
+//     store: store,
+//     name: "session",
+//     resave: false,
+//     secret: session_key,
+//     saveUninitialized: true,
+//     cookie: {
+//         maxAge: 1000 * 60 * 60 * 2,
+//         sameSite: true,
+//         secure: true,
+//         HttpOnly: true
+//     }
+// }))
 
 // app.use(session({secret: session_key,resave:true,saveUninitialized: true,httponly:false,cookie: {}}))
 app.use("/api/user", userRoutes)
