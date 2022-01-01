@@ -36,7 +36,7 @@ export default function Register() {
     const [error, setError] = useState([false, ""]);
     const [redirect, setRedirect] = useState(false);
 
-    const user = useSelector((state) => state.user.value);
+    const user = useSelector((state) => state.user.currentUser);
 
     if (user) {
         return <Redirect to="/dashboard" />;

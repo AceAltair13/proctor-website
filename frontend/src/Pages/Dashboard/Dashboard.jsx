@@ -1,24 +1,55 @@
-import React from "react";
-import { Redirect } from "react-router-dom";
+import React, { useState } from "react";
+import { Box } from "@mui/material";
+import DashboardNavbar from "./Components/DashboardNavbar";
+import DashboardDrawer from "./Components/DashboardDrawer";
+import DashboardContent from "./Components/DashboardContent";
 import { useSelector } from "react-redux";
-import SupervisorDashboard from "./Supervisor/SupervisorDashboard";
-import StudentDashboard from "./Student/StudentDashboard";
-import NotFoundError from "../Errors/NotFoundError"
+import { Redirect, Route, Switch } from "react-router-dom";
+import { drawerItems } from "./Components/drawerList";
 
 function Dashboard() {
     const user = useSelector((state) => state.user.currentUser);
+    const [title, setTitle] = useState("Dashboard");
+    const [mobileOpen, setMobileOpen] = useState(false);
+    const handleDrawerToggle = () => {
+        setMobileOpen(!mobileOpen);
+    };
 
     if (!user) {
         return <Redirect to="/login" />;
     } else {
-        switch(user.role) {
-            case "supervisor":
-                return <SupervisorDashboard />
-            case "student":
-                return <StudentDashboard />
-            default:
-                return <NotFoundError/>
-        }
+        let role = user.role;
+
+        return (
+            <Box sx={{ display: "flex" }}>
+                <DashboardNavbar
+                    handleDrawerToggle={handleDrawerToggle}
+                    title={title}
+                />
+                <DashboardDrawer
+                    mobileOpen={mobileOpen}
+                    handleDrawerToggle={handleDrawerToggle}
+                    drawerItems={drawerItems[role]}
+                />
+                <DashboardContent>
+                    <Switch>
+                        {drawerItems[role].map((item) =>
+                            item.items.map((subItem, index) => (
+                                <Route
+                                    key={index}
+                                    exact
+                                    path={subItem.to}
+                                    render={(props) => {
+                                        setTitle(subItem.text);
+                                        return <subItem.component {...props} />;
+                                    }}
+                                />
+                            ))
+                        )}
+                    </Switch>
+                </DashboardContent>
+            </Box>
+        );
     }
 }
 
