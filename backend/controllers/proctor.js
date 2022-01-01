@@ -26,7 +26,7 @@ const postMalpractice = async (req, res, next) => {
 
     async function upload(buffer) {
         await uploadBytes(storageRef_1, buffer, metadata).then((snapshot) => {
-            console.log('file is uploaded successfully!');
+            console.log('file is uploaded Successfully!');
         });
     }
 
