@@ -2,8 +2,12 @@
 import { createTransport } from "nodemailer";
 import * as config from "../config.js";
 
-export const sendMail = async(emailaddress,subject_details,body_content)=>{
+export const sendMail = async (emailaddress, subject_details, body_content) => {
     let transporter = createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: false,
+
         service: 'gmail',
         auth: {
             type: config.nodemailer_transport_type,
@@ -14,18 +18,22 @@ export const sendMail = async(emailaddress,subject_details,body_content)=>{
             refreshToken: config.nodemailer_transport_refresh_token
         }
     });
+    console.log(transporter)
     let mailOptions = {
         from: config.nodemailer_transport_user,
         to: emailaddress,
-        subject:subject_details,
-        text:body_content
+        subject: subject_details,
+        text: body_content
     };
-    transporter.sendMail(mailOptions, function (err, data) {
-        if (err) {
-            console.log("Error " + err);
-        } else {
-            console.log("Email sent successfully");
-        }
-    });
+    await sending();
+    async function sending() {
+        transporter.sendMail(mailOptions, function (err, data) {
+            if (err) {
+                console.log("Error " + err);
+            } else {
+                console.log("Email sent successfully",data);
+            }
+        });
+    }
 }
 
