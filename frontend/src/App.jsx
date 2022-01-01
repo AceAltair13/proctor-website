@@ -11,6 +11,7 @@ import {
     MobileExamError,
     NotFoundError,
     ExamPermissionError,
+    PreExam,
 } from "./Pages/index";
 import { SnackbarProvider } from "notistack";
 import { useSelector } from "react-redux";
@@ -45,6 +46,9 @@ function App() {
                     </Route>
                     <Route path="/error2">
                         <ExamPermissionError />
+                    </Route>
+                    <Route path="/preexam">
+                        <PreExam />
                     </Route>
                     <Route exact path="/">
                         <Home />

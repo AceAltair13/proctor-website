@@ -1,60 +1,90 @@
 import React from "react";
 import {
+    Avatar,
     Box,
-    Divider,
     Drawer,
     List,
     ListItem,
     ListItemIcon,
     ListItemText,
+    ListSubheader,
+    Stack,
+    Toolbar,
     Typography,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 import Logo from "../../../Components/Logo";
-import MailIcon from "@mui/icons-material/Mail";
 import { drawerWidth } from "../../../Constants/sizes";
+import { useSelector } from "react-redux";
+
+const DrawerItems = (props) => {
+
+    return props.drawerItems.map((item, index) => (
+        <List
+            subheader={
+                <ListSubheader sx={{ pl: 3 }}>{item.subheader}</ListSubheader>
+            }
+            key={index}
+        >
+            {item.items.map((item, i) => (
+                <ListItem
+                    button
+                    key={i}
+                    sx={{ pl: 3 }}
+                    component={Link}
+                    to={item.to}
+                    disableGutters
+                >
+                    <ListItemIcon sx={{ minWidth: "40px" }}>
+                        {item.icon}
+                    </ListItemIcon>
+                    <ListItemText primary={item.text} />
+                </ListItem>
+            ))}
+        </List>
+    ));
+};
 
 function DashboardDrawer(props) {
+    const user = useSelector((state) => state.user.currentUser);
+
     const drawer = (
-        <div>
-            <Box mx={2} mt={2} mb={4} textAlign="center">
-                <img
-                    src={props.image}
-                    alt="Supervisor"
-                    style={{ height: "auto", width: "100%" }}
-                />
+        <>
+            <Toolbar>
                 <Logo variant="h5" />
-                <Typography variant="h6" color="textSecondary" mt={-1}>
-                    {props.role}
-                </Typography>
+            </Toolbar>
+            <Box
+                sx={{
+                    m: 2,
+                    p: 2,
+                    display: "flex",
+                    backgroundColor: "rgba(145, 158, 171, 0.12)",
+                    borderRadius: 3,
+                }}
+            >
+                <Box>
+                    <Avatar sx={{ bgcolor: "secondary.light" }}>
+                        {user.firstName.charAt(0)}
+                        {user.lastName.charAt(0)}
+                    </Avatar>
+                </Box>
+                <Box ml={2}>
+                    <Stack>
+                        <Typography variant="body1" fontWeight="fontWeightBold">
+                            {user.firstName} {user.lastName}
+                        </Typography>
+                        <Typography variant="body2">
+                            {user.role.toUpperCase()}
+                        </Typography>
+                    </Stack>
+                </Box>
             </Box>
-            <Divider variant="middle" />
-            <List>
-                {[
-                    "Create Exam",
-                    "Add Questions",
-                    "Update Questions",
-                    "Delete Questions",
-                    "Student Monitoring",
-                    "Results",
-                    "Edit Profile",
-                ].map((text, index) => (
-                    <ListItem button key={text} sx={{ pl: 4 }}>
-                        <ListItemIcon sx={{ minWidth: "40px" }}>
-                            {index % 2 === 0 ? <MailIcon /> : <MailIcon />}
-                        </ListItemIcon>
-                        <ListItemText primary={text} />
-                    </ListItem>
-                ))}
-            </List>
-        </div>
+            <DrawerItems drawerItems={props.drawerItems}/>
+        </>
     );
 
     return (
-        <Box
-            component="nav"
-            sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-            aria-label="mailbox folders"
-        >
+        <Box sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}>
             <Drawer
                 variant="temporary"
                 open={props.mobileOpen}
