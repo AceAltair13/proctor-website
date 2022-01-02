@@ -33,26 +33,31 @@ const registerStudent = async (req, res) => {
     // const data = { ...req.body, password: hashedPassword, isSupervisor: false ,isStudent:true, isAdmin:false }
     student.password = hashedPassword;
     const studentJson = JSON.parse(JSON.stringify(student));
-
-    const result = await firebase_firestore.collection("users").add(studentJson);
-    await firebase_firestore.collection("users").doc(result.id).update({ userId: result.id });
+    // const newId = uid();
+    // studentJson.userId = newId;
+    // const result = await firebase_firestore.collection("users").add(studentJson);
+    // await firebase_firestore.collection("users").doc(result.id).update({ userId: result.id });
     const accessToken = jwt.sign(
       {
-        userId: result.id,
-        isSupervisor: false,
+        isSupervisor: student.isSupervisor,
         emailId: student.emailId,
         firstName: student.firstName,
-        lastName: student.lastName
+        lastName: student.lastName,
+        phoneNumber: student.phoneNumber,
+        password: student.password,
+        isAdmin: student.isAdmin,
+        isStudent: student.isStudent
       },
       config.jwt_passKey,
       {
-        expiresIn: 300,
+        expiresIn: "5m",
       }
     );
     const body = `click here to verify email address
 http://localhost:8080/api/user/emailverifivation?id=`+ accessToken
     await sendMail(student.emailId, "Email Verification", body)
-    return res.status(200).json(result);
+    // return res.status(200).json(result);
+    return res.status(200).json({});
   } catch (error) {
     return res.status(400).json("Failed to create the Student" + error);
   }
@@ -80,30 +85,33 @@ const registerSupervisor = async (req, res) => {
     supervisor.password = hashedPassword;
     const supervisorJson = JSON.parse(JSON.stringify(supervisor));
 
-    const newId = uid();
-    supervisorJson.userId = newId;
+    // const newId = uid();
+    // supervisorJson.userId = newId;
     delete supervisorJson.examsCreated;
     // const result = await firebase_firestore.collection('users').add(supervisorJson)
     // await firebase_firestore.collection("users").doc(result.id).update({ user_id: result.id });
-    const result = await firebase_firestore.collection("users").doc(newId).create(supervisorJson);
+    // const result = await firebase_firestore.collection("users").doc(newId).create(supervisorJson);
     const accessToken = jwt.sign(
       {
-        userId: newId,
-        isSupervisor: true,
+        isSupervisor: supervisor.isSupervisor,
         emailId: supervisor.emailId,
         firstName: supervisor.firstName,
-        lastName: supervisor.lastName
+        lastName: supervisor.lastName,
+        phoneNumber: supervisor.phoneNumber,
+        password: supervisor.password,
+        isAdmin: supervisor.isAdmin,
+        isStudent: supervisor.isStudent
+
       },
       config.jwt_passKey,
       {
-        expiresIn: 300,
+        expiresIn: "5m",
       }
     );
     const body = `click here to verify email address
 http://localhost:8080/api/user/emailverifivation?id=`+ accessToken
     await sendMail(supervisor.emailId, "Email Verification", body)
-
-    return res.status(200).json(result);
+    return res.status(200).json({});
   } catch (error) {
     return res.status(400).json("Failed to create the Supervisor" + error);
   }
@@ -204,17 +212,17 @@ const login = async (req, res) => {
 
 const emailverify = async (req, res) => {
   const id = req.query.id
-  auth.emailToken(id,req,res)
-  await firebase_firestore.collection("users").doc(req.user.userId).update({ "emailVerified": true }).then(result => {
-    res.write("Email have been verified Successfully")
-    res.end()
-  })
-    .catch(error => {
-      res.write("Ivalid Link")
-      console.log(error)
-      res.status(500).json(error);
-      res.end()
-    })
+  auth.emailToken(id, req, res)
+  delete req.user['iat'];
+  delete req.user['exp'];
+  if (req.email) {
+    const result = await firebase_firestore.collection("users").add(req.user);
+    await firebase_firestore.collection("users").doc(result.id).update({ userId: result.id, "emailVerified": true })
+      .then(result => {
+        res.write("Email have been verified Successfully")
+        res.end()
+      })
+  }
 }
 
 const logout = async (req, res) => {
