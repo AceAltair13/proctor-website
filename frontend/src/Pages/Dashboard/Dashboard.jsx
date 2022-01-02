@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Box } from "@mui/material";
 import DashboardNavbar from "./Components/DashboardNavbar";
 import DashboardDrawer from "./Components/DashboardDrawer";
@@ -8,19 +8,12 @@ import { drawerItems } from "./Components/drawerList";
 import { useSelector } from "react-redux";
 
 function Dashboard() {
-    const [mobileOpen, setMobileOpen] = useState(false);
     const role = useSelector((state) => state.user.currentUser.role);
-    const handleDrawerToggle = () => {
-        setMobileOpen(!mobileOpen);
-    };
 
     return (
         <Box sx={{ display: "flex" }}>
             <DashboardNavbar />
-            <DashboardDrawer
-                handleDrawerToggle={handleDrawerToggle}
-                drawerItems={drawerItems[role]}
-            />
+            <DashboardDrawer drawerItems={drawerItems[role]} />
             <Switch>
                 {drawerItems[role].map((item) =>
                     item.items.map((subItem, index) => (
