@@ -1,6 +1,5 @@
 import React from "react";
-import { Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Typography, Link } from "@mui/material";
 import PropTypes from "prop-types";
 
 function Logo(props) {
@@ -10,7 +9,7 @@ function Logo(props) {
             sx={{ color: "primary.main", textDecoration: "none" }}
             fontWeight="fontWeightBold"
             component={Link}
-            to="/"
+            href="/"
         >
             EXAMINATOR
         </Typography>
