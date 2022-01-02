@@ -1,3 +1,5 @@
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
     Button,
     Card,
@@ -6,39 +8,50 @@ import {
     Grid,
     Typography,
 } from "@mui/material";
-import React from "react";
+import { fetchStudentExams } from "../../../Features/apiCalls";
 
 const UpcomingExams = () => {
+    const dispatch = useDispatch();
+    const { exams } = useSelector((state) => state.studentDashboard);
+
+    useEffect(() => {
+        fetchStudentExams(dispatch);
+    }, [dispatch]);
+
     return (
         <>
-            <Typography variant="h6" gutterBottom>
-                Upcoming Exams
-            </Typography>
-
-            <Grid container spacing={4}>
-                {[1, 2, 3, 4].map((i) => (
-                    <Grid item xs={12} sm={6} md={4} lg={3} key={i}>
-                        <Card>
-                            <CardContent>
-                                <Typography variant="h6">Exam {i}</Typography>
-                                <Typography variant="body1">
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    adipiscing elit.
-                                </Typography>
-                            </CardContent>
-                            <CardActions>
-                                <Button
-                                    size="small"
-                                    disableElevation
-                                    sx={{ ml: "auto" }}
-                                >
-                                    Start
-                                </Button>
-                            </CardActions>
-                        </Card>
-                    </Grid>
-                ))}
-            </Grid>
+            {exams && exams.length > 0 ? (
+                <Grid container spacing={4}>
+                    {exams.map((exam, index) => (
+                        <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                            <Card>
+                                <CardContent>
+                                    <Typography variant="h6">
+                                        {exam.examName}
+                                    </Typography>
+                                    <Typography variant="body1">
+                                        Lorem ipsum dolor sit amet, consectetur
+                                        adipiscing elit.
+                                    </Typography>
+                                </CardContent>
+                                <CardActions>
+                                    <Button
+                                        size="small"
+                                        disableElevation
+                                        sx={{ ml: "auto" }}
+                                    >
+                                        Start
+                                    </Button>
+                                </CardActions>
+                            </Card>
+                        </Grid>
+                    ))}
+                </Grid>
+            ) : (
+                <Typography variant="h6" gutterBottom>
+                    No upcoming exams
+                </Typography>
+            )}
         </>
     );
 };

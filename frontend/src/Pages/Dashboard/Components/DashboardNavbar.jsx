@@ -11,6 +11,7 @@ import {
     Stack,
     Avatar,
     Divider,
+    LinearProgress,
 } from "@mui/material";
 import { drawerWidth } from "../../../Constants/sizes";
 import {
@@ -25,14 +26,19 @@ import EditIcon from "@mui/icons-material/Edit";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
+import { resetStudentDashboard } from "../../../Features/studentDashboardSlice";
 
 function DashboardNavbar(props) {
     const dispatch = useDispatch();
     const [redirect, setRedirect] = useState(false);
     const user = useSelector((state) => state.user.currentUser);
+    const isFetching = useSelector(
+        (state) => state.studentDashboard.isFetching
+    );
 
     const logoutUser = () => {
         dispatch(logout());
+        dispatch(resetStudentDashboard());
         setRedirect(true);
     };
 
@@ -126,6 +132,7 @@ function DashboardNavbar(props) {
                 </IconButton>
                 {userMenu}
             </Toolbar>
+            {isFetching && <LinearProgress color="secondary" />}
         </AppBar>
     );
 }

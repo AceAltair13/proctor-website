@@ -11,14 +11,13 @@ export const publicRequest = axios.create({
 
 export const userRequest = axios.create({
     baseURL: URL,
-    header: { token: TOKEN },
+    headers: { token: TOKEN },
 });
 
-
 export const postImagerequest = axios.create({
-    baseURL:URL,
-    header :{
-        token:TOKEN,
+    baseURL: URL,
+    headers: {
+        token: TOKEN,
         // examId:
-    }
-})
+    },
+});
