@@ -1,6 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import userSlice from "./Features/userSlice";
-import studentDashboardSlice from "./Features/studentDashboardSlice";
+import studentSlice from "./Features/studentSlice";
+import dashboardSlice from "./Features/dashboardSlice";
 import {
     persistReducer,
     FLUSH,
@@ -20,7 +21,8 @@ const persistConfig = {
 
 const allReducers = combineReducers({
     user: userSlice,
-    studentDashboard: studentDashboardSlice,
+    student: studentSlice,
+    dashboard: dashboardSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, allReducers);

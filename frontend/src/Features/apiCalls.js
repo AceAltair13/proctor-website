@@ -11,7 +11,7 @@ import {
     fetchExamsStart,
     fetchExamsSuccess,
     fetchExamsFailure,
-} from "./studentDashboardSlice";
+} from "./studentSlice";
 
 export const login = (dispatch, user) => {
     dispatch(loginStart());

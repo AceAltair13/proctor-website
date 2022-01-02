@@ -12,7 +12,7 @@ import { fetchStudentExams } from "../../../Features/apiCalls";
 
 const UpcomingExams = () => {
     const dispatch = useDispatch();
-    const { exams } = useSelector((state) => state.studentDashboard);
+    const { exams } = useSelector((state) => state.student);
 
     useEffect(() => {
         fetchStudentExams(dispatch);

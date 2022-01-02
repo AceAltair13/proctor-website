@@ -15,9 +15,11 @@ import {
 import { Link } from "react-router-dom";
 import Logo from "../../../Components/Logo";
 import { drawerWidth } from "../../../Constants/sizes";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setMobileOpen } from "../../../Features/dashboardSlice";
 
 const DrawerItems = (props) => {
+    const dispatch = useDispatch();
 
     return props.drawerItems.map((item, index) => (
         <List
@@ -34,6 +36,7 @@ const DrawerItems = (props) => {
                     component={Link}
                     to={item.to}
                     disableGutters
+                    onClick={() => dispatch(setMobileOpen())}
                 >
                     <ListItemIcon sx={{ minWidth: "40px" }}>
                         {item.icon}
@@ -46,7 +49,9 @@ const DrawerItems = (props) => {
 };
 
 function DashboardDrawer(props) {
+    const dispatch = useDispatch();
     const user = useSelector((state) => state.user.currentUser);
+    const mobileOpen = useSelector((state) => state.dashboard.mobileOpen);
 
     const drawer = (
         <>
@@ -79,7 +84,7 @@ function DashboardDrawer(props) {
                     </Stack>
                 </Box>
             </Box>
-            <DrawerItems drawerItems={props.drawerItems}/>
+            <DrawerItems drawerItems={props.drawerItems} />
         </>
     );
 
@@ -87,8 +92,8 @@ function DashboardDrawer(props) {
         <Box sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}>
             <Drawer
                 variant="temporary"
-                open={props.mobileOpen}
-                onClose={props.handleDrawerToggle}
+                open={mobileOpen}
+                onClose={() => dispatch(setMobileOpen())}
                 ModalProps={{
                     keepMounted: true, // Better open performance on mobile.
                 }}

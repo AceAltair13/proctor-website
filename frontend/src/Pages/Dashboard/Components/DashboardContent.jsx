@@ -1,8 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { drawerWidth } from "../../../Constants/sizes";
 import { Toolbar, Box } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { setDashboardTitle } from "../../../Features/dashboardSlice";
 
 function DashboardContent(props) {
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(setDashboardTitle(props.title));
+    }, [dispatch, props.title]);
+
     return (
         <Box
             component="main"

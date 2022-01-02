@@ -26,15 +26,15 @@ import EditIcon from "@mui/icons-material/Edit";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import { resetStudentDashboard } from "../../../Features/studentDashboardSlice";
+import { resetStudentDashboard } from "../../../Features/studentSlice";
+import { setMobileOpen } from "../../../Features/dashboardSlice";
 
-function DashboardNavbar(props) {
+function DashboardNavbar() {
     const dispatch = useDispatch();
     const [redirect, setRedirect] = useState(false);
     const user = useSelector((state) => state.user.currentUser);
-    const isFetching = useSelector(
-        (state) => state.studentDashboard.isFetching
-    );
+    const title = useSelector((state) => state.dashboard.title);
+    const isFetching = useSelector((state) => state.student.isFetching);
 
     const logoutUser = () => {
         dispatch(logout());
@@ -114,7 +114,7 @@ function DashboardNavbar(props) {
                     color="inherit"
                     aria-label="open drawer"
                     edge="start"
-                    onClick={props.handleDrawerToggle}
+                    onClick={() => dispatch(setMobileOpen())}
                     sx={{ mr: 2, display: { sm: "none" } }}
                 >
                     <MenuIcon />
@@ -125,7 +125,7 @@ function DashboardNavbar(props) {
                     component="div"
                     sx={{ flexGrow: 1 }}
                 >
-                    {props.title}
+                    {title}
                 </Typography>
                 <IconButton color="inherit" {...bindTrigger(popupState)}>
                     <AccountCircle />

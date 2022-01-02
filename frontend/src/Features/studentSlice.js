@@ -5,8 +5,8 @@ const initialState = {
     isFetching: false,
 };
 
-const studentDashboardSlice = createSlice({
-    name: "studentDashboard",
+const studentSlice = createSlice({
+    name: "student",
     initialState: initialState,
     reducers: {
         fetchExamsStart: (state) => {
@@ -19,6 +19,9 @@ const studentDashboardSlice = createSlice({
         fetchExamsFailure: (state) => {
             state.isFetching = false;
         },
+        setDashboardTitle: (state, action) => {
+            state.dashboardTitle = action.payload;
+        },
         resetStudentDashboard: () => initialState,
     },
 });
@@ -28,5 +31,5 @@ export const {
     fetchExamsSuccess,
     fetchExamsFailure,
     resetStudentDashboard,
-} = studentDashboardSlice.actions;
-export default studentDashboardSlice.reducer;
+} = studentSlice.actions;
+export default studentSlice.reducer;
