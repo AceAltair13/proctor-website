@@ -18,7 +18,6 @@ export const sendMail = async (emailaddress, subject_details, body_content) => {
             refreshToken: config.nodemailer_transport_refresh_token
         }
     });
-    console.log(transporter)
     let mailOptions = {
         from: config.nodemailer_transport_user,
         to: emailaddress,

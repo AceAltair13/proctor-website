@@ -51,16 +51,20 @@ export const emailToken = (token,req,res) => {
         // console.log(authHeaderDecryptString)
         jwt.verify(authHeader, config.jwt_passKey, (err, user) => {
             if (err) {
-                console.log(err)
+                req.email=false
                 res.write("Link has Expired")
-                return res.status(403).json("Link has Expired")
+                res.end()
+                return
+                // return res.status(403).json("Link has Expired")
             }
+            req.email=true
             req.user = user
   
         })
     }else {
+        req.email=false
         res.write("Invalid Link")
-        return res.status(412).json("Invalid Link")
+        // return res.status(412).json("Invalid Link")
 
     }    
 }
