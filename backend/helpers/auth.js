@@ -15,6 +15,7 @@ export const SessionId = (req,res,next)=>{
 export const Token = (req, res, next) => {
      
         const authHeader = req.headers.token
+        console.log(authHeader)
         if (authHeader) {
            
             // decrypt the token

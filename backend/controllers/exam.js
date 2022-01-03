@@ -128,9 +128,9 @@ const deleteExam = async (req, res) => {
     }
 }
 
-const getAllExams= async (req, res) => {
+const getAllExams = async (req, res) => {
 
-    if(req.user.isStudent){
+    if (req.user.isStudent) {
         const studentId = req.user.userId;
 
         try {
@@ -138,7 +138,7 @@ const getAllExams= async (req, res) => {
             var examIdsList
             try {
                 examIdsList = await (await firebase_firestore.collection("users").doc(studentId).get()).data()["examsEnrolled"]
-    
+
             } catch (error) {
                 return res.status.json("No exams available")
             }
@@ -148,28 +148,28 @@ const getAllExams= async (req, res) => {
                     if (exam) {
                         let examData = exam.data()
                         // let {studentsList,...other} = examData;
-    
+
                         examsList.push(examData)
                     }
                 }
-    
-    
+
+
             } else {
-                return res.status(400).json("Exam or user doesn't exists")
+                return res.status(200).json([])
             }
-    
+
             if (examsList.length > 0) {
-    
+
                 return res.status(200).json(examsList)
             } else {
                 return res.status(200).json("No exams available")
-    
+
             }
-    
+
         } catch (error) {
             return res.status(500).json("Something went wrong")
         }
-    }else if(req.user.isSupervisor){
+    } else if (req.user.isSupervisor) {
         const supervisorId = req.user.userId;
 
         try {
@@ -177,7 +177,7 @@ const getAllExams= async (req, res) => {
             var examIdsList
             try {
                 examIdsList = await (await firebase_firestore.collection("users").doc(supervisorId).get()).data()["examsCreated"]
-    
+
             } catch (error) {
                 return res.status.json("No exams available")
             }
@@ -187,24 +187,24 @@ const getAllExams= async (req, res) => {
                     if (exam) {
                         let examData = exam.data()
                         // let {studentsList,...other} = examData;
-    
+
                         examsList.push(examData)
                     }
                 }
-    
-    
+
+
             } else {
                 return res.status(400).json("Exam or user doesn't exists")
             }
-    
+
             if (examsList.length > 0) {
-    
+
                 return res.status(200).json(examsList)
             } else {
                 return res.status(200).json("No exams available")
-    
+
             }
-    
+
         } catch (error) {
             return res.status(500).json("Something went wrong")
         }
@@ -504,38 +504,38 @@ const receiveAnswer = async (req, res) => {
 }
 
 
-const receiveAnswers = async(req,res)=>{
+const receiveAnswers = async (req, res) => {
     try {
         const exam = await firebase_firestore.collection("exams").doc(req.body.examId).get();
 
-        
+
         if (exam) {
             if (!examAccess(exam, req.user.userId)) {
                 return res.status(400).json("You are not allowed to access the exam")
-                
+
             }
             // console.log(hasSubmitted(exam.data()["examId"],req.user.userId))
-            if(await hasSubmitted(exam.data()["examId"],req.user.userId)){
+            if (await hasSubmitted(exam.data()["examId"], req.user.userId)) {
                 return res.status(400).json("You have already submitted the exam")
             }
-            
+
             const questionPaperDoc = await firebase_firestore.collection("questionPapers").doc(exam.data()["questionPaperId"]).get();
             const questionPaper = questionPaperDoc.data()["questionAnswers"];
-    
+
             var totalMarks = 0;
             const answers = req.body.answers;
 
 
             try {
-                for(var i=0;i<answers.length;i++){
+                for (var i = 0; i < answers.length; i++) {
                     var currentQuestionId = answers[i].questionId;
                     var currentUserSelection = answers[i].userSelection;
 
-                    for(var j=0;j<questionPaper.length;j++){
-                        
-                        if(questionPaper[j].questionId === currentQuestionId){
-                            if(questionPaper[j].options[currentUserSelection].isCorrect){
-                                totalMarks = totalMarks +questionPaper[j].weightage
+                    for (var j = 0; j < questionPaper.length; j++) {
+
+                        if (questionPaper[j].questionId === currentQuestionId) {
+                            if (questionPaper[j].options[currentUserSelection].isCorrect) {
+                                totalMarks = totalMarks + questionPaper[j].weightage
                             }
                         }
 
@@ -544,21 +544,21 @@ const receiveAnswers = async(req,res)=>{
 
 
                 }
-      
-                const answerJson = {"answers":req.body.answers,"marksScored":totalMarks}
-        //  const answerJson = JSON({answers,totalMarks})
+
+                const answerJson = { "answers": req.body.answers, "marksScored": totalMarks }
+                //  const answerJson = JSON({answers,totalMarks})
                 // req.body.answers.marksScored = totalMarks
-              
+
 
                 console.log(answerJson)
                 try {
                     // const answerResponse = [req.user.userId,req.body.answers]
-              
-                    await firebase_firestore.collection("exams").doc(req.body.examId).collection("responses").doc(req.user.userId).set({...answerJson})
-                    await firebase_firestore.collection("users").doc(req.user.userId).update({"history":fieldValue.arrayUnion(req.body.examId)});  
+
+                    await firebase_firestore.collection("exams").doc(req.body.examId).collection("responses").doc(req.user.userId).set({ ...answerJson })
+                    await firebase_firestore.collection("users").doc(req.user.userId).update({ "history": fieldValue.arrayUnion(req.body.examId) });
                     // Send email to the student
-                    await sendMail(req.user.emailId,"Results for "+exam.data()["examName"],"Your marks for the exam "+exam.data()["examName"]+" is "+totalMarks)
-                    
+                    await sendMail(req.user.emailId, "Results for " + exam.data()["examName"], "Your marks for the exam " + exam.data()["examName"] + " is " + totalMarks)
+
                     res.status(200).json("Response submitted successfully")
                 } catch (error) {
                     res.status(500).json("Something went wrong. Try agin later.")
@@ -566,7 +566,7 @@ const receiveAnswers = async(req,res)=>{
 
             } catch (error) {
                 res.status(500).json("Something went wrong.")
-                
+
             }
 
 
@@ -576,10 +576,10 @@ const receiveAnswers = async(req,res)=>{
 
 
         }
-        
+
     } catch (error) {
         res.status(500).json("Something went wrongg")
-        
+
     }
 }
 
