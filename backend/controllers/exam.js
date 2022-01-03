@@ -23,8 +23,12 @@ import {
     questionPaperExists,
     questionPaperFromExam
 } from "../helpers/exams.js";
-import { ExamAndSupervisor } from "../helpers/auth.js";
-import { sendMail } from "../helpers/email.js";
+import {
+    ExamAndSupervisor
+} from "../helpers/auth.js";
+import {
+    sendMail
+} from "../helpers/email.js";
 const fieldValue = admin.firestore.FieldValue;
 
 
@@ -108,10 +112,14 @@ const deleteExam = async (req, res) => {
             } catch (error) {
                 console.log("Question Paper was not created")
             }
-            await firebase_firestore.collection("users").doc(examSup).update({ examsCreated: admin.firestore.FieldValue.arrayRemove(exam.data()["examId"]) });
+            await firebase_firestore.collection("users").doc(examSup).update({
+                examsCreated: admin.firestore.FieldValue.arrayRemove(exam.data()["examId"])
+            });
             studentsList.map(async (student) => {
 
-                await firebase_firestore.collection("users").doc(student).update({ examsEnrolled: admin.firestore.FieldValue.arrayRemove(exam.data()["examId"]) });
+                await firebase_firestore.collection("users").doc(student).update({
+                    examsEnrolled: admin.firestore.FieldValue.arrayRemove(exam.data()["examId"])
+                });
             })
             await firebase_firestore.collection("exams").doc(exam.id).delete()
 
@@ -140,7 +148,7 @@ const getAllExams = async (req, res) => {
                 examIdsList = await (await firebase_firestore.collection("users").doc(studentId).get()).data()["examsEnrolled"]
 
             } catch (error) {
-                return res.status.json("No exams available")
+                return res.status.json([])
             }
             if (examIdsList) {
                 for (var i = 0; i < examIdsList.length; i++) {
@@ -162,7 +170,7 @@ const getAllExams = async (req, res) => {
 
                 return res.status(200).json(examsList)
             } else {
-                return res.status(200).json("No exams available")
+                return res.status(200).json([])
 
             }
 
@@ -179,7 +187,7 @@ const getAllExams = async (req, res) => {
                 examIdsList = await (await firebase_firestore.collection("users").doc(supervisorId).get()).data()["examsCreated"]
 
             } catch (error) {
-                return res.status.json("No exams available")
+                return res.status(200).json([])
             }
             if (examIdsList) {
                 for (var i = 0; i < examIdsList.length; i++) {
@@ -194,14 +202,14 @@ const getAllExams = async (req, res) => {
 
 
             } else {
-                return res.status(400).json("Exam or user doesn't exists")
+                return res.status(200).json([])
             }
 
             if (examsList.length > 0) {
 
                 return res.status(200).json(examsList)
             } else {
-                return res.status(200).json("No exams available")
+                return res.status(200).json([])
 
             }
 
@@ -270,7 +278,9 @@ const deleteQuestionPaper = async (req, res) => {
     if (req.body.questionPaperId && req.body.examId) {
         if (questionPaperExists(req.body.questionPaperId, req.body.examId)) {
             await firebase_firestore.collection("questionPapers").doc(req.body.questionPaperId).delete()
-            await firebase_firestore.collection("exams").doc(req.body.examId).update({ questionPaperId: fieldValue.delete() })
+            await firebase_firestore.collection("exams").doc(req.body.examId).update({
+                questionPaperId: fieldValue.delete()
+            })
             return res.status(200).json("Question Paper deleted")
         }
     } else {
@@ -354,8 +364,7 @@ const removeStudents = async (req, res) => {
                         await Promise.resolve(firebase_firestore.collection("users").doc(req.body.userExists.userId).update({
                             examsEnrolled: admin.firestore.FieldValue.arrayRemove(req.body.examId)
                         }))
-                    } catch (error) {
-                    }
+                    } catch (error) {}
                 } else {
                     invalidUsers.push(req.body.emailId)
                 }
@@ -366,8 +375,7 @@ const removeStudents = async (req, res) => {
                 await firebase_firestore.collection("exams").doc(req.body.examId).update({
                     studentsList: admin.firestore.FieldValue.arrayRemove(filteredStudentsList[i].userId)
                 });
-            } catch (error) {
-            }
+            } catch (error) {}
         }
 
         return res.status(200).json("Students removed from exam successfully and users:- " + invalidUsers + " doesn't exists")
@@ -545,7 +553,10 @@ const receiveAnswers = async (req, res) => {
 
                 }
 
-                const answerJson = { "answers": req.body.answers, "marksScored": totalMarks }
+                const answerJson = {
+                    "answers": req.body.answers,
+                    "marksScored": totalMarks
+                }
                 //  const answerJson = JSON({answers,totalMarks})
                 // req.body.answers.marksScored = totalMarks
 
@@ -554,8 +565,12 @@ const receiveAnswers = async (req, res) => {
                 try {
                     // const answerResponse = [req.user.userId,req.body.answers]
 
-                    await firebase_firestore.collection("exams").doc(req.body.examId).collection("responses").doc(req.user.userId).set({ ...answerJson })
-                    await firebase_firestore.collection("users").doc(req.user.userId).update({ "history": fieldValue.arrayUnion(req.body.examId) });
+                    await firebase_firestore.collection("exams").doc(req.body.examId).collection("responses").doc(req.user.userId).set({
+                        ...answerJson
+                    })
+                    await firebase_firestore.collection("users").doc(req.user.userId).update({
+                        "history": fieldValue.arrayUnion(req.body.examId)
+                    });
                     // Send email to the student
                     await sendMail(req.user.emailId, "Results for " + exam.data()["examName"], "Your marks for the exam " + exam.data()["examName"] + " is " + totalMarks)
 
