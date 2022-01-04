@@ -40,7 +40,7 @@ const createExam = async (req, res) => {
 
 
         const newId = uid()
-        const newExam = new Exam(newId, req.user.userId, req.body.examName, req.body.examStartTime, req.body.examEndTime, req.body.examDesc)
+        const newExam = new Exam(newId, req.user.userId, req.body.examName, req.body.examStartTime, req.body.examEndTime, req.body.examDesc,req.body.examInstructions)
         const examJson = JSON.parse(JSON.stringify(newExam))
         const result = await firebase_firestore.collection('exams').doc(newId).create(examJson);
         // await firebase_firestore.collection('users').doc(req.user.userId).set({examsCreated:presentExamsCreated},{merge:true})
@@ -62,7 +62,7 @@ const updateExam = async (req, res) => {
     try {
 
         const studentsList = await (await firebase_firestore.collection("exams").doc(req.body.examId).get()).data()["studentsList"]
-        const newExam = new Exam(req.body.examId, req.user.userId, req.body.examName, req.body.examStartTime, req.body.examEndTime, req.body.examDesc)
+        const newExam = new Exam(req.body.examId, req.user.userId, req.body.examName, req.body.examStartTime, req.body.examEndTime, req.body.examDesc,req.body.examInstructions)
         newExam.studentsList = studentsList;
         const examJson = JSON.parse(JSON.stringify(newExam))
         const result = await firebase_firestore.collection('exams').doc(req.body.examId).update(examJson);
