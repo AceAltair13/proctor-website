@@ -82,10 +82,12 @@ const getExam = async (req, res) => {
         if (req.query.examId) {
             const exam = await firebase_firestore.collection("exams").doc(req.query.examId).get()
             if (exam) {
-                if (!examAccess(exam, req.session.userId)) {
+                if (!examAccess(exam, req.user.userId)) {
                     return res.status(400).json("Permission denied to access the exam")
                 }
-                return res.status(200).json(exam.data())
+                let {supervisorId,studentsList,createdAt,...other} = exam.data();
+
+                return res.status(200).json(other)
             } else {
                 return res.status(400).json("Invalid examId")
             }
@@ -137,56 +139,60 @@ const deleteExam = async (req, res) => {
 }
 
 const getAllExams = async (req, res) => {
+    if(req.query.examId){
+        getExam(req,res);
+    }else{
 
-    if (req.user.isStudent) {
-        const studentId = req.user.userId;
-
-        try {
-            var examsList = [];
-            var examIdsList
+        
+        if (req.user.isStudent) {
+            const studentId = req.user.userId;
+            
             try {
-                examIdsList = await (await firebase_firestore.collection("users").doc(studentId).get()).data()["examsEnrolled"]
-
-            } catch (error) {
-                return res.status.json([])
-            }
-            if (examIdsList) {
-                for (var i = 0; i < examIdsList.length; i++) {
-                    var exam = await firebase_firestore.collection("exams").doc(examIdsList[i]).get()
-                    if (exam) {
-                        let examData = exam.data()
-                        let {supervisorId,studentsList,questionPaperId,createdAt,examInstructions,...other} = examData;
-
-                        examsList.push(other)
-                    }
+                var examsList = [];
+                var examIdsList
+                try {
+                    examIdsList = await (await firebase_firestore.collection("users").doc(studentId).get()).data()["examsEnrolled"]
+                    
+                } catch (error) {
+                    return res.status.json([])
                 }
-
-
-            } else {
-                return res.status(200).json([])
-            }
-
-            if (examsList.length > 0) {
-
-                return res.status(200).json(examsList)
-            } else {
-                return res.status(200).json([])
-
-            }
-
-        } catch (error) {
-            return res.status(500).json("Something went wrong")
-        }
-    } else if (req.user.isSupervisor) {
-        const supervisorId = req.user.userId;
-
-        try {
-            var examsList = [];
-            var examIdsList
-            try {
-                examIdsList = await (await firebase_firestore.collection("users").doc(supervisorId).get()).data()["examsCreated"]
-
+                if (examIdsList) {
+                    for (var i = 0; i < examIdsList.length; i++) {
+                        var exam = await firebase_firestore.collection("exams").doc(examIdsList[i]).get()
+                        if (exam) {
+                            let examData = exam.data()
+                            let {supervisorId,studentsList,questionPaperId,createdAt,examInstructions,...other} = examData;
+                            
+                            examsList.push(other)
+                        }
+                    }
+                    
+                    
+                } else {
+                    return res.status(200).json([])
+                }
+                
+                if (examsList.length > 0) {
+                    
+                    return res.status(200).json(examsList)
+                } else {
+                    return res.status(200).json([])
+                    
+                }
+                
             } catch (error) {
+                return res.status(500).json("Something went wrong")
+            }
+        } else if (req.user.isSupervisor) {
+            const supervisorId = req.user.userId;
+            
+            try {
+                var examsList = [];
+                var examIdsList
+                try {
+                    examIdsList = await (await firebase_firestore.collection("users").doc(supervisorId).get()).data()["examsCreated"]
+                    
+                } catch (error) {
                 return res.status(200).json([])
             }
             if (examIdsList) {
@@ -195,29 +201,30 @@ const getAllExams = async (req, res) => {
                     if (exam) {
                         let examData = exam.data()
                         // let {studentsList,...other} = examData;
-
+                        
                         examsList.push(examData)
                     }
                 }
-
-
+                
+                
             } else {
                 return res.status(200).json([])
             }
-
+            
             if (examsList.length > 0) {
-
+                
                 return res.status(200).json(examsList)
             } else {
                 return res.status(200).json([])
-
+                
             }
-
+            
         } catch (error) {
             return res.status(500).json("Something went wrong")
         }
     }
-
+    
+    }
 }
 
 

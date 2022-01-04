@@ -26,7 +26,7 @@ const router = Router();
 // CRUD EXAM
 router.post("/", [auth.Token,auth.Supervisor], createExam);
 router.put("/", [auth.Token,auth.Supervisor,exam.examCreatedBySupervisor], updateExam);
-router.get("/:examId", [auth.Token], getExam);
+// router.get("/:examId", [auth.Token], getExam);
 router.get("/", [auth.Token], getAllExams);
 
 router.delete("/", [auth.Token,auth.ExamAndSupervisor], deleteExam);
