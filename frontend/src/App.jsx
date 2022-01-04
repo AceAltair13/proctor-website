@@ -41,6 +41,9 @@ function App() {
                     <Route path="/register">
                         {user ? <Redirect to="/dashboard" /> : <Register />}
                     </Route>
+                    <Route path="/take-exam/:id">
+                        {user ? <PreExam /> : <Redirect to="/login" />}
+                    </Route>
                     <Route path="/error1">
                         <MobileExamError />
                     </Route>

@@ -12,6 +12,7 @@ import {
     REGISTER,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+import questionPaperSlice from "./Features/questionPaperSlice";
 
 const persistConfig = {
     key: "root",
@@ -21,8 +22,9 @@ const persistConfig = {
 
 const allReducers = combineReducers({
     user: userSlice,
-    student: studentSlice,
     dashboard: dashboardSlice,
+    student: studentSlice,
+    questionPaper: questionPaperSlice
 });
 
 const persistedReducer = persistReducer(persistConfig, allReducers);

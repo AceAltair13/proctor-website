@@ -1,7 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    exams: [],
+    exams: {
+        upcoming: [],
+        current: [],
+        past: [],
+    },
     isFetching: false,
 };
 
