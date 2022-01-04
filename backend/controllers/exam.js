@@ -155,9 +155,9 @@ const getAllExams = async (req, res) => {
                     var exam = await firebase_firestore.collection("exams").doc(examIdsList[i]).get()
                     if (exam) {
                         let examData = exam.data()
-                        // let {studentsList,...other} = examData;
+                        let {supervisorId,studentsList,questionPaperId,createdAt,examInstructions,...other} = examData;
 
-                        examsList.push(examData)
+                        examsList.push(other)
                     }
                 }
 
