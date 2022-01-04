@@ -333,9 +333,9 @@ const enrollStudent = async (req, res) => {
                     });
                 }
 
-                const subject = "Link for exam" + " " + Test_name.examId
-                const body = "http://localhost:8080/api/user/" + student_details.userId + "/" + req.body.examId
-                await sendMail(filteredStudentsList[i].emailId, subject, body)
+                // const subject = "Link for exam" + " " + Test_name.examId
+                // const body = "http://localhost:8080/api/user/" + student_details.userId + "/" + req.body.examId
+                // await sendMail(filteredStudentsList[i].emailId, subject, body)
 
             } catch (error) {
                 console.log(error)
