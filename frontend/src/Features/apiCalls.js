@@ -12,13 +12,13 @@ import {
     fetchExamsSuccess,
     fetchExamsFailure,
 } from "./studentSlice";
+import { DateTime } from "luxon";
 
 export const login = (dispatch, user) => {
     dispatch(loginStart());
     // Timeout to prevent loading bar vanishing too fast
     setTimeout(async () => {
         try {
-            console.log(user);
             const res = await publicRequest.post(LOGIN_URL, user);
             dispatch(loginSuccess(res.data));
         } catch (error) {
@@ -65,7 +65,24 @@ export const fetchStudentExams = (dispatch) => {
     setTimeout(async () => {
         try {
             const res = await userRequest.get(FETCH_EXAMS_URL);
-            dispatch(fetchExamsSuccess(res.data));
+            console.log(res.data);
+            let upcoming = [];
+            let current = [];
+            let past = [];
+            res.data.forEach((exam) => {
+                let examStartTime = DateTime.fromISO(exam.examStartTime);
+                let currentTime = DateTime.local();
+                let examEndTime = DateTime.fromISO(exam.examEndTime);
+
+                if (examStartTime > currentTime) {
+                    upcoming.push(exam);
+                } else if (examEndTime < currentTime) {
+                    past.push(exam);
+                } else {
+                    current.push(exam);
+                }
+            });
+            dispatch(fetchExamsSuccess({ upcoming, current, past }));
         } catch (error) {
             dispatch(fetchExamsFailure());
             snackActions.error(error.response.data);

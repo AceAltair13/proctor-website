@@ -1,11 +1,15 @@
-import React from 'react'
+import React from "react";
+import { useParams } from "react-router-dom";
 
 const PreExam = () => {
-    return (
-        <div>
-            
-        </div>
-    )
-}
+    const { id } = useParams();
 
-export default PreExam
+    return (
+        <>
+            <h1>PreExam</h1>
+            <h2>{id}</h2>
+        </>
+    );
+};
+
+export default PreExam;

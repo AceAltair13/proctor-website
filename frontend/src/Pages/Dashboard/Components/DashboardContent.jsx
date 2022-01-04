@@ -19,7 +19,7 @@ function DashboardContent(props) {
                 p: 3,
                 width: { sm: `calc(100% - ${drawerWidth}px)` },
                 bgcolor: "#f5f5f5",
-                height: "100vh",
+                minHeight: "100vh",
             }}
         >
             <Toolbar />

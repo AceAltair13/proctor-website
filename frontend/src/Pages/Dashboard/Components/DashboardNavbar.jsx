@@ -37,8 +37,8 @@ function DashboardNavbar() {
     const isFetching = useSelector((state) => state.student.isFetching);
 
     const logoutUser = () => {
-        dispatch(logout());
         dispatch(resetStudentDashboard());
+        dispatch(logout());
         setRedirect(true);
     };
 
