@@ -19,15 +19,14 @@ import {
     bindTrigger,
     bindMenu,
 } from "material-ui-popup-state/hooks";
-import { logout } from "../../../Features/userSlice";
 import { Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import EditIcon from "@mui/icons-material/Edit";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import { resetStudentDashboard } from "../../../Features/studentSlice";
 import { setMobileOpen } from "../../../Features/dashboardSlice";
+import { logout } from "../../../Features/apiCalls";
 
 function DashboardNavbar() {
     const dispatch = useDispatch();
@@ -37,8 +36,7 @@ function DashboardNavbar() {
     const isFetching = useSelector((state) => state.student.isFetching);
 
     const logoutUser = () => {
-        dispatch(resetStudentDashboard());
-        dispatch(logout());
+        logout(dispatch);
         setRedirect(true);
     };
 

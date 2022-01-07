@@ -9,7 +9,6 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogContentText,
     DialogTitle,
     Divider,
     Fab,
@@ -46,31 +45,31 @@ const PreExamDialog = (props) => {
                 </Stack>
             </DialogTitle>
             <DialogContent dividers>
-                <DialogContentText variant="body1">
+                <Stack>
                     <Typography variant="h6">
                         General instructions for candidates:
                     </Typography>
-                    <Stack>
+                    <Typography variant="body1">
                         {[...new Array(25)]
                             .map(
                                 () =>
                                     `Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
                             )
                             .join("\n")}
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={instructionsRead}
-                                    onChange={(e) =>
-                                        setInstructionsRead(e.target.checked)
-                                    }
-                                />
-                            }
-                            label="I have read the instructions"
-                            sx={{ mt: 2 }}
-                        />
-                    </Stack>
-                </DialogContentText>
+                    </Typography>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={instructionsRead}
+                                onChange={(e) =>
+                                    setInstructionsRead(e.target.checked)
+                                }
+                            />
+                        }
+                        label="I have read the instructions"
+                        sx={{ mt: 2 }}
+                    />
+                </Stack>
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose} color="primary" variant="text">
@@ -90,7 +89,7 @@ const PreExamDialog = (props) => {
 };
 
 const ExamCard = (props) => {
-    const { examName, examDesc, examStartTime, examEndTime, examId } = props;
+    const { examName, examStartTime, examEndTime, examId } = props;
     const examStartTimeDate = DateTime.fromISO(examStartTime);
     const examEndTimeDate = DateTime.fromISO(examEndTime);
     const duration = examEndTimeDate.diff(examStartTimeDate, "minutes").minutes;
@@ -109,9 +108,8 @@ const ExamCard = (props) => {
             <Card>
                 <CardContent>
                     <Stack>
-                        <Typography variant="h6">{examName}</Typography>
-                        <Typography variant="body2" gutterBottom>
-                            {examDesc}
+                        <Typography variant="h6" gutterBottom>
+                            {examName}
                         </Typography>
                         <Typography variant="caption">
                             <strong>Started At:</strong>{" "}

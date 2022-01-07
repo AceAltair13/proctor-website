@@ -4,14 +4,11 @@ import theme from "./Themes/theme";
 import { Switch, Route, Redirect } from "react-router-dom";
 import {
     Dashboard,
-    Exam,
     Home,
     Login,
     Register,
-    MobileExamError,
     NotFoundError,
-    ExamPermissionError,
-    PreExam,
+    ExamRoutes,
 } from "./Pages/index";
 import { SnackbarProvider } from "notistack";
 import { useSelector } from "react-redux";
@@ -32,9 +29,6 @@ function App() {
                     <Route path="/dashboard">
                         {user ? <Dashboard /> : <Redirect to="/login" />}
                     </Route>
-                    <Route path="/exam">
-                        {user ? <Exam /> : <Redirect to="/login" />}
-                    </Route>
                     <Route path="/login">
                         {user ? <Redirect to="/dashboard" /> : <Login />}
                     </Route>
@@ -42,16 +36,7 @@ function App() {
                         {user ? <Redirect to="/dashboard" /> : <Register />}
                     </Route>
                     <Route path="/take-exam/:id">
-                        {user ? <PreExam /> : <Redirect to="/login" />}
-                    </Route>
-                    <Route path="/error1">
-                        <MobileExamError />
-                    </Route>
-                    <Route path="/error2">
-                        <ExamPermissionError />
-                    </Route>
-                    <Route path="/preexam">
-                        <PreExam />
+                        {user ? <ExamRoutes /> : <Redirect to="/login" />}
                     </Route>
                     <Route exact path="/">
                         <Home />

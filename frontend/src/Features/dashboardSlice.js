@@ -15,8 +15,10 @@ const dashboardSlice = createSlice({
         setMobileOpen: (state) => {
             state.mobileOpen = !state.mobileOpen;
         },
+        resetDashboard: () => initialState,
     },
 });
 
-export const { setDashboardTitle, setMobileOpen } = dashboardSlice.actions;
+export const { setDashboardTitle, setMobileOpen, resetDashboard } =
+    dashboardSlice.actions;
 export default dashboardSlice.reducer;

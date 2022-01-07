@@ -26,7 +26,7 @@ const studentSlice = createSlice({
         setDashboardTitle: (state, action) => {
             state.dashboardTitle = action.payload;
         },
-        resetStudentDashboard: () => initialState,
+        resetStudent: () => initialState,
     },
 });
 
@@ -34,6 +34,6 @@ export const {
     fetchExamsStart,
     fetchExamsSuccess,
     fetchExamsFailure,
-    resetStudentDashboard,
+    resetStudent,
 } = studentSlice.actions;
 export default studentSlice.reducer;

@@ -1,7 +1,7 @@
 import React from "react";
-import ExamFooter from "./ExamFooter";
-import ExamHeader from "./ExamHeader";
-import ExamMain from "./ExamMain";
+import ExamFooter from "./ExamComponents/ExamFooter";
+import ExamHeader from "./ExamComponents/ExamHeader";
+import ExamMain from "./ExamComponents/ExamMain";
 import { Grid } from "@mui/material";
 
 function Exam() {

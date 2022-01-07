@@ -6,13 +6,17 @@ import {
 } from "../Constants/urls";
 import { publicRequest, userRequest } from "../requestMethods";
 import { snackActions } from "../Utils/SnackBarUtils";
-import { loginFailure, loginStart, loginSuccess } from "./userSlice";
+import { loginFailure, loginStart, loginSuccess, resetUser } from "./userSlice";
 import {
     fetchExamsStart,
     fetchExamsSuccess,
     fetchExamsFailure,
+    resetStudent,
 } from "./studentSlice";
 import { DateTime } from "luxon";
+import { resetExam, setExam, setIsCurrentExamFetching } from "./examSlice";
+import { resetDashboard } from "./dashboardSlice";
+import { resetQuestionPaper } from "./questionPaperSlice";
 
 export const login = (dispatch, user) => {
     dispatch(loginStart());
@@ -26,6 +30,14 @@ export const login = (dispatch, user) => {
             snackActions.error(error.response.data);
         }
     }, 1000);
+};
+
+export const logout = (dispatch) => {
+    dispatch(resetUser());
+    dispatch(resetDashboard());
+    dispatch(resetStudent());
+    dispatch(resetExam());
+    dispatch(resetQuestionPaper());
 };
 
 export const registerUser = (dispatch, user, role) => {
@@ -65,7 +77,6 @@ export const fetchStudentExams = (dispatch) => {
     setTimeout(async () => {
         try {
             const res = await userRequest.get(FETCH_EXAMS_URL);
-            console.log(res.data);
             let upcoming = [];
             let current = [];
             let past = [];
@@ -85,6 +96,23 @@ export const fetchStudentExams = (dispatch) => {
             dispatch(fetchExamsSuccess({ upcoming, current, past }));
         } catch (error) {
             dispatch(fetchExamsFailure());
+            snackActions.error(error.response.data);
+        }
+    }, 1000);
+};
+
+export const fetchSingleStudentExam = (dispatch, examId) => {
+    dispatch(setIsCurrentExamFetching(true));
+    // Timeout to prevent loading bar vanishing too fast
+    setTimeout(async () => {
+        try {
+            console.log(examId);
+            const res = await userRequest.get(
+                FETCH_EXAMS_URL + "?examId=" + examId
+            );
+            dispatch(setExam(res.data));
+        } catch (error) {
+            dispatch(setIsCurrentExamFetching(false));
             snackActions.error(error.response.data);
         }
     }, 1000);

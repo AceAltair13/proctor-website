@@ -21,7 +21,6 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginValidation } from "../../Validations/loginValidation";
 
-
 function Login() {
     const dispatch = useDispatch();
     const { isFetching } = useSelector((state) => state.user);
