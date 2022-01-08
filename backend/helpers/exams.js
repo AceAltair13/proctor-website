@@ -5,6 +5,7 @@ import * as config from "../config.js";
 import {
     firebase_firestore
 } from "../db.js";
+import { DateTime } from "luxon";
 
 
 export const questionPaperExists = async (questionPaperId, examId) => {
@@ -81,9 +82,13 @@ export const examAccess = (exam,userId)=>{
     return userEligible
 }
 
-export const inTime = async(exam,userId)=>{
-    const startTime = new Date(exam.data()["examStartTime"]).toISOString()
-    const endTime = new Date(exam.data()["examEndTime"]).toISOString()
+export const inTime = async(exam,userId,req)=>{
+    console.log("Tiem print"+ new Date());
+    // const startTime = new Date(exam.data()["examStartTime"]).toISOString()
+    // const endTime = new Date(exam.data()["examEndTime"]).toISOString()
+
+    const startTime = DateTime.fromISO(exam.data()["examStartTime"])
+    const endTime = DateTime.fromISO(exam.data()["examEndTime"])
     const supervisorId = exam.data()["supervisorId"]
 
 
@@ -91,14 +96,23 @@ export const inTime = async(exam,userId)=>{
     if(userId === supervisorId){
         allow = true
     }else{
-        const currTime = new Date().toISOString()
+        // const currTime = new Date().toISOString()
+        const currTime = DateTime.local()
+
 
         if(currTime>=startTime && currTime<=endTime){
             allow = true
+            req.timeStatus = "inTime"
         }else{
+            if(currTime<startTime && currTime<endTime){
+                req.timeStatus = "beforeTime"
+            }else if(currTime>endTime && currTime>startTime){
+                req.timeStatus = "afterTime"
+            }
             allow = false
         }
     }
+    console.log(req.timeStatus);
     console.log("inTime "+ allow)
     return allow
 
