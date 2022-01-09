@@ -10,7 +10,6 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
-    Fab,
     FormControlLabel,
     Grid,
     Stack,
@@ -19,8 +18,7 @@ import {
 import { fetchStudentExams } from "../../../Features/apiCalls";
 import { DateTime } from "luxon";
 import { Redirect } from "react-router-dom";
-import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
-import RefreshIcon from "@mui/icons-material/Refresh";
+import StudentExams from "./Templates/StudentExams";
 
 const PreExamDialog = (props) => {
     const { open, onClose, examName, duration, examId } = props;
@@ -156,27 +154,15 @@ const ExamCardGrid = (props) => {
 const OngoingExams = () => {
     const dispatch = useDispatch();
     const exams = useSelector((state) => state.student.exams.current);
-
-    useEffect(() => fetchStudentExams(dispatch, "current"), [dispatch]);
+    const fetchCurrentExams = () => fetchStudentExams(dispatch, "current");
 
     return (
-        <>
-            <Typography variant="h6" gutterBottom>
-                Currently Ongoing Exams
-                <NotificationsActiveIcon
-                    sx={{ ml: 1, verticalAlign: "middle" }}
-                    color="action"
-                />
-            </Typography>
-            {exams.length > 0 && <ExamCardGrid exams={exams} />}
-            <Fab
-                color="primary"
-                sx={{ position: "fixed", bottom: 0, right: 0, m: 3 }}
-                onClick={() => fetchStudentExams(dispatch, "current")}
-            >
-                <RefreshIcon />
-            </Fab>
-        </>
+        <StudentExams
+            title="Ongoing Exams"
+            fetchExamFunction={fetchCurrentExams}
+        >
+            <ExamCardGrid exams={exams} />
+        </StudentExams>
     );
 };
 

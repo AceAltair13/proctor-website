@@ -112,6 +112,7 @@ export const fetchStudentExams = (dispatch, time) => {
             dispatch(setter(res.data));
         } catch (error) {
             dispatch(fetchExamsFailure());
+            console.log(error);
             snackActions.error(error.response.data);
         }
     }, 1000);

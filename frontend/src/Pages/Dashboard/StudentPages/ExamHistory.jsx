@@ -1,9 +1,58 @@
-import { Paper, Typography } from "@mui/material";
-import React, { useEffect } from "react";
+import { Paper } from "@mui/material";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
 import { DateTime } from "luxon";
 import { fetchStudentExams } from "../../../Features/apiCalls";
+import StudentExams from "./Templates/StudentExams";
+
+const columns = [
+    {
+        headerName: "Sr No",
+        field: "srNo",
+        width: 100,
+        type: "number",
+        headerAlign: "center",
+        align: "center",
+    },
+    {
+        headerName: "Exam Name",
+        field: "examName",
+        width: 200,
+        headerAlign: "center",
+        align: "center",
+    },
+    {
+        headerName: "Start",
+        field: "startTime",
+        width: 200,
+        type: "dateTime",
+        headerAlign: "center",
+        align: "center",
+    },
+    {
+        headerName: "End",
+        field: "endTime",
+        width: 200,
+        type: "dateTime",
+        headerAlign: "center",
+        align: "center",
+    },
+    {
+        headerName: "Exam Description",
+        field: "examDesc",
+        flex: 1,
+        headerAlign: "center",
+        align: "center",
+    },
+    {
+        headerName: "Status",
+        field: "status",
+        width: 200,
+        headerAlign: "center",
+        align: "center",
+    },
+];
 
 const ExamHistory = () => {
     const dispatch = useDispatch();
@@ -20,64 +69,13 @@ const ExamHistory = () => {
         ),
         examDesc: exam.examDesc,
     }));
-    const columns = [
-        {
-            headerName: "Sr No",
-            field: "srNo",
-            width: 100,
-            type: "number",
-            headerAlign: "center",
-            align: "center",
-        },
-        {
-            headerName: "Exam Name",
-            field: "examName",
-            width: 200,
-            headerAlign: "center",
-            align: "center",
-        },
-        {
-            headerName: "Start",
-            field: "startTime",
-            width: 200,
-            type: "dateTime",
-            headerAlign: "center",
-            align: "center",
-        },
-        {
-            headerName: "End",
-            field: "endTime",
-            width: 200,
-            type: "dateTime",
-            headerAlign: "center",
-            align: "center",
-        },
-        {
-            headerName: "Exam Description",
-            field: "examDesc",
-            flex: 1,
-            headerAlign: "center",
-            align: "center",
-        },
-        {
-            headerName: "Status",
-            field: "status",
-            width: 200,
-            headerAlign: "center",
-            align: "center",
-        },
-    ];
-
-    useEffect(() => {
-        fetchStudentExams(dispatch, "history");
-    }, [dispatch]);
+    const fetchExamsHistory = () => fetchStudentExams(dispatch, "history");
 
     return (
-        <>
-            <Typography variant="h6" gutterBottom>
-                Past Exams
-            </Typography>
-
+        <StudentExams
+            title="Exams History"
+            fetchExamFunction={fetchExamsHistory}
+        >
             <Paper>
                 <DataGrid
                     columns={columns}
@@ -86,7 +84,7 @@ const ExamHistory = () => {
                     disableRowSelection
                 />
             </Paper>
-        </>
+        </StudentExams>
     );
 };
 
