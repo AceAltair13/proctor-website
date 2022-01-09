@@ -7,8 +7,8 @@ import { fetchStudentExams } from "../../../Features/apiCalls";
 
 const ExamHistory = () => {
     const dispatch = useDispatch();
-    const { past } = useSelector((state) => state.student.exams);
-    const rows = past.map((exam, index) => ({
+    const exams = useSelector((state) => state.student.exams.history);
+    const rows = exams.map((exam, index) => ({
         id: index,
         srNo: index + 1,
         examName: exam.examName,
@@ -69,7 +69,7 @@ const ExamHistory = () => {
     ];
 
     useEffect(() => {
-        fetchStudentExams(dispatch);
+        fetchStudentExams(dispatch, "history");
     }, [dispatch]);
 
     return (

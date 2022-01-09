@@ -3,8 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     exams: {
         upcoming: [],
+        history: [],
         current: [],
-        past: [],
     },
     isFetching: false,
 };
@@ -16,9 +16,17 @@ const studentSlice = createSlice({
         fetchExamsStart: (state) => {
             state.isFetching = true;
         },
-        fetchExamsSuccess: (state, action) => {
+        setUpcomingExams: (state, action) => {
             state.isFetching = false;
-            state.exams = action.payload;
+            state.exams.upcoming = action.payload;
+        },
+        setHistoryExams: (state, action) => {
+            state.isFetching = false;
+            state.exams.history = action.payload;
+        },
+        setCurrentExams: (state, action) => {
+            state.isFetching = false;
+            state.exams.current = action.payload;
         },
         fetchExamsFailure: (state) => {
             state.isFetching = false;
@@ -32,7 +40,9 @@ const studentSlice = createSlice({
 
 export const {
     fetchExamsStart,
-    fetchExamsSuccess,
+    setCurrentExams,
+    setHistoryExams,
+    setUpcomingExams,
     fetchExamsFailure,
     resetStudent,
 } = studentSlice.actions;

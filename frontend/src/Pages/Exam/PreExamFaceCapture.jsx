@@ -8,17 +8,32 @@ import {
     Toolbar,
     Typography,
 } from "@mui/material";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import Webcam from "react-webcam";
 import { snackActions } from "../../Utils/SnackBarUtils";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import ReplayIcon from "@mui/icons-material/Replay";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
+import "@tensorflow/tfjs";
+import * as blazeFace from "@tensorflow-models/blazeface";
+import { uploadPreExamFace } from "../../Features/apiCalls";
 
 const PreExamFaceCapture = () => {
     const { exam } = useSelector((state) => state.exam);
     const webcamRef = useRef(null);
+    const [model, setModel] = useState(null);
     const [image, setImage] = useState("");
+    const [errorMsg, setErrorMsg] = useState("");
+    const [showUploadBtn, setShowUploadBtn] = useState(false);
+
+    useEffect(() => {
+        const loadModel = async () => {
+            const model = await blazeFace.load();
+            setModel(model);
+        };
+        loadModel();
+    }, []);
 
     const videoConstraints = {
         height: 300,
@@ -26,10 +41,42 @@ const PreExamFaceCapture = () => {
         facingMode: "user",
     };
 
-    const captureImage = useCallback(() => {
+    const processPredictions = (predictions) => {
+        if (predictions.length > 1) {
+            setErrorMsg("More than 1 person detected! Please try again.");
+        } else if (predictions.length === 0) {
+            setErrorMsg("No face detected! Please try again.");
+        } else {
+            setErrorMsg("");
+            setShowUploadBtn(true);
+        }
+    };
+
+    const captureImage = async () => {
         const imageSrc = webcamRef.current.getScreenshot();
         setImage(imageSrc);
-    }, [webcamRef]);
+        if (
+            typeof webcamRef.current !== "undefined" &&
+            webcamRef.current !== null &&
+            webcamRef.current.video.readyState === 4
+        ) {
+            const snapshot = new Image();
+            snapshot.src = imageSrc;
+            snapshot.height = videoConstraints.height;
+            snapshot.width = videoConstraints.width;
+            snapshot.onload = async () => {
+                const predictions = await model.estimateFaces(snapshot);
+                console.log(predictions);
+                processPredictions(predictions);
+            };
+        }
+    };
+
+    const uploadImage = () => {
+        const uploadImage = new Image();
+        uploadImage.src = image;
+        uploadImage.onload = () => uploadPreExamFace(uploadImage);
+    };
 
     return (
         <Box
@@ -65,38 +112,62 @@ const PreExamFaceCapture = () => {
                             <Divider orientation="vertical" />
                         </Grid>
                         <Grid item xs={5} container justifyContent="center">
-                            {image === "" ? (
+                            {!!image ? (
+                                <img src={image} alt="face" />
+                            ) : (
                                 <Webcam
                                     audio={false}
                                     videoConstraints={videoConstraints}
                                     screenshotFormat="image/jpeg"
                                     ref={webcamRef}
                                     onUserMediaError={(e) =>
-                                        snackActions.warning(e)
+                                        snackActions.error(
+                                            "Webcam Error: " + e.message
+                                        )
                                     }
                                 />
-                            ) : (
-                                <img src={image} alt="face" />
                             )}
-                            {image === "" ? (
+                            {!!errorMsg && (
+                                <Typography variant="body1" color="error">
+                                    {errorMsg}
+                                </Typography>
+                            )}
+                            {!!image ? (
+                                <Button
+                                    size="large"
+                                    fullWidth
+                                    startIcon={<ReplayIcon />}
+                                    sx={{ mt: 2 }}
+                                    onClick={() => {
+                                        setImage("");
+                                        setErrorMsg("");
+                                        setShowUploadBtn(false);
+                                    }}
+                                >
+                                    Reset
+                                </Button>
+                            ) : (
                                 <Button
                                     size="large"
                                     fullWidth
                                     startIcon={<CameraAltIcon />}
                                     sx={{ mt: 2 }}
                                     onClick={captureImage}
+                                    disabled={!(!!image || !!model)}
                                 >
-                                    Capture
+                                    {!!model ? "Capture" : "Loading..."}
                                 </Button>
-                            ) : (
+                            )}
+                            {showUploadBtn && (
                                 <Button
                                     size="large"
                                     fullWidth
-                                    startIcon={<ReplayIcon />}
-                                    sx={{ mt: 2 }}
-                                    onClick={() => setImage("")}
+                                    startIcon={<FileUploadIcon />}
+                                    color="success"
+                                    sx={{ mt: 1 }}
+                                    onClick={uploadImage}
                                 >
-                                    Reset
+                                    Upload Image
                                 </Button>
                             )}
                         </Grid>

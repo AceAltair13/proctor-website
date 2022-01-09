@@ -13,17 +13,25 @@ import StudentMonitoring from "../SupervisorPages/StudentMonitoring";
 import Results from "../SupervisorPages/Results";
 import Profile from "../CommonPages/Profile";
 import ChangePassword from "../CommonPages/ChangePassword";
-import HistoryIcon from '@mui/icons-material/History';
+import HistoryIcon from "@mui/icons-material/History";
 import ExamHistory from "../StudentPages/ExamHistory";
+import OngoingExams from "../StudentPages/OngoingExams";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 
 const studentDrawerItems = [
     {
         subheader: "Exam",
         items: [
             {
-                text: "My Exams",
+                text: "Ongoing Exams",
+                icon: <NotificationsActiveIcon />,
+                to: "/dashboard/exam/ongoing",
+                component: OngoingExams,
+            },
+            {
+                text: "Upcoming Exams",
                 icon: <UpcomingIcon />,
-                to: "/dashboard/exam/exams",
+                to: "/dashboard/exam/upcoming",
                 component: UpcomingExams,
             },
             {
@@ -37,7 +45,7 @@ const studentDrawerItems = [
                 icon: <HistoryIcon />,
                 to: "/dashboard/exam/history",
                 component: ExamHistory,
-            }
+            },
         ],
     },
 ];

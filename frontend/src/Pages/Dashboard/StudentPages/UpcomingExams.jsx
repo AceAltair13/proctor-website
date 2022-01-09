@@ -1,164 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-    Button,
-    Card,
-    CardActions,
-    CardContent,
-    Checkbox,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    Divider,
-    Fab,
-    FormControlLabel,
-    Grid,
-    Paper,
-    Stack,
-    Typography,
-} from "@mui/material";
+import { Fab, Paper, Typography } from "@mui/material";
 import { fetchStudentExams } from "../../../Features/apiCalls";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { DataGrid } from "@mui/x-data-grid";
 import { DateTime } from "luxon";
-import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
-import { Redirect } from "react-router-dom";
-
-const PreExamDialog = (props) => {
-    const { open, onClose, examName, duration, examId } = props;
-    const [redirect, setRedirect] = useState(false);
-    const [instructionsRead, setInstructionsRead] = useState(false);
-
-    if (redirect) {
-        return <Redirect to={`/take-exam/${examId}`} />;
-    }
-
-    return (
-        <Dialog open={open} onClose={onClose} scroll="paper">
-            <DialogTitle>
-                <Stack>
-                    {examName}
-                    <Typography variant="body2">
-                        Time Duration: <strong>{duration}</strong> minutes
-                    </Typography>
-                </Stack>
-            </DialogTitle>
-            <DialogContent dividers>
-                <Stack>
-                    <Typography variant="h6">
-                        General instructions for candidates:
-                    </Typography>
-                    <Typography variant="body1">
-                        {[...new Array(25)]
-                            .map(
-                                () =>
-                                    `Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
-                            )
-                            .join("\n")}
-                    </Typography>
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                checked={instructionsRead}
-                                onChange={(e) =>
-                                    setInstructionsRead(e.target.checked)
-                                }
-                            />
-                        }
-                        label="I have read the instructions"
-                        sx={{ mt: 2 }}
-                    />
-                </Stack>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={onClose} color="primary" variant="text">
-                    Close
-                </Button>
-                <Button
-                    onClick={() => setRedirect(true)}
-                    color="primary"
-                    variant="text"
-                    disabled={!instructionsRead}
-                >
-                    Start Exam
-                </Button>
-            </DialogActions>
-        </Dialog>
-    );
-};
-
-const ExamCard = (props) => {
-    const { examName, examStartTime, examEndTime, examId } = props;
-    const examStartTimeDate = DateTime.fromISO(examStartTime);
-    const examEndTimeDate = DateTime.fromISO(examEndTime);
-    const duration = examEndTimeDate.diff(examStartTimeDate, "minutes").minutes;
-    const [open, setOpen] = useState(false);
-
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    return (
-        <>
-            <Card>
-                <CardContent>
-                    <Stack>
-                        <Typography variant="h6" gutterBottom>
-                            {examName}
-                        </Typography>
-                        <Typography variant="caption">
-                            <strong>Started At:</strong>{" "}
-                            {examStartTimeDate.toLocaleString()}
-                        </Typography>
-                        <Typography variant="caption" gutterBottom>
-                            <strong>Ends At:</strong>{" "}
-                            {examEndTimeDate.toLocaleString()}
-                        </Typography>
-                    </Stack>
-                </CardContent>
-
-                <CardActions>
-                    <Button
-                        disableElevation
-                        color="success"
-                        sx={{ ml: "auto" }}
-                        onClick={handleClickOpen}
-                    >
-                        Start
-                    </Button>
-                </CardActions>
-            </Card>
-            <PreExamDialog
-                open={open}
-                onClose={handleClose}
-                examName={examName}
-                duration={duration}
-                examId={examId}
-            />
-        </>
-    );
-};
-
-const ExamCardGrid = (props) => {
-    return (
-        <Grid container spacing={4}>
-            {props.exams.map((exam, index) => (
-                <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                    <ExamCard {...exam} />
-                </Grid>
-            ))}
-        </Grid>
-    );
-};
 
 const UpcomingExams = () => {
     const dispatch = useDispatch();
-    const { upcoming, current } = useSelector((state) => state.student.exams);
+    const exams = useSelector((state) => state.student.exams.upcoming);
     const { isFetching } = useSelector((state) => state.student);
     const columns = [
         {
@@ -201,7 +51,7 @@ const UpcomingExams = () => {
             flex: 1,
         },
     ];
-    const rows = upcoming.map((exam, index) => ({
+    const rows = exams.map((exam, index) => ({
         id: exam.examId,
         srNo: index + 1,
         examName: exam.examName,
@@ -215,27 +65,13 @@ const UpcomingExams = () => {
     }));
 
     useEffect(() => {
-        fetchStudentExams(dispatch);
+        fetchStudentExams(dispatch, "upcoming");
     }, [dispatch]);
 
     return (
         <>
             {!isFetching && (
                 <>
-                    {current.length > 0 && (
-                        <>
-                            <Typography variant="h6" gutterBottom>
-                                Currently Ongoing Exams
-                                <NotificationsActiveIcon
-                                    sx={{ ml: 1, verticalAlign: "middle" }}
-                                    color="action"
-                                />
-                            </Typography>
-                            <ExamCardGrid exams={current} />
-                            <Divider sx={{ my: 3 }} variant="fullWidth" />
-                        </>
-                    )}
-
                     <Typography variant="h6" gutterBottom>
                         Upcoming Exams
                     </Typography>
@@ -252,7 +88,7 @@ const UpcomingExams = () => {
             <Fab
                 color="primary"
                 sx={{ position: "fixed", bottom: 0, right: 0, m: 3 }}
-                onClick={() => fetchStudentExams(dispatch)}
+                onClick={() => fetchStudentExams(dispatch, "upcoming")}
             >
                 <RefreshIcon />
             </Fab>
