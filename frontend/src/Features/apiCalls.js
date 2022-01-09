@@ -13,6 +13,7 @@ import {
     removeToken,
     setToken,
     userRequest,
+    imageuploadrequest
 } from "../requestMethods";
 import { snackActions } from "../Utils/SnackBarUtils";
 import { loginFailure, loginStart, loginSuccess, resetUser } from "./userSlice";
@@ -136,10 +137,11 @@ export const fetchSingleStudentExam = (dispatch, examId) => {
 };
 
 export const uploadPreExamFace = async (image) => {
+    console.log("uploadpreexam",image)
     const formData = new FormData();
     formData.append("image", image);
     try {
-        await userRequest.post(UPLOAD_FACE_URL, formData).then(() => {
+        await imageuploadrequest.post(UPLOAD_FACE_URL, formData).then(() => {
             snackActions.success("Face uploaded successfully");
         });
     } catch (error) {

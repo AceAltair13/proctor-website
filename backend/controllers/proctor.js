@@ -2,19 +2,22 @@ import { storageRef, firebase_firestore } from "../db.js"
 import { examAccess } from "../helpers/exams.js"
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import fs from "fs"
+import base64ToImage from "base64-to-image";
+import path from "path";
 
-
-
-const postMalpractice = async (req, res, next) => {
+const upload_face = async (req, res, next) => {
+    const __dirname = path.resolve();
+    var optionalObj = {'fileName': 'face', 'type':'jpeg'};
+    base64ToImage(req.body.image,path.join(__dirname,"controllers"),optionalObj)
     const metadata = { contentType: 'image/jpeg; charset=utf-8' }
-    const type = req.body.type
-    const folder = req.user.userId + "/" + req.body.type + "/" + req.file.filename
+    const folder = req.user.userId + "/" + "Face Recoginition" + "/" + "face.jpeg"
     const storageRef_1 = ref(storageRef, folder);
-    fs.readFile(req.file.path, function (err, buffer) {
+    fs.readFile(path.join(__dirname)+"/controllersface.jpeg", function (err, buffer) {
+        console.log("function",buffer)
         upload(buffer)
     })
     download()
-    fs.unlink(req.file.path, (err) => {
+    fs.unlink(path.join(__dirname)+"/controllersface.jpeg", (err) => {
         if (err) throw err;
         console.log('done');
     });
@@ -31,17 +34,14 @@ const postMalpractice = async (req, res, next) => {
     }
 
 
-    async function updating_into_firestore(type, url) {
-        if (type === "Face Recoginition")
-        {
-            await firebase_firestore.collection("users").doc(req.user.userId).update({ "Face_Recoginition": url });
-        }
+    async function updating_into_firestore(url) {
+        await firebase_firestore.collection("users").doc(req.user.userId).update({ "Face_Recoginition": url });
     }
     async function download_link() {
         await getDownloadURL(ref(storageRef_1))
             .then((url) => {
                 console.log("download url", url);
-                updating_into_firestore(type, url);
+                updating_into_firestore(url);
 
             })
             .catch((error) => {
@@ -59,5 +59,5 @@ const postMalpractice = async (req, res, next) => {
     // // }
 }
 export {
-    postMalpractice
+    upload_face
 }

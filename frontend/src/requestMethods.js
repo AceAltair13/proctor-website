@@ -23,6 +23,11 @@ const userRequest = axios.create({
     headers: { token: getToken() },
 });
 
+const imageuploadrequest = axios.create({
+    baseURL: URL,
+    headers: { token: getToken(),'Content-Type': 'multipart/form-data'},
+});
+
 userRequest.interceptors.request.use(
     (config) => {
         config.headers.token = getToken();
@@ -33,7 +38,7 @@ userRequest.interceptors.request.use(
     }
 );
 
-export { userRequest, publicRequest };
+export { userRequest, publicRequest,imageuploadrequest};
 
 // export const postImageRequest = axios.create({
 //     baseURL: URL,

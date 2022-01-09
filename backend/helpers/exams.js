@@ -83,7 +83,7 @@ export const examAccess = (exam,userId)=>{
 }
 
 export const inTime = async(exam,userId,req)=>{
-    console.log("Tiem print"+ new Date());
+    console.log("Time print"+ new Date());
     // const startTime = new Date(exam.data()["examStartTime"]).toISOString()
     // const endTime = new Date(exam.data()["examEndTime"]).toISOString()
 

@@ -3,10 +3,11 @@ import * as auth from "../helpers/auth.js"
 
 import multer from "multer"
 import {
-    postMalpractice
+    upload_face
 } from "../controllers/proctor.js"
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
+        console.log("file",file)
         cb(null, './controllers')
 
     },
@@ -19,7 +20,7 @@ const upload = multer({ storage: storage })
 // const storage = multer.memoryStorage()
 const router = Router()
 
-router.post("/", auth.Token, upload.single('image'),postMalpractice)
+router.post("/upload-face", auth.Token, upload.single('image'),upload_face)
 
 
 

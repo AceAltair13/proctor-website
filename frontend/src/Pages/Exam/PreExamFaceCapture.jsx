@@ -18,7 +18,6 @@ import FileUploadIcon from "@mui/icons-material/FileUpload";
 import "@tensorflow/tfjs";
 import * as blazeFace from "@tensorflow-models/blazeface";
 import { uploadPreExamFace } from "../../Features/apiCalls";
-
 const PreExamFaceCapture = () => {
     const { exam } = useSelector((state) => state.exam);
     const webcamRef = useRef(null);
@@ -73,9 +72,15 @@ const PreExamFaceCapture = () => {
     };
 
     const uploadImage = () => {
-        const uploadImage = new Image();
-        uploadImage.src = image;
-        uploadImage.onload = () => uploadPreExamFace(uploadImage);
+        uploadPreExamFace(image)
+        // const uploadImage = new Image();
+        // uploadImage.src = image;
+        // const buffer = Buffer.from(image, "base64");
+        // fs.writeFileSync("new-path.jpg", buffer);
+        // console.log("upload image ",image);
+        // uploadImage.onload = async () =>
+        // console.log("image object",uploadImage)
+        //  uploadPreExamFace(uploadImage);
     };
 
     return (
