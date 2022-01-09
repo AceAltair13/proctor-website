@@ -761,10 +761,11 @@ const getCurrentExam = async (req, res) => {
                             .collection("exams")
                             .doc(examIdsList[i])
                             .get();
+                        if(exam){
 
                             inTime(exam,studentId,req);
                             if(req.timeStatus === "inTime"){
-
+                                
                                 let examData = exam.data();
                                 if (examData) {
                                     let examData = exam.data();
@@ -779,6 +780,7 @@ const getCurrentExam = async (req, res) => {
                                     
                                     examsList.push(other);
                                 }
+                            }
                         }
                     }
                 } else {
@@ -867,26 +869,28 @@ const getExamHistory = async (req, res) => {
                         .collection("exams")
                         .doc(examIdsList[i])
                         .get();
+                        if(exam){
 
-                        inTime(exam,studentId,req);
-                        if(req.timeStatus === "afterTime"){
+                            inTime(exam,studentId,req);
+                            if(req.timeStatus === "afterTime"){
 
-                            let examData = exam.data();
-                            if (examData) {
                                 let examData = exam.data();
-                                let {
-                                    supervisorId,
-                                    studentsList,
-                                    questionPaperId,
-                                    createdAt,
-                                    examInstructions,
-                                    ...other
-                                } = examData;
-                                
-                                examsList.push(other);
+                                if (examData) {
+                                    let examData = exam.data();
+                                    let {
+                                        supervisorId,
+                                        studentsList,
+                                        questionPaperId,
+                                        createdAt,
+                                        examInstructions,
+                                        ...other
+                                    } = examData;
+                                    
+                                    examsList.push(other);
+                                }
                             }
+                        }
                     }
-                }
             } else {
                 return res.status(200).json([]);
             }
@@ -972,23 +976,25 @@ const getUpcomingExams = async (req, res) => {
                         .collection("exams")
                         .doc(examIdsList[i])
                         .get();
+                        if(exam){
 
-                        inTime(exam,studentId,req);
-                        if(req.timeStatus === "beforeTime"){
-
-                            let examData = exam.data();
-                            if (examData) {
-                                let examData = exam.data();
-                                let {
-                                    supervisorId,
-                                    studentsList,
-                                    questionPaperId,
-                                    createdAt,
-                                    examInstructions,
-                                    ...other
-                                } = examData;
+                            inTime(exam,studentId,req);
+                            if(req.timeStatus === "beforeTime"){
                                 
-                                examsList.push(other);
+                                let examData = exam.data();
+                                if (examData) {
+                                    let examData = exam.data();
+                                    let {
+                                        supervisorId,
+                                        studentsList,
+                                        questionPaperId,
+                                        createdAt,
+                                        examInstructions,
+                                        ...other
+                                    } = examData;
+                                    
+                                    examsList.push(other);
+                                }
                             }
                     }
                 }
