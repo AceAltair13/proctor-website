@@ -142,22 +142,23 @@ export const hasSubmitted = async(examId,userId)=>{
 
     try {
 
-        const submittedList = await (await firebase_firestore.collection("users").doc(userId).get()).data()["history"];
+        const submittedList = await (await firebase_firestore.collection("exams").doc(examId).collection("candidates").doc(userId).get()).data()["attempted"];
         
         if(submittedList){
-     
-            for(var i=0;i<submittedList.length;i++){
-                if(submittedList[i]===examId){
-                    return true
-                }
-            }            
+            console.log("Exam already submitted");
+            // for(var i=0;i<submittedList.length;i++){
+            //     if(submittedList[i]===examId){
+            //         return true
+            //     }
+            // }  
+            return true;          
         }
         console.log("not submitted allow it")
         return false
 
     } catch (error) {
-
-         return false
+        console.log("error but not submitted");
+        return false
     }
 }
 

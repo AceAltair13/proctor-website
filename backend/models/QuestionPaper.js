@@ -1,8 +1,10 @@
 import QuestionAnswer from "./QuestionAnswer.js";
 
 class QuestionPaper {
-    constructor(examId, questionAnswers) {
+    constructor(examId, questionAnswers,maxMarks) {
+      
         let questionId = 0;
+        this.maxMarks = maxMarks;
         this.examId = examId;
         this.questionAnswers = [];
         questionAnswers.map((qa) => {
@@ -20,6 +22,7 @@ class QuestionPaper {
         return {
             examId: this.examId,
             questionAnswers: this.questionAnswers,
+            maxMarks: this.maxMarks,
         };
     };
 }

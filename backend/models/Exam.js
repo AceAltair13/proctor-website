@@ -2,7 +2,7 @@ import Supervisor from "./Supervisor.js";
 import Student from "./Student.js";
 
 import QuestionPaper from "./QuestionPaper.js";
-import ExamInstruction from "./ExamInstructions.js";
+// import ExamInstruction from "./ExamInstructions.js";
 
 class Exam {
   constructor(examId, supervisorId, examName, examStartTime, examEndTime,examDesc,examInstructions) {
@@ -15,10 +15,11 @@ class Exam {
     this.studentsList = [];
     this.createdAt = new Date().toISOString().toString();
     this.examDesc = examDesc
-    this.examInstructions = [];
-    examInstructions.map((examInstruction) => {
-      this.examInstructions.push(new ExamInstruction(examInstruction.title,examInstruction.subtitle,examInstruction.bullets));
-    })
+    this.examInstructions = examInstructions
+    // this.examInstructions = [];
+    // examInstructions.map((examInstruction) => {
+    //   this.examInstructions.push(new ExamInstruction(examInstruction.title,examInstruction.subtitle,examInstruction.bullets));
+    // })
   }
 
   toJson = () => {
