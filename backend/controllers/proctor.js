@@ -32,8 +32,6 @@ const upload_face = async (req, res) => {
         });
 
     }
-
-
     async function updating_into_firestore(url) {
         await firebase_firestore.collection("exams").doc(req.body.exam).collection("candidates").doc(req.user.userId).set({ "face": url, folderLocation: folder })
 
@@ -77,8 +75,6 @@ const malpractices = async (req, res) => {
             console.log('Uploaded a base64 string!', snapshot);
         });
     }
-
-
     async function updating_into_firestore(url) {
         await firebase_firestore.collection("exams").doc(req.body.exam).collection("candidates").doc(req.user.userId).collection(req.body.type).add({ imageUrl: url, time: req.body.time })
 
