@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
     Button,
@@ -15,7 +15,7 @@ import {
     Stack,
     Typography,
 } from "@mui/material";
-import { fetchStudentExams } from "../../../Features/apiCalls";
+import { fetchStudentExams } from "../../../Api/exam";
 import { DateTime } from "luxon";
 import { Redirect } from "react-router-dom";
 import StudentExams from "./Templates/StudentExams";

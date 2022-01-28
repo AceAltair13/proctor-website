@@ -1,7 +1,7 @@
 import { Box, CircularProgress, Stack, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSingleStudentExam } from "../../Features/apiCalls";
+import { fetchSingleStudentExam } from "../../Api/exam";
 import PreExamInstructions from "./PreExamInstructions";
 
 const ExamLoadingPage = ({ id }) => {

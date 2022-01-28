@@ -14,7 +14,7 @@ import {
 import { Link as _Link } from "react-router-dom";
 import Logo from "../../Components/Logo";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../../Features/apiCalls";
+import { login } from "../../Api/auth";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import BackgroundImage from "../../Assets/Images/cubes.png";
 import { useForm } from "react-hook-form";

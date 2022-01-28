@@ -26,7 +26,7 @@ const allReducers = combineReducers({
     dashboard: dashboardSlice,
     student: studentSlice,
     questionPaper: questionPaperSlice,
-    exam: examSlice
+    exam: examSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, allReducers);

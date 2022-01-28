@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Paper } from "@mui/material";
-import { fetchStudentExams } from "../../../Features/apiCalls";
+import { fetchStudentExams } from "../../../Api/exam";
 import { DataGrid } from "@mui/x-data-grid";
 import { DateTime } from "luxon";
 import StudentExams from "./Templates/StudentExams";

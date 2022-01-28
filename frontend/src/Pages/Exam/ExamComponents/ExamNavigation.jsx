@@ -1,7 +1,10 @@
 import React from "react";
 import { Grid, Button, Typography, Divider } from "@mui/material";
+import { useSelector } from "react-redux";
 
 function ExamNavigation() {
+    const { questions } = useSelector((state) => state.questionPaper);
+
     return (
         <Grid container direction="column">
             <Grid item xs>
@@ -13,10 +16,19 @@ function ExamNavigation() {
                     spacing={2}
                     sx={{ maxHeight: "40vh", overflow: "auto", mt: 1 }}
                 >
-                    {Array.from({ length: 50 }, (_, k) => k + 1).map((item) => (
-                        <Grid item>
-                            <Button color="error" disableElevation>
-                                {item}
+                    {questions.map((question, index) => (
+                        <Grid item key={question.questionId}>
+                            <Button
+                                color={
+                                    question.markedForReview
+                                        ? "info"
+                                        : question.attempted
+                                        ? "success"
+                                        : "error"
+                                }
+                                disableElevation
+                            >
+                                {index + 1}
                             </Button>
                         </Grid>
                     ))}

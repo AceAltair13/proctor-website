@@ -18,7 +18,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { registerValidation } from "../../Validations/registerValidation";
-import { registerUser } from "../../Features/apiCalls";
+import { registerUser } from "../../Api/auth";
 import { useDispatch, useSelector } from "react-redux";
 import BackgroundImage from "../../Assets/Images/cubes.png";
 
