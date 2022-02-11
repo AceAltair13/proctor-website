@@ -48,7 +48,7 @@ const createExam = async (req, res) => {
                 examsCreated: fieldValue.arrayUnion(newId),
             });
 
-        res.status(200).json("Exam Created" + result);
+        res.status(200).json("Exam Created Successfully!");
     } catch (error) {
         return res.status(500).json("Failed to create exam " + error);
     }

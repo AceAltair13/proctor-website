@@ -33,7 +33,7 @@ function DashboardNavbar() {
     const [redirect, setRedirect] = useState(false);
     const user = useSelector((state) => state.user.currentUser);
     const title = useSelector((state) => state.dashboard.title);
-    const isFetching = useSelector((state) => state.student.isFetching);
+    const { isFetching } = useSelector((state) => state.dashboard);
 
     const logoutUser = () => {
         logout(dispatch);

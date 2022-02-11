@@ -13,6 +13,7 @@ import {
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { useSelector } from "react-redux";
 import { useRouteMatch, Link } from "react-router-dom";
+import SimpleBar from "simplebar-react";
 
 const PreExamInstructions = () => {
     const { exam } = useSelector((state) => state.exam);
@@ -48,20 +49,14 @@ const PreExamInstructions = () => {
                 >
                     Instructions from the supervisor:
                 </Typography>
-                <Typography variant="body2" color="error" mt={-1}>
+                <Typography variant="body2" color="error" mt={-1} gutterBottom>
                     Please read all the instructions carefully
                 </Typography>
-                <Typography
-                    variant="body1"
-                    paragraph
-                    mt={2}
-                    sx={{
-                        maxHeight: "50vh",
-                        overflow: "auto",
-                    }}
-                >
-                    {exam.examInstructions}
-                </Typography>
+                <SimpleBar style={{ maxHeight: "50vh" }}>
+                    <Typography variant="body1" paragraph>
+                        {exam.examInstructions}
+                    </Typography>
+                </SimpleBar>
             </Stack>
             <Box
                 sx={{

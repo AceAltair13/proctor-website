@@ -1,11 +1,9 @@
 import {
     Card,
     Container,
-    FormControl,
     FormControlLabel,
     Grid,
     Radio,
-    RadioGroup,
     Stack,
     Typography,
 } from "@mui/material";
@@ -15,10 +13,18 @@ import ExamNavigation from "./ExamNavigation";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import { setQuestionAttempted } from "../../../Features/questionPaperSlice";
+import SimpleBar from "simplebar-react";
 
 function ExamMain(props) {
     const dispatch = useDispatch();
-    const { currentQuestionId, totalQuestions, question, options } = props;
+    const {
+        currentQuestionId,
+        totalQuestions,
+        question,
+        options,
+        selectedOption,
+        weightage,
+    } = props;
 
     return (
         <Grid container sx={{ pt: 2 }}>
@@ -28,9 +34,11 @@ function ExamMain(props) {
                         <Typography
                             variant="body1"
                             fontWeight="fontWeightBold"
-                            gutterBottom
                         >
                             Question {currentQuestionId + 1} of {totalQuestions}
+                        </Typography>
+                        <Typography variant="subtitle2" gutterBottom>
+                            ({weightage} Marks)
                         </Typography>
                         <Box
                             sx={{
@@ -47,38 +55,33 @@ function ExamMain(props) {
             </Grid>
             <Grid item xs={5}>
                 <Card sx={{ p: 3, mr: 10 }} variant="outlined">
-                    <Stack>
-                        <Typography
-                            variant="body1"
-                            fontWeight="fontWeightBold"
-                            gutterBottom
-                        >
-                            Options
-                        </Typography>
-                        <FormControl component="fieldset">
-                            <RadioGroup
-                                name="options"
-                                sx={{ maxHeight: "70vh", overflow: "auto" }}
-                                value={
-                                    options[currentQuestionId].selectedOption
-                                }
-                                onChange={(e) => {
-                                    dispatch(
-                                        setQuestionAttempted(e.target.value)
-                                    );
-                                }}
-                            >
-                                {options.map((option) => (
-                                    <FormControlLabel
-                                        key={option.optionId}
-                                        value={option.optionId}
-                                        control={<Radio />}
-                                        label={option.optionDesc}
-                                    />
-                                ))}
-                            </RadioGroup>
-                        </FormControl>
-                    </Stack>
+                    <Typography
+                        variant="body1"
+                        fontWeight="fontWeightBold"
+                        gutterBottom
+                    >
+                        Options
+                    </Typography>
+                    <SimpleBar style={{ maxHeight: "70vh" }}>
+                        <Stack>
+                            {options.map((option) => (
+                                <FormControlLabel
+                                    key={option.optionId}
+                                    value={option.optionId.toString()}
+                                    control={<Radio />}
+                                    label={option.optionDesc}
+                                    checked={option.optionId === selectedOption}
+                                    onClick={() => {
+                                        dispatch(
+                                            setQuestionAttempted(
+                                                option.optionId
+                                            )
+                                        );
+                                    }}
+                                />
+                            ))}
+                        </Stack>
+                    </SimpleBar>
                 </Card>
             </Grid>
             <Grid item xs={2}>
@@ -98,6 +101,8 @@ ExamMain.propTypes = {
             optionDesc: PropTypes.string.isRequired,
         })
     ).isRequired,
+    selectedOption: PropTypes.number.isRequired,
+    weightage: PropTypes.number.isRequired,
 };
 
 export default ExamMain;

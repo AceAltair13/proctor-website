@@ -28,6 +28,10 @@ const QuestionPaper = () => {
                         question={questions[currentQuestionId].question}
                         options={questions[currentQuestionId].options}
                         totalQuestions={totalQuestions}
+                        selectedOption={
+                            questions[currentQuestionId].selectedOption
+                        }
+                        weightage={questions[currentQuestionId].weightage}
                     />
                 </Grid>
                 <Grid item container py={3}>

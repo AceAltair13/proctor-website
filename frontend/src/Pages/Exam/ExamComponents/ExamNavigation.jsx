@@ -1,8 +1,12 @@
 import React from "react";
 import { Grid, Button, Typography, Divider } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import SimpleBar from "simplebar-react";
+import "simplebar/dist/simplebar.min.css";
+import { setCurrentQuestionId } from "../../../Features/questionPaperSlice";
 
 function ExamNavigation() {
+    const dispatch = useDispatch();
     const { questions } = useSelector((state) => state.questionPaper);
 
     return (
@@ -11,28 +15,33 @@ function ExamNavigation() {
                 <Typography variant="body1" fontWeight="fontWeightBold">
                     Question Summary
                 </Typography>
-                <Grid
-                    container
-                    spacing={2}
-                    sx={{ maxHeight: "40vh", overflow: "auto", mt: 1 }}
-                >
-                    {questions.map((question, index) => (
-                        <Grid item key={question.questionId}>
-                            <Button
-                                color={
-                                    question.markedForReview
-                                        ? "info"
-                                        : question.attempted
-                                        ? "success"
-                                        : "error"
-                                }
-                                disableElevation
-                            >
-                                {index + 1}
-                            </Button>
-                        </Grid>
-                    ))}
-                </Grid>
+                <SimpleBar style={{ maxHeight: 300 }}>
+                    <Grid container spacing={2} mt={1}>
+                        {questions.map((question, index) => (
+                            <Grid item key={question.questionId}>
+                                <Button
+                                    color={
+                                        question.markedForReview
+                                            ? "info"
+                                            : question.attempted
+                                            ? "success"
+                                            : "error"
+                                    }
+                                    disableElevation
+                                    onClick={() =>
+                                        dispatch(
+                                            setCurrentQuestionId(
+                                                question.questionId
+                                            )
+                                        )
+                                    }
+                                >
+                                    {index + 1}
+                                </Button>
+                            </Grid>
+                        ))}
+                    </Grid>
+                </SimpleBar>
                 <Divider sx={{ my: 2, width: "85%" }} />
             </Grid>
             <Grid item xs>

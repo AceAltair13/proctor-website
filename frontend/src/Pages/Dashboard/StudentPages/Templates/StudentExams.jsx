@@ -1,4 +1,4 @@
-import { Fab, Typography } from "@mui/material";
+import { Fab } from "@mui/material";
 import React, { useEffect } from "react";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { useSelector } from "react-redux";
@@ -10,14 +10,7 @@ const StudentExams = (props) => {
 
     return (
         <>
-            <Typography variant="h6" gutterBottom>
-                {props.title}
-            </Typography>
-            {isFetching ? (
-                <Typography variant="caption">Fetching Data...</Typography>
-            ) : (
-                props.children
-            )}
+            {!isFetching && props.children}
             <Fab
                 color="primary"
                 sx={{ position: "fixed", bottom: 0, right: 0, m: 3 }}
