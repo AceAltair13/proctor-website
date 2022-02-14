@@ -18,3 +18,5 @@ export const createExam = (dispatch, history, examDetails) => {
         }
     }, 1000);
 };
+
+export const updateExam = () => {};
