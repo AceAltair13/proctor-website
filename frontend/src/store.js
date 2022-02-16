@@ -1,9 +1,8 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 import userSlice from "./Features/userSlice";
 import studentSlice from "./Features/studentSlice";
 import dashboardSlice from "./Features/dashboardSlice";
 import {
-    persistReducer,
     FLUSH,
     REHYDRATE,
     PAUSE,
@@ -14,22 +13,22 @@ import {
 import storage from "redux-persist/lib/storage";
 import questionPaperSlice from "./Features/questionPaperSlice";
 import examSlice from "./Features/examSlice";
+import persistCombineReducers from "redux-persist/es/persistCombineReducers";
 
 const persistConfig = {
     key: "root",
     version: 1,
     storage,
+    whitelist: ["user"],
 };
 
-const allReducers = combineReducers({
+const persistedReducer = persistCombineReducers(persistConfig, {
     user: userSlice,
     dashboard: dashboardSlice,
     student: studentSlice,
     questionPaper: questionPaperSlice,
-    exam: examSlice
+    exam: examSlice,
 });
-
-const persistedReducer = persistReducer(persistConfig, allReducers);
 
 export default configureStore({
     reducer: persistedReducer,

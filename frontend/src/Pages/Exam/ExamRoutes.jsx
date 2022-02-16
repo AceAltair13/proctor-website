@@ -2,6 +2,8 @@ import React from "react";
 import { Route, Switch, useParams, useRouteMatch } from "react-router-dom";
 import ExamLoadingPage from "./ExamLoadingPage";
 import PreExamFaceCapture from "./PreExamFaceCapture";
+import Exam from "./Exam";
+import ExamSubmitPage from "./ExamSubmitPage";
 
 const ExamRoutes = () => {
     const { id } = useParams();
@@ -9,10 +11,15 @@ const ExamRoutes = () => {
 
     return (
         <Switch>
-            <Route
-                path={`${path}/face-capture`}
-                component={PreExamFaceCapture}
-            />
+            <Route path={`${path}/start`}>
+                <Exam examId={id} />
+            </Route>
+            <Route path={`${path}/submit`}>
+                <ExamSubmitPage />
+            </Route>
+            <Route path={`${path}/face-capture`}>
+                <PreExamFaceCapture examId={id} />
+            </Route>
             <Route path={`${path}`}>
                 <ExamLoadingPage id={id} />
             </Route>

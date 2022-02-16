@@ -1,56 +1,18 @@
-import React, { useState } from "react";
-import {
-    AppBar,
-    Box,
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    Grid,
-    Toolbar,
-    Typography,
-} from "@mui/material";
+import React from "react";
+import { AppBar, Box, Button, Grid, Toolbar, Typography } from "@mui/material";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
+import PropTypes from "prop-types";
+import SubmitDialog from "./SubmitDialog";
+import { useDispatch } from "react-redux";
+import { setSubmitDialogOpen } from "../../../Features/questionPaperSlice";
 
-function ExamHeader() {
-    const [open, setOpen] = useState(false);
+function ExamHeader(props) {
+    const dispatch = useDispatch();
+    const { userId, examName } = props;
 
     const handleClickOpen = () => {
-        setOpen(true);
+        dispatch(setSubmitDialogOpen(true));
     };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    const alertDialog = (
-        <Dialog
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-        >
-            <DialogTitle id="alert-dialog-title">
-                {"Save and exit?"}
-            </DialogTitle>
-            <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                    You will not be able to return to this page. Are you sure
-                    you want to save and exit the test?
-                </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={handleClose} variant="text">
-                    No
-                </Button>
-                <Button onClick={handleClose} variant="text" autoFocus>
-                    Yes
-                </Button>
-            </DialogActions>
-        </Dialog>
-    );
 
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -73,10 +35,10 @@ function ExamHeader() {
                                 fontWeight="fontWeightBold"
                                 noWrap
                             >
-                                Examination Name
+                                {examName}
                             </Typography>
                             <Typography variant="subtitle1" sx={{ mt: -1 }}>
-                                First Last
+                                {"Candidate ID: " + userId}
                             </Typography>
                         </Grid>
                         <Grid
@@ -112,9 +74,14 @@ function ExamHeader() {
                     </Grid>
                 </Toolbar>
             </AppBar>
-            {alertDialog}
+            <SubmitDialog />
         </Box>
     );
 }
+
+ExamHeader.propTypes = {
+    userId: PropTypes.string.isRequired,
+    examName: PropTypes.string.isRequired,
+};
 
 export default ExamHeader;

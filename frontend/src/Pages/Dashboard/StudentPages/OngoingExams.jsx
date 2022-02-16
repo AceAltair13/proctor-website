@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
     Button,
@@ -15,7 +15,7 @@ import {
     Stack,
     Typography,
 } from "@mui/material";
-import { fetchStudentExams } from "../../../Features/apiCalls";
+import { fetchStudentExams } from "../../../Api/student";
 import { DateTime } from "luxon";
 import { Redirect } from "react-router-dom";
 import StudentExams from "./Templates/StudentExams";
@@ -103,28 +103,31 @@ const ExamCard = (props) => {
             <Card>
                 <CardContent>
                     <Stack>
-                        <Typography variant="h6" gutterBottom>
+                        <Typography variant="h6" gutterBottom noWrap>
                             {examName}
                         </Typography>
                         <Typography variant="caption">
                             <strong>Started At:</strong>{" "}
-                            {examStartTimeDate.toLocaleString()}
+                            {examStartTimeDate.toLocaleString(
+                                DateTime.DATETIME_MED
+                            )}
                         </Typography>
-                        <Typography variant="caption" gutterBottom>
+                        <Typography variant="caption">
                             <strong>Ends At:</strong>{" "}
-                            {examEndTimeDate.toLocaleString()}
+                            {examEndTimeDate.toLocaleString(
+                                DateTime.DATETIME_MED
+                            )}
                         </Typography>
                     </Stack>
                 </CardContent>
-
                 <CardActions>
                     <Button
                         disableElevation
                         color="success"
-                        sx={{ ml: "auto" }}
+                        sx={{ px: 4, ml: "auto", mr: 1, mb: 1 }}
                         onClick={handleClickOpen}
                     >
-                        Start
+                        Start Now
                     </Button>
                 </CardActions>
             </Card>

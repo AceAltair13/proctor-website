@@ -3,7 +3,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
 import { DateTime } from "luxon";
-import { fetchStudentExams } from "../../../Features/apiCalls";
+import { fetchStudentExams } from "../../../Api/student";
 import StudentExams from "./Templates/StudentExams";
 
 const columns = [

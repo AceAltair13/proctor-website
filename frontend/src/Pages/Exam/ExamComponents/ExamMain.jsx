@@ -1,19 +1,31 @@
 import {
     Card,
     Container,
-    FormControl,
     FormControlLabel,
     Grid,
     Radio,
-    RadioGroup,
     Stack,
     Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
 import ExamNavigation from "./ExamNavigation";
+import PropTypes from "prop-types";
+import { useDispatch } from "react-redux";
+import { setQuestionAttempted } from "../../../Features/questionPaperSlice";
+import SimpleBar from "simplebar-react";
 
-function ExamMain() {
+function ExamMain(props) {
+    const dispatch = useDispatch();
+    const {
+        currentQuestionId,
+        totalQuestions,
+        question,
+        options,
+        selectedOption,
+        weightage,
+    } = props;
+
     return (
         <Grid container sx={{ pt: 2 }}>
             <Grid item xs={5}>
@@ -22,106 +34,54 @@ function ExamMain() {
                         <Typography
                             variant="body1"
                             fontWeight="fontWeightBold"
-                            gutterBottom
                         >
-                            Question 1 of 20
+                            Question {currentQuestionId + 1} of {totalQuestions}
                         </Typography>
-                        <Box sx={{ maxHeight: "70vh", overflow: "auto", pr: 1, pb: 1 }}>
-                        <Typography variant="body1">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit, sed do eiusmod tempor incididunt ut labore et
-                            dolore magna aliqua. Ut enim ad minim veniam, quis
-                            nostrud exercitation ullamco laboris nisi ut aliquip
-                            ex ea commodo consequat. Duis aute irure dolor in
-                            reprehenderit in voluptate velit esse cillum dolore
-                            eu fugiat nulla pariatur. Excepteur sint occaecat
-                            cupidatat non proident, sunt in culpa qui officia
-                            deserunt mollit anim id est laborum ?
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit, sed do eiusmod tempor incididunt ut labore et
-                            dolore magna aliqua. Ut enim ad minim veniam, quis
-                            nostrud exercitation ullamco laboris nisi ut aliquip
-                            ex ea commodo consequat. Duis aute irure dolor in
-                            reprehenderit in voluptate velit esse cillum dolore
-                            eu fugiat nulla pariatur. Excepteur sint occaecat
-                            cupidatat non proident, sunt in culpa qui officia
-                            deserunt mollit anim id est laborum ?
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit, sed do eiusmod tempor incididunt ut labore et
-                            dolore magna aliqua. Ut enim ad minim veniam, quis
-                            nostrud exercitation ullamco laboris nisi ut aliquip
-                            ex ea commodo consequat. Duis aute irure dolor in
-                            reprehenderit in voluptate velit esse cillum dolore
-                            eu fugiat nulla pariatur. Excepteur sint occaecat
-                            cupidatat non proident, sunt in culpa qui officia
-                            deserunt mollit anim id est laborum ?
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit, sed do eiusmod tempor incididunt ut labore et
-                            dolore magna aliqua. Ut enim ad minim veniam, quis
-                            nostrud exercitation ullamco laboris nisi ut aliquip
-                            ex ea commodo consequat. Duis aute irure dolor in
-                            reprehenderit in voluptate velit esse cillum dolore
-                            eu fugiat nulla pariatur. Excepteur sint occaecat
-                            cupidatat non proident, sunt in culpa qui officia
-                            deserunt mollit anim id est laborum ?
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit, sed do eiusmod tempor incididunt ut labore et
-                            dolore magna aliqua. Ut enim ad minim veniam, quis
-                            nostrud exercitation ullamco laboris nisi ut aliquip
-                            ex ea commodo consequat. Duis aute irure dolor in
-                            reprehenderit in voluptate velit esse cillum dolore
-                            eu fugiat nulla pariatur. Excepteur sint occaecat
-                            cupidatat non proident, sunt in culpa qui officia
-                            deserunt mollit anim id est laborum ?
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit, sed do eiusmod tempor incididunt ut labore et
-                            dolore magna aliqua. Ut enim ad minim veniam, quis
-                            nostrud exercitation ullamco laboris nisi ut aliquip
-                            ex ea commodo consequat. Duis aute irure dolor in
-                            reprehenderit in voluptate velit esse cillum dolore
-                            eu fugiat nulla pariatur. Excepteur sint occaecat
-                            cupidatat non proident, sunt in culpa qui officia
-                            deserunt mollit anim id est laborum ?
+                        <Typography variant="subtitle2" gutterBottom>
+                            ({weightage} Marks)
                         </Typography>
+                        <Box
+                            sx={{
+                                maxHeight: "70vh",
+                                overflow: "auto",
+                                pr: 1,
+                                pb: 1,
+                            }}
+                        >
+                            <Typography variant="body1">{question}</Typography>
                         </Box>
                     </Stack>
                 </Container>
             </Grid>
             <Grid item xs={5}>
-                <Card sx={{p: 3, mr: 10}} variant="outlined">
-                    <Stack>
-                        <Typography
-                            variant="body1"
-                            fontWeight="fontWeightBold"
-                            gutterBottom
-                        >
-                            Options
-                        </Typography>
-                        <FormControl component="fieldset">
-                            <RadioGroup name="options" sx={{maxHeight: "70vh", overflow: "auto"}}>
+                <Card sx={{ p: 3, mr: 10 }} variant="outlined">
+                    <Typography
+                        variant="body1"
+                        fontWeight="fontWeightBold"
+                        gutterBottom
+                    >
+                        Options
+                    </Typography>
+                    <SimpleBar style={{ maxHeight: "70vh" }}>
+                        <Stack>
+                            {options.map((option) => (
                                 <FormControlLabel
-                                    value="option1"
+                                    key={option.optionId}
+                                    value={option.optionId.toString()}
                                     control={<Radio />}
-                                    label="Option 1"
+                                    label={option.optionDesc}
+                                    checked={option.optionId === selectedOption}
+                                    onClick={() => {
+                                        dispatch(
+                                            setQuestionAttempted(
+                                                option.optionId
+                                            )
+                                        );
+                                    }}
                                 />
-                                <FormControlLabel
-                                    value="option2"
-                                    control={<Radio />}
-                                    label="Option 2"
-                                />
-                                <FormControlLabel
-                                    value="option3"
-                                    control={<Radio />}
-                                    label="Option 3"
-                                />
-                                <FormControlLabel
-                                    value="option4"
-                                    control={<Radio />}
-                                    label="Option 4"
-                                />
-                            </RadioGroup>
-                        </FormControl>
-                    </Stack>
+                            ))}
+                        </Stack>
+                    </SimpleBar>
                 </Card>
             </Grid>
             <Grid item xs={2}>
@@ -130,5 +90,19 @@ function ExamMain() {
         </Grid>
     );
 }
+
+ExamMain.propTypes = {
+    currentQuestionId: PropTypes.number.isRequired,
+    totalQuestions: PropTypes.number.isRequired,
+    question: PropTypes.string.isRequired,
+    options: PropTypes.arrayOf(
+        PropTypes.shape({
+            optionId: PropTypes.number.isRequired,
+            optionDesc: PropTypes.string.isRequired,
+        })
+    ).isRequired,
+    selectedOption: PropTypes.number.isRequired,
+    weightage: PropTypes.number.isRequired,
+};
 
 export default ExamMain;

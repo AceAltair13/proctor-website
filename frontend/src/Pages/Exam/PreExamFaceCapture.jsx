@@ -9,7 +9,7 @@ import {
     Typography,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Webcam from "react-webcam";
 import { snackActions } from "../../Utils/SnackBarUtils";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
@@ -17,14 +17,19 @@ import ReplayIcon from "@mui/icons-material/Replay";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import "@tensorflow/tfjs";
 import * as blazeFace from "@tensorflow-models/blazeface";
-import { uploadPreExamFace } from "../../Features/apiCalls";
-const PreExamFaceCapture = () => {
+import { uploadPreExamFace } from "../../Api/proctor";
+import { Redirect } from "react-router-dom";
+
+const PreExamFaceCapture = ({ examId }) => {
+    const dispatch = useDispatch();
     const { exam } = useSelector((state) => state.exam);
     const webcamRef = useRef(null);
     const [model, setModel] = useState(null);
     const [image, setImage] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
     const [showUploadBtn, setShowUploadBtn] = useState(false);
+    const { faceRegistered } = useSelector((state) => state.questionPaper);
+    const [startExam, setStartExam] = useState(false);
 
     useEffect(() => {
         const loadModel = async () => {
@@ -72,7 +77,7 @@ const PreExamFaceCapture = () => {
     };
 
     const uploadImage = () => {
-        uploadPreExamFace(image)
+        uploadPreExamFace(dispatch, image, examId);
         // const uploadImage = new Image();
         // uploadImage.src = image;
         // const buffer = Buffer.from(image, "base64");
@@ -82,6 +87,55 @@ const PreExamFaceCapture = () => {
         // console.log("image object",uploadImage)
         //  uploadPreExamFace(uploadImage);
     };
+
+    const ButtonList = () => {
+        return (
+            <>
+                {!!image ? (
+                    <Button
+                        size="large"
+                        fullWidth
+                        startIcon={<ReplayIcon />}
+                        sx={{ mt: 2 }}
+                        onClick={() => {
+                            setImage("");
+                            setErrorMsg("");
+                            setShowUploadBtn(false);
+                        }}
+                    >
+                        Reset
+                    </Button>
+                ) : (
+                    <Button
+                        size="large"
+                        fullWidth
+                        startIcon={<CameraAltIcon />}
+                        sx={{ mt: 2 }}
+                        onClick={captureImage}
+                        disabled={!(!!image || !!model)}
+                    >
+                        {!!model ? "Capture" : "Loading..."}
+                    </Button>
+                )}
+                {showUploadBtn && (
+                    <Button
+                        size="large"
+                        fullWidth
+                        startIcon={<FileUploadIcon />}
+                        color="success"
+                        sx={{ mt: 1 }}
+                        onClick={uploadImage}
+                    >
+                        Upload Image
+                    </Button>
+                )}
+            </>
+        );
+    };
+
+    if (startExam) {
+        return <Redirect to={`/take-exam/${exam.examId}/start`} />;
+    }
 
     return (
         <Box
@@ -137,43 +191,18 @@ const PreExamFaceCapture = () => {
                                     {errorMsg}
                                 </Typography>
                             )}
-                            {!!image ? (
+                            {faceRegistered ? (
                                 <Button
+                                    sx={{ mt: 2 }}
+                                    color="secondary"
                                     size="large"
                                     fullWidth
-                                    startIcon={<ReplayIcon />}
-                                    sx={{ mt: 2 }}
-                                    onClick={() => {
-                                        setImage("");
-                                        setErrorMsg("");
-                                        setShowUploadBtn(false);
-                                    }}
+                                    onClick={() => setStartExam(true)}
                                 >
-                                    Reset
+                                    Start Exam
                                 </Button>
                             ) : (
-                                <Button
-                                    size="large"
-                                    fullWidth
-                                    startIcon={<CameraAltIcon />}
-                                    sx={{ mt: 2 }}
-                                    onClick={captureImage}
-                                    disabled={!(!!image || !!model)}
-                                >
-                                    {!!model ? "Capture" : "Loading..."}
-                                </Button>
-                            )}
-                            {showUploadBtn && (
-                                <Button
-                                    size="large"
-                                    fullWidth
-                                    startIcon={<FileUploadIcon />}
-                                    color="success"
-                                    sx={{ mt: 1 }}
-                                    onClick={uploadImage}
-                                >
-                                    Upload Image
-                                </Button>
+                                <ButtonList />
                             )}
                         </Grid>
                     </Grid>

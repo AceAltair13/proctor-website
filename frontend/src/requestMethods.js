@@ -2,7 +2,6 @@ import axios from "axios";
 import { URL } from "./Constants/urls";
 
 export const setToken = (token) => {
-    axios.defaults.headers.common["token"] = token;
     localStorage.setItem("token", token);
 };
 
@@ -23,9 +22,9 @@ const userRequest = axios.create({
     headers: { token: getToken() },
 });
 
-const imageuploadrequest = axios.create({
+const imageUploadRequest = axios.create({
     baseURL: URL,
-    headers: { token: getToken(),'Content-Type': 'multipart/form-data'},
+    headers: { token: getToken(), "Content-Type": "multipart/form-data" },
 });
 
 userRequest.interceptors.request.use(
@@ -38,12 +37,14 @@ userRequest.interceptors.request.use(
     }
 );
 
-export { userRequest, publicRequest,imageuploadrequest};
+imageUploadRequest.interceptors.request.use(
+    (config) => {
+        config.headers.token = getToken();
+        return config;
+    },
+    (error) => {
+        console.log(error);
+    }
+);
 
-// export const postImageRequest = axios.create({
-//     baseURL: URL,
-//     headers: {
-//         token: getToken(),
-//         // examId:
-//     },
-// });
+export { userRequest, publicRequest, imageUploadRequest };

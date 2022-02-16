@@ -12,6 +12,8 @@ export const FETCH_EXAMS_URL = "/exam";
 export const FETCH_UPCOMING_EXAM_URL = "/exam/upcoming";
 export const FETCH_PAST_EXAM_URL = "/exam/history";
 export const FETCH_CURRENT_EXAM_URL = "/exam/current";
+export const FETCH_QUESTION_PAPER = "/exam/question-paper";
+export const SUBMIT_EXAM_RESPONSE = "/exam/submit-answer";
 
 // Proctor
 export const UPLOAD_FACE_URL = "/proctor/upload-face";

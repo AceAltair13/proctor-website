@@ -26,14 +26,14 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { setMobileOpen } from "../../../Features/dashboardSlice";
-import { logout } from "../../../Features/apiCalls";
+import { logout } from "../../../Api/auth";
 
 function DashboardNavbar() {
     const dispatch = useDispatch();
     const [redirect, setRedirect] = useState(false);
     const user = useSelector((state) => state.user.currentUser);
     const title = useSelector((state) => state.dashboard.title);
-    const isFetching = useSelector((state) => state.student.isFetching);
+    const { isFetching } = useSelector((state) => state.dashboard);
 
     const logoutUser = () => {
         logout(dispatch);

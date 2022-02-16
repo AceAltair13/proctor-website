@@ -48,7 +48,7 @@ const createExam = async (req, res) => {
                 examsCreated: fieldValue.arrayUnion(newId),
             });
 
-        res.status(200).json("Exam Created" + result);
+        res.status(200).json("Exam Created Successfully!");
     } catch (error) {
         return res.status(500).json("Failed to create exam " + error);
     }
@@ -272,7 +272,7 @@ const assignQuestionPaper = async (req, res) => {
                 .json("Question Paper already exists for the exam ");
         }
         var maxMarks = 0;
-        for(var i=0;i<req.body.questionAnswers.length;i++){
+        for (var i = 0; i < req.body.questionAnswers.length; i++) {
             maxMarks += req.body.questionAnswers[i].weightage;
         }
         const questionPaper = new QuestionPaper(
@@ -306,7 +306,7 @@ const updateQuestionPaper = async (req, res) => {
     try {
         if (req.body.questionPaperId && req.body.examId) {
             var maxMarks = 0;
-            for(var i=0;i<req.body.questionAnswers.length;i++){
+            for (var i = 0; i < req.body.questionAnswers.length; i++) {
                 maxMarks += req.body.questionAnswers[i].weightage;
             }
             const questionPaper = new QuestionPaper(
@@ -502,7 +502,6 @@ const removeStudents = async (req, res) => {
 const getQuestionPaper = async (req, res) => {
     try {
         // does exam exists
-
         const exam = await firebase_firestore
             .collection("exams")
             .doc(req.query.examId)
@@ -515,7 +514,7 @@ const getQuestionPaper = async (req, res) => {
         if (!examAccess(exam, req.user.userId)) {
             return res.status(400).json("Permission denied to access the exam");
         }
-        if (!(await inTime(exam, req.user.userId,req))) {
+        if (!(await inTime(exam, req.user.userId, req))) {
             return res.status(400).json("Exam Time out");
         }
 
@@ -554,20 +553,23 @@ const getQuestionPaper = async (req, res) => {
 
             questionPaper.push(question);
         }
-        if(req.user.isStudent){
-
+        if (req.user.isStudent) {
             let examSatrtTime = DateTime.local().toUTC().toString();
-            
-            await firebase_firestore.collection('exams').doc(req.query.examId).collection("candidates").doc(req.user.userId).create({"startedExamAt":examSatrtTime});
+
+            await firebase_firestore
+                .collection("exams")
+                .doc(req.query.examId)
+                .collection("candidates")
+                .doc(req.user.userId)
+                .update({ startedExamAt: examSatrtTime });
         }
+        console.log("Question Paper fetched from " + req.user.userId);
         return res.status(200).json(questionPaper);
     } catch (error) {
         console.log(error);
         return res.status(500).json(error);
     }
 };
-
-
 
 const receiveAnswers = async (req, res) => {
     try {
@@ -596,7 +598,7 @@ const receiveAnswers = async (req, res) => {
             const questionPaper = questionPaperDoc.data()["questionAnswers"];
 
             var totalMarks = 0;
-            
+
             const answers = req.body.answers;
 
             try {
@@ -636,9 +638,19 @@ const receiveAnswers = async (req, res) => {
                         .set({
                             ...answerJson,
                         });
-                    let  endedExamAt = DateTime.local().toUTC().toString();  
-                    await firebase_firestore.collection("exams").doc(req.body.examId).collection("candidates").doc(req.user.userId).update({"attempted":true,"response":req.body.answers,"score":totalMarks,"endedExamAt": endedExamAt});
-                    
+                    let endedExamAt = DateTime.local().toUTC().toString();
+                    await firebase_firestore
+                        .collection("exams")
+                        .doc(req.body.examId)
+                        .collection("candidates")
+                        .doc(req.user.userId)
+                        .update({
+                            attempted: true,
+                            response: req.body.answers,
+                            score: totalMarks,
+                            endedExamAt: endedExamAt,
+                        });
+
                     // await firebase_firestore
                     //     .collection("users")
                     //     .doc(req.user.userId)
@@ -646,12 +658,15 @@ const receiveAnswers = async (req, res) => {
                     //         history: fieldValue.arrayUnion(req.body.examId),
                     //     });
                     // Send email to the student
-                    const mailBody = "Your marks for the exam " +exam.data()["examName"] +" is " +totalMarks
+                    const mailBody =
+                        "Your marks for the exam " +
+                        exam.data()["examName"] +
+                        " is " +
+                        totalMarks;
                     await sendMail(
                         req.user.emailId,
                         "Results for " + exam.data()["examName"],
                         mailBody
-
                     );
 
                     res.status(200).json("Response submitted successfully");
@@ -670,113 +685,107 @@ const receiveAnswers = async (req, res) => {
 };
 
 const getCurrentExam = async (req, res) => {
+    if (req.user.isStudent) {
+        const studentId = req.user.userId;
 
-        if (req.user.isStudent) {
-            const studentId = req.user.userId;
-
+        try {
+            var examsList = [];
+            var examIdsList;
             try {
-                var examsList = [];
-                var examIdsList;
-                try {
-                    examIdsList = await (
-                        await firebase_firestore
-                            .collection("users")
-                            .doc(studentId)
-                            .get()
-                    ).data()["examsEnrolled"];
-                } catch (error) {
-                    return res.status.json([]);
-                }
-                if (examIdsList) {
-                    for (var i = 0; i < examIdsList.length; i++) {
-                        var exam = await firebase_firestore
-                            .collection("exams")
-                            .doc(examIdsList[i])
-                            .get();
-                        if(exam){
-
-                            inTime(exam,studentId,req);
-                            if(req.timeStatus === "inTime"){
-                                
+                examIdsList = await (
+                    await firebase_firestore
+                        .collection("users")
+                        .doc(studentId)
+                        .get()
+                ).data()["examsEnrolled"];
+            } catch (error) {
+                return res.status.json([]);
+            }
+            if (examIdsList) {
+                for (var i = 0; i < examIdsList.length; i++) {
+                    var exam = await firebase_firestore
+                        .collection("exams")
+                        .doc(examIdsList[i])
+                        .get();
+                    if (exam) {
+                        inTime(exam, studentId, req);
+                        if (req.timeStatus === "inTime") {
+                            let examData = exam.data();
+                            if (examData) {
                                 let examData = exam.data();
-                                if (examData) {
-                                    let examData = exam.data();
-                                    let {
-                                        supervisorId,
-                                        studentsList,
-                                        questionPaperId,
-                                        createdAt,
-                                        examInstructions,
-                                        ...other
-                                    } = examData;
-                                    
-                                    examsList.push(other);
-                                }
+                                let {
+                                    supervisorId,
+                                    studentsList,
+                                    questionPaperId,
+                                    createdAt,
+                                    examInstructions,
+                                    ...other
+                                } = examData;
+
+                                examsList.push(other);
                             }
                         }
                     }
-                } else {
-                    return res.status(200).json([]);
                 }
-
-                if (examsList.length > 0) {
-                    return res.status(200).json(examsList);
-                } else {
-                    return res.status(200).json([]);
-                }
-            } catch (error) {
-                console.log(error);
-                return res.status(500).json("Something went wrong");
+            } else {
+                return res.status(200).json([]);
             }
-        } else if (req.user.isSupervisor) {
-            const supervisorId = req.user.userId;
 
+            if (examsList.length > 0) {
+                return res.status(200).json(examsList);
+            } else {
+                return res.status(200).json([]);
+            }
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json("Something went wrong");
+        }
+    } else if (req.user.isSupervisor) {
+        const supervisorId = req.user.userId;
+
+        try {
+            var examsList = [];
+            var examIdsList;
             try {
-                var examsList = [];
-                var examIdsList;
-                try {
-                    examIdsList = await (
-                        await firebase_firestore
-                            .collection("users")
-                            .doc(supervisorId)
-                            .get()
-                    ).data()["examsCreated"];
-                } catch (error) {
-                    return res.status(200).json([]);
-                }
-                if (examIdsList) {
-                    for (var i = 0; i < examIdsList.length; i++) {
-                        var exam = await firebase_firestore
-                            .collection("exams")
-                            .doc(examIdsList[i])
-                            .get();
-                        if (exam) {
-                            inTime(exam,studentId,req);
-                            if(req.timeStatus === "inTime"){
+                examIdsList = await (
+                    await firebase_firestore
+                        .collection("users")
+                        .doc(supervisorId)
+                        .get()
+                ).data()["examsCreated"];
+            } catch (error) {
+                return res.status(200).json([]);
+            }
+            if (examIdsList) {
+                for (var i = 0; i < examIdsList.length; i++) {
+                    var exam = await firebase_firestore
+                        .collection("exams")
+                        .doc(examIdsList[i])
+                        .get();
+                    if (exam) {
+                        inTime(exam, studentId, req);
+                        if (req.timeStatus === "inTime") {
                             let examData = exam.data();
                             // let {studentsList,...other} = examData;
 
                             examsList.push(examData);
-                            }
                         }
                     }
-                } else {
-                    return res.status(200).json([]);
                 }
-
-                if (examsList.length > 0) {
-                    return res.status(200).json(examsList);
-                } else {
-                    return res.status(200).json([]);
-                }
-            } catch (error) {
-                return res.status(500).json("Something went wrong");
+            } else {
+                return res.status(200).json([]);
             }
-        }
-    
-    
 
-}
+            if (examsList.length > 0) {
+                return res.status(200).json(examsList);
+            } else {
+                return res.status(200).json([]);
+            }
+        } catch (error) {
+            return res.status(500).json("Something went wrong");
+        }
+    }
+};
 
 const getExamHistory = async (req, res) => {
     if (req.user.isStudent) {
@@ -801,28 +810,26 @@ const getExamHistory = async (req, res) => {
                         .collection("exams")
                         .doc(examIdsList[i])
                         .get();
-                        if(exam){
-
-                            inTime(exam,studentId,req);
-                            if(req.timeStatus === "afterTime"){
-
+                    if (exam) {
+                        inTime(exam, studentId, req);
+                        if (req.timeStatus === "afterTime") {
+                            let examData = exam.data();
+                            if (examData) {
                                 let examData = exam.data();
-                                if (examData) {
-                                    let examData = exam.data();
-                                    let {
-                                        supervisorId,
-                                        studentsList,
-                                        questionPaperId,
-                                        createdAt,
-                                        examInstructions,
-                                        ...other
-                                    } = examData;
-                                    
-                                    examsList.push(other);
-                                }
+                                let {
+                                    supervisorId,
+                                    studentsList,
+                                    questionPaperId,
+                                    createdAt,
+                                    examInstructions,
+                                    ...other
+                                } = examData;
+
+                                examsList.push(other);
                             }
                         }
                     }
+                }
             } else {
                 return res.status(200).json([]);
             }
@@ -859,12 +866,12 @@ const getExamHistory = async (req, res) => {
                         .doc(examIdsList[i])
                         .get();
                     if (exam) {
-                        inTime(exam,studentId,req);
-                        if(req.timeStatus === "afterTime"){
-                        let examData = exam.data();
-                        // let {studentsList,...other} = examData;
+                        inTime(exam, studentId, req);
+                        if (req.timeStatus === "afterTime") {
+                            let examData = exam.data();
+                            // let {studentsList,...other} = examData;
 
-                        examsList.push(examData);
+                            examsList.push(examData);
                         }
                     }
                 }
@@ -881,9 +888,7 @@ const getExamHistory = async (req, res) => {
             return res.status(500).json("Something went wrong");
         }
     }
-
-
-}
+};
 
 const getUpcomingExams = async (req, res) => {
     if (req.user.isStudent) {
@@ -908,26 +913,24 @@ const getUpcomingExams = async (req, res) => {
                         .collection("exams")
                         .doc(examIdsList[i])
                         .get();
-                        if(exam){
-
-                            inTime(exam,studentId,req);
-                            if(req.timeStatus === "beforeTime"){
-                                
+                    if (exam) {
+                        inTime(exam, studentId, req);
+                        if (req.timeStatus === "beforeTime") {
+                            let examData = exam.data();
+                            if (examData) {
                                 let examData = exam.data();
-                                if (examData) {
-                                    let examData = exam.data();
-                                    let {
-                                        supervisorId,
-                                        studentsList,
-                                        questionPaperId,
-                                        createdAt,
-                                        examInstructions,
-                                        ...other
-                                    } = examData;
-                                    
-                                    examsList.push(other);
-                                }
+                                let {
+                                    supervisorId,
+                                    studentsList,
+                                    questionPaperId,
+                                    createdAt,
+                                    examInstructions,
+                                    ...other
+                                } = examData;
+
+                                examsList.push(other);
                             }
+                        }
                     }
                 }
             } else {
@@ -966,12 +969,12 @@ const getUpcomingExams = async (req, res) => {
                         .doc(examIdsList[i])
                         .get();
                     if (exam) {
-                        inTime(exam,studentId,req);
-                        if(req.timeStatus === "beforeTime"){
-                        let examData = exam.data();
-                        // let {studentsList,...other} = examData;
+                        inTime(exam, studentId, req);
+                        if (req.timeStatus === "beforeTime") {
+                            let examData = exam.data();
+                            // let {studentsList,...other} = examData;
 
-                        examsList.push(examData);
+                            examsList.push(examData);
                         }
                     }
                 }
@@ -988,9 +991,7 @@ const getUpcomingExams = async (req, res) => {
             return res.status(500).json("Something went wrong");
         }
     }
-
-
-}
+};
 
 export {
     createExam,
@@ -1007,5 +1008,5 @@ export {
     receiveAnswers,
     getCurrentExam,
     getExamHistory,
-    getUpcomingExams
+    getUpcomingExams,
 };
