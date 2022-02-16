@@ -18,7 +18,7 @@ import {
 import { fetchStudentExams } from "../../../Api/student";
 import { DateTime } from "luxon";
 import { Redirect } from "react-router-dom";
-import StudentExams from "./Templates/StudentExams";
+import RefreshablePage from "../CommonPages/RefreshablePage";
 
 const PreExamDialog = (props) => {
     const { open, onClose, examName, duration, examId } = props;
@@ -160,12 +160,12 @@ const OngoingExams = () => {
     const fetchCurrentExams = () => fetchStudentExams(dispatch, "current");
 
     return (
-        <StudentExams
+        <RefreshablePage
             title="Ongoing Exams"
             fetchExamFunction={fetchCurrentExams}
         >
             <ExamCardGrid exams={exams} />
-        </StudentExams>
+        </RefreshablePage>
     );
 };
 

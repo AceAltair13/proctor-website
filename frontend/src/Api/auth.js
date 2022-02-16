@@ -5,11 +5,17 @@ import {
 } from "../Constants/urls";
 import { publicRequest, removeToken, setToken } from "../requestMethods";
 import { snackActions } from "../Utils/SnackBarUtils";
-import { loginFailure, loginStart, loginSuccess, resetUser } from "../Features/userSlice";
+import {
+    loginFailure,
+    loginStart,
+    loginSuccess,
+    resetUser,
+} from "../Features/userSlice";
 import { resetStudent } from "../Features/studentSlice";
 import { resetExam } from "../Features/examSlice";
 import { resetDashboard } from "../Features/dashboardSlice";
 import { resetQuestionPaper } from "../Features/questionPaperSlice";
+import { resetSupervisor } from "../Features/supervisorSlice";
 
 export const login = (dispatch, user) => {
     dispatch(loginStart());
@@ -34,6 +40,7 @@ export const logout = (dispatch) => {
     dispatch(resetStudent());
     dispatch(resetExam());
     dispatch(resetQuestionPaper());
+    dispatch(resetSupervisor());
 };
 
 export const registerUser = (dispatch, user, role) => {

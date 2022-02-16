@@ -4,7 +4,7 @@ import { Paper } from "@mui/material";
 import { fetchStudentExams } from "../../../Api/student";
 import { DataGrid } from "@mui/x-data-grid";
 import { DateTime } from "luxon";
-import StudentExams from "./Templates/StudentExams";
+import RefreshablePage from "../CommonPages/RefreshablePage";
 
 const columns = [
     {
@@ -66,7 +66,7 @@ const UpcomingExams = () => {
     const fetchUpcomingExams = () => fetchStudentExams(dispatch, "upcoming");
 
     return (
-        <StudentExams
+        <RefreshablePage
             title="Upcoming Exams"
             fetchExamFunction={fetchUpcomingExams}
         >
@@ -78,7 +78,7 @@ const UpcomingExams = () => {
                     disableSelectionOnClick
                 />
             </Paper>
-        </StudentExams>
+        </RefreshablePage>
     );
 };
 

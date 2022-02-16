@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
 import { DateTime } from "luxon";
 import { fetchStudentExams } from "../../../Api/student";
-import StudentExams from "./Templates/StudentExams";
+import RefreshablePage from "../CommonPages/RefreshablePage";
 
 const columns = [
     {
@@ -72,7 +72,7 @@ const ExamHistory = () => {
     const fetchExamsHistory = () => fetchStudentExams(dispatch, "history");
 
     return (
-        <StudentExams
+        <RefreshablePage
             title="Exams History"
             fetchExamFunction={fetchExamsHistory}
         >
@@ -84,7 +84,7 @@ const ExamHistory = () => {
                     disableRowSelection
                 />
             </Paper>
-        </StudentExams>
+        </RefreshablePage>
     );
 };
 

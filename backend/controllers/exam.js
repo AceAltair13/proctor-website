@@ -245,8 +245,11 @@ const getAllExams = async (req, res) => {
                 } else {
                     return res.status(200).json([]);
                 }
-
                 if (examsList.length > 0) {
+                    // sort examList based on date
+                    examsList.sort(function (a, b) {
+                        return new Date(b.createdAt) - new Date(a.createdAt);
+                    });
                     return res.status(200).json(examsList);
                 } else {
                     return res.status(200).json([]);

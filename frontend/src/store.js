@@ -14,6 +14,7 @@ import storage from "redux-persist/lib/storage";
 import questionPaperSlice from "./Features/questionPaperSlice";
 import examSlice from "./Features/examSlice";
 import persistCombineReducers from "redux-persist/es/persistCombineReducers";
+import supervisorSlice from "./Features/supervisorSlice";
 
 const persistConfig = {
     key: "root",
@@ -26,6 +27,7 @@ const persistedReducer = persistCombineReducers(persistConfig, {
     user: userSlice,
     dashboard: dashboardSlice,
     student: studentSlice,
+    supervisor: supervisorSlice,
     questionPaper: questionPaperSlice,
     exam: examSlice,
 });
