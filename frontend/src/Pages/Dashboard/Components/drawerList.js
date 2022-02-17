@@ -73,9 +73,9 @@ const supervisorDrawerItems = [
                 component: StudentMonitoring,
             },
             {
-                text: "Results",
+                text: "Analytics",
                 icon: <EqualizerIcon />,
-                to: "/dashboard/exam/results",
+                to: "/dashboard/exam/analytics",
                 component: Results,
             },
         ],

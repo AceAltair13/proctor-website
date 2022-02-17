@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Typography, Avatar, Paper, IconButton } from "@mui/material";
+import { Grid, Typography, Avatar, IconButton, Card } from "@mui/material";
 import { GitHub, LinkedIn } from "@mui/icons-material";
 import RushilPhoto from "../../Assets/Images/rushil.png";
 import TirthPhoto from "../../Assets/Images/tirth.png";
@@ -70,8 +70,8 @@ function About() {
                 <Grid item sx={{ my: 2 }} spacing={5} container>
                     {teamMembers.map((member, index) => (
                         <Grid item md={4} key={index}>
-                            <Paper
-                                variant="outlined"
+                            <Card
+                                elevation={4}
                                 sx={{
                                     p: 5,
                                 }}
@@ -123,7 +123,7 @@ function About() {
                                         </Grid>
                                     </Grid>
                                 </Grid>
-                            </Paper>
+                            </Card>
                         </Grid>
                     ))}
                 </Grid>

@@ -4,13 +4,13 @@ import Navbar from "./Navbar";
 import Landing from "./Landing";
 import About from "./About";
 import Features from "./Features";
-import { Container } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import Footer from "./Footer";
 import GetStarted from "./GetStarted";
 
 function Home() {
     return (
-        <>
+        <Box bgcolor="rgb(248, 249, 250)">
             <Navbar />
             <Container>
                 <Landing />
@@ -19,7 +19,7 @@ function Home() {
                 <About />
             </Container>
             <Footer />
-        </>
+        </Box>
     );
 }
 

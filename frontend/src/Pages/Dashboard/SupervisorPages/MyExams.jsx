@@ -1,12 +1,10 @@
-import { Paper, Tooltip, Typography } from "@mui/material";
-import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+import { Button, Paper, Stack, Tooltip, Typography } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 import { DateTime } from "luxon";
 import React, { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getSupervisorExams } from "../../../Api/supervisor";
 import RefreshablePage from "../CommonPages/RefreshablePage";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
 
 const columnSchema = [
     {
@@ -22,6 +20,15 @@ const columnSchema = [
         width: 200,
         headerAlign: "center",
         align: "center",
+        renderCell: (params) => {
+            return (
+                <Tooltip title={params.value}>
+                    <Typography variant="body2" noWrap>
+                        {params.value}
+                    </Typography>
+                </Tooltip>
+            );
+        },
     },
     {
         headerName: "Created At",
@@ -61,26 +68,61 @@ const columnSchema = [
         headerAlign: "center",
         align: "center",
     },
+    // {
+    //     headerName: "Actions",
+    //     field: "actions",
+    //     type: "actions",
+    //     getActions: (params) => [
+    //         <GridActionsCellItem
+    //             icon={<DeleteIcon />}
+    //             onClick={() => {
+    //                 console.log(params.id);
+    //             }}
+    //         />,
+    //         <GridActionsCellItem
+    //             icon={<EditIcon />}
+    //             onClick={() => {
+    //                 console.log(params.id);
+    //             }}
+    //         />,
+    //         <GridActionsCellItem
+    //             icon={<DescriptionIcon />}
+    //             onClick={() => {
+    //                 console.log(params.id);
+    //             }}
+    //         />,
+    //     ],
+    //     headerAlign: "center",
+    //     align: "center",
+    //     minWidth: 200,
+    //     flex: 1,
+    // },
     {
         headerName: "Actions",
         field: "actions",
-        type: "actions",
-        getActions: (params) => [
-            <GridActionsCellItem
-                icon={<DeleteIcon />}
-                tooltip="Delete"
-                onClick={() => {
-                    console.log(params.id);
-                }}
-            />,
-            <GridActionsCellItem
-                icon={<EditIcon />}
-                tooltip="Edit"
-                onClick={() => {
-                    console.log(params.id);
-                }}
-            />,
-        ],
+        renderCell: (params) => {
+            return (
+                <Stack direction="row" spacing={1}>
+                    <Button
+                        color="error"
+                        size="small"
+                        onClick={() => {
+                            console.log(params.id);
+                        }}
+                    >
+                        Delete
+                    </Button>
+                    <Button
+                        size="small"
+                        onClick={() => {
+                            console.log(params.id);
+                        }}
+                    >
+                        Edit
+                    </Button>
+                </Stack>
+            );
+        },
         headerAlign: "center",
         align: "center",
         minWidth: 200,

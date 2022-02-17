@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Grid, Paper, Typography } from "@mui/material";
+import { Avatar, Card, Grid, Typography } from "@mui/material";
 import {
     Group,
     Mood,
@@ -88,8 +88,8 @@ function Features() {
                 >
                     {features.map((feature, index) => (
                         <Grid item md={6} lg={4} key={index}>
-                            <Paper
-                                variant="outlined"
+                            <Card
+                                elevation={4}
                                 sx={{
                                     p: 5,
                                 }}
@@ -130,7 +130,7 @@ function Features() {
                                         </Typography>
                                     </Grid>
                                 </Grid>
-                            </Paper>
+                            </Card>
                         </Grid>
                     ))}
                 </Grid>

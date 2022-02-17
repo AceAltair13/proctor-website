@@ -1,13 +1,14 @@
 import { createTheme } from "@mui/material";
 import { deepOrange } from "@mui/material/colors";
+import { customShadows } from "./shadows";
 
 const theme = createTheme({
     palette: {
         text: {
             primary: "#2D3743",
-            secondary: "#646E73"
+            secondary: "#646E73",
         },
-        secondary: deepOrange
+        secondary: deepOrange,
     },
     components: {
         MuiButton: {
@@ -18,6 +19,10 @@ const theme = createTheme({
     },
     typography: {
         fontFamily: ["Inter"],
+    },
+    shadows: customShadows(),
+    shape: {
+        borderRadius: 8,
     },
 });
 

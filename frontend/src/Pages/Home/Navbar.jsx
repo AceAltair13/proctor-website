@@ -97,7 +97,7 @@ function Navbar() {
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="sticky" color="inherit" elevation={0}>
+            <AppBar position="sticky" color="transparent" elevation={0}>
                 <Container disableGutters>
                     <Toolbar>
                         <Box sx={{ flexGrow: 1 }}>

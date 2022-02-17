@@ -64,7 +64,7 @@ function DashboardDrawer(props) {
                     p: 2,
                     display: "flex",
                     backgroundColor: "rgba(145, 158, 171, 0.12)",
-                    borderRadius: 3,
+                    borderRadius: 2
                 }}
             >
                 <Box>

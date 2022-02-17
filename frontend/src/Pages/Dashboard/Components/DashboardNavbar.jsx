@@ -12,6 +12,7 @@ import {
     Avatar,
     Divider,
     LinearProgress,
+    Box,
 } from "@mui/material";
 import { drawerWidth } from "../../../Constants/sizes";
 import {
@@ -32,7 +33,6 @@ function DashboardNavbar() {
     const dispatch = useDispatch();
     const [redirect, setRedirect] = useState(false);
     const user = useSelector((state) => state.user.currentUser);
-    const title = useSelector((state) => state.dashboard.title);
     const { isFetching } = useSelector((state) => state.dashboard);
 
     const logoutUser = () => {
@@ -117,14 +117,7 @@ function DashboardNavbar() {
                 >
                     <MenuIcon />
                 </IconButton>
-                <Typography
-                    variant="h6"
-                    noWrap
-                    component="div"
-                    sx={{ flexGrow: 1 }}
-                >
-                    {title}
-                </Typography>
+                <Box sx={{ flexGrow: 1 }} />
                 <IconButton color="inherit" {...bindTrigger(popupState)}>
                     <AccountCircle />
                 </IconButton>
