@@ -21,8 +21,8 @@ const upload_face = async (req, res) => {
     //     if (err) throw err;
     //     console.log('done');
     // });
-    res.status(200).json("file is uploaded successfully")
-    res.end()
+    // res.status(200).json("file is uploaded successfully")
+    // res.end()
     async function upload() {
         // await uploadBytes(storageRef_1, buffer, metadata).then((snapshot) => {
         //     console.log('file is uploaded Successfully!');
@@ -34,6 +34,7 @@ const upload_face = async (req, res) => {
     }
     async function updating_into_firestore(url) {
         await firebase_firestore.collection("exams").doc(req.body.exam).collection("candidates").doc(req.user.userId).set({ "face": url, folderLocation: folder })
+        return res.status(200).json({"userImageLink": url})
 
     }
     async function download_link() {

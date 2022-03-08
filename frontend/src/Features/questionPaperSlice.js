@@ -7,6 +7,7 @@ const initialState = {
     totalQuestions: 0,
     questions: [],
     submitDialogOpen: false,
+    userImageLink: ""
 };
 
 const questionPaperSlice = createSlice({
@@ -15,6 +16,9 @@ const questionPaperSlice = createSlice({
     reducers: {
         setFaceRegistered: (state, action) => {
             state.faceRegistered = action.payload;
+        },
+        setUserImageLink: (state, action) => {
+            state.userImageLink = action.payload;
         },
         setQuestionList: (state, action) => {
             state.questions = action.payload;
@@ -53,5 +57,6 @@ export const {
     setIsQuestionPaperFetching,
     resetQuestionPaper,
     setSubmitDialogOpen,
+    setUserImageLink
 } = questionPaperSlice.actions;
 export default questionPaperSlice.reducer;

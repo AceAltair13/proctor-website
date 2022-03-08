@@ -9,6 +9,7 @@ import { setExam, setIsCurrentExamFetching } from "../Features/examSlice";
 import {
     setIsQuestionPaperFetching,
     setQuestionList,
+    setUserImageLink,
 } from "../Features/questionPaperSlice";
 
 export const fetchSingleStudentExam = (dispatch, examId) => {
@@ -71,6 +72,7 @@ export const submitAnswers = (dispatch, examId, questions) => {
         try {
             const res = await userRequest.post(SUBMIT_EXAM_RESPONSE, data);
             console.log(res.data);
+            dispatch(setUserImageLink(""));
         } catch (error) {
             snackActions.error(error.response.data);
         } finally {

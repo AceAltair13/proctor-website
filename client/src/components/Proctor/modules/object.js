@@ -47,3 +47,4 @@ function getPrediction(predictions) {
 }
 
 export default runCoco;
+        
