@@ -214,6 +214,8 @@ const getAllExams = async (req, res) => {
                 return res.status(500).json("Something went wrong");
             }
         } else if (req.user.isSupervisor) {
+            // exam_name,exam_createdat, desc, startat,endat
+
             const supervisorId = req.user.userId;
 
             try {
@@ -1001,6 +1003,43 @@ const getUpcomingExams = async (req, res) => {
     }
 };
 
+
+const getExamStudents = async (req, res) => {
+    const examId = req.query.examId;
+    try {
+        // const studentIdsList = await firebase_firestore.collection("exams").doc(examId).get().data()["studentsList"];
+        const studentIdsList = await (await firebase_firestore.collection("exams").doc(examId).get()).data()["studentsList"];
+  
+        if (studentIdsList) {
+            var studentsList = [];
+            for (var i = 0; i < studentIdsList.length; i++) {
+      
+                var student = await firebase_firestore
+                    .collection("users")
+                    .doc(studentIdsList[i])
+                    .get();
+                if (student) {
+                    let studentData = student.data();
+                    let filterStudentData = {
+                        studentId: studentData.userId,
+                        studentFirstName: studentData.firstName,
+                        studentLastName: studentData.lastName,
+
+                        studentEmailId: studentData.emailId,
+                        studentPhoneNumber: studentData.phoneNumber,
+
+
+                    }
+                    studentsList.push(filterStudentData);
+                }
+            }
+            return res.status(200).json(studentsList);
+        }
+    } catch (error) {
+        return res.status(500).json("Something went wrong");
+    }
+}
+
 export {
     createExam,
     updateExam,
@@ -1017,4 +1056,5 @@ export {
     getCurrentExam,
     getExamHistory,
     getUpcomingExams,
+    getExamStudents
 };
