@@ -53,9 +53,11 @@ const PreExamInstructions = () => {
                     Please read all the instructions carefully
                 </Typography>
                 <SimpleBar style={{ maxHeight: "50vh" }}>
-                    <Typography variant="body1" paragraph>
-                        {exam.examInstructions}
-                    </Typography>
+                    <Box
+                        dangerouslySetInnerHTML={{
+                            __html: exam.examInstructions,
+                        }}
+                    />
                 </SimpleBar>
             </Stack>
             <Box

@@ -237,9 +237,14 @@ const getAllExams = async (req, res) => {
                             .get();
                         if (exam) {
                             let examData = exam.data();
-                            // let {studentsList,...other} = examData;
-
-                            examsList.push(examData);
+                            examsList.push({
+                                examId: examData.examId,
+                                examName: examData.examName,
+                                examCreatedAt: examData.createdAt,
+                                examDesc: examData.examDesc,
+                                examStartTime: examData.examStartTime,
+                                examEndTime: examData.examEndTime,
+                            });
                         }
                     }
                 } else {

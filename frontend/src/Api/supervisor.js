@@ -1,6 +1,9 @@
 import { FETCH_EXAMS_URL } from "../Constants/urls";
 import { setDashboardFetching } from "../Features/dashboardSlice";
-import { setSupervisorExams } from "../Features/supervisorSlice";
+import {
+    setSelectedExam,
+    setSupervisorExams,
+} from "../Features/supervisorSlice";
 import { userRequest } from "../requestMethods";
 import { snackActions } from "../Utils/SnackBarUtils";
 
@@ -27,6 +30,23 @@ export const getSupervisorExams = (dispatch) => {
         try {
             const res = await userRequest.get(FETCH_EXAMS_URL);
             dispatch(setSupervisorExams(res.data));
+        } catch (error) {
+            snackActions.error(error.response.data);
+        } finally {
+            dispatch(setDashboardFetching(false));
+        }
+    }, 1000);
+};
+
+export const getExamDetailsForSupervisor = (dispatch, examId) => {
+    dispatch(setDashboardFetching(true));
+    // Timeout to prevent loading bar vanishing too fast
+    setTimeout(async () => {
+        try {
+            const res = await userRequest.get(
+                `${FETCH_EXAMS_URL}?examId=${examId}`
+            );
+            dispatch(setSelectedExam(res.data));
         } catch (error) {
             snackActions.error(error.response.data);
         } finally {

@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     exams: [],
+    selectedExam: {},
 };
 
 const supervisorSlice = createSlice({
@@ -11,9 +12,13 @@ const supervisorSlice = createSlice({
         setSupervisorExams: (state, action) => {
             state.exams = action.payload;
         },
+        setSelectedExam: (state, action) => {
+            state.selectedExam = action.payload;
+        },
         resetSupervisor: () => initialState,
     },
 });
 
-export const { setSupervisorExams, resetSupervisor } = supervisorSlice.actions;
+export const { setSupervisorExams, setSelectedExam, resetSupervisor } =
+    supervisorSlice.actions;
 export default supervisorSlice.reducer;

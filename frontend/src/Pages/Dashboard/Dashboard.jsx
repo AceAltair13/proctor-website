@@ -17,7 +17,7 @@ function Dashboard() {
             <Switch>
                 {drawerItems[role].map((item) =>
                     item.items.map((subItem, index) => (
-                        <Route key={index} exact path={subItem.to}>
+                        <Route key={index} path={subItem.to}>
                             <DashboardContent title={subItem.text}>
                                 <subItem.component />
                             </DashboardContent>

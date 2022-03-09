@@ -10,7 +10,7 @@ import GetStarted from "./GetStarted";
 
 function Home() {
     return (
-        <Box bgcolor="rgb(248, 249, 250)">
+        <Box bgcolor="whitesmoke">
             <Navbar />
             <Container>
                 <Landing />
