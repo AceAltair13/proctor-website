@@ -214,6 +214,8 @@ const getAllExams = async (req, res) => {
                 return res.status(500).json("Something went wrong");
             }
         } else if (req.user.isSupervisor) {
+            // exam_name,exam_createdat, desc, startat,endat
+
             const supervisorId = req.user.userId;
 
             try {
@@ -237,7 +239,17 @@ const getAllExams = async (req, res) => {
                             .get();
                         if (exam) {
                             let examData = exam.data();
-                            // let {studentsList,...other} = examData;
+                            let {
+                                examDesc,
+                                examEndTime,
+                                examStartTime,
+                                examId,
+                                examName,
+                              
+                                createdAt,
+                             
+                                ...other
+                            } = examData;
 
                             examsList.push(examData);
                         }
