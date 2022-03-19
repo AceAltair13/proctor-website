@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Box,
     Button,
     Card,
     CardContent,
+    createTheme,
     Grid,
     TextField,
+    ThemeProvider,
     Typography,
 } from "@mui/material";
 import DateTimePicker from "@mui/lab/DateTimePicker";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
 import { DateTime } from "luxon";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -18,6 +18,36 @@ import { createExamValidation } from "../../../Validations/createExamValidation"
 import { useDispatch, useSelector } from "react-redux";
 import { createExam } from "../../../Api/supervisor";
 import { useHistory } from "react-router-dom";
+import MUIRichTextEditor from "mui-rte";
+import { convertToRaw } from "draft-js";
+
+const theme = createTheme({
+    typography: {
+        fontFamily: ["Inter"],
+    },
+    overrides: {
+        MUIRichTextEditor: {
+            root: {
+                fontFamily: ["Inter"],
+                border: "1px solid rgb(158 158 158 / 80%)",
+                borderRadius: 8,
+            },
+            editor: {
+                height: 300,
+                maxHeight: 300,
+                overflow: "auto",
+            },
+            editorContainer: {
+                padding: 16,
+            },
+            toolbar: {
+                borderBottom: "1px solid rgb(158 158 158 / 80%)",
+                paddingLeft: 16,
+                paddingRight: 16,
+            },
+        },
+    },
+});
 
 const FormContainer = (props) => {
     return (
@@ -40,19 +70,23 @@ const CreateExam = () => {
     const { isFetching } = useSelector((state) => state.dashboard);
     const [startDate, setStartDate] = useState(DateTime.now());
     const [endDate, setEndDate] = useState(DateTime.now());
-    const [instructions, setInstructions] = useState("");
     const {
         register,
         handleSubmit,
         formState: { errors },
+        setValue,
     } = useForm({
         resolver: yupResolver(createExamValidation),
+        examInstructions: "",
     });
+
+    useEffect(() => {
+        register("examInstructions");
+    }, [register]);
 
     const onSubmit = (data) => {
         const finalData = {
             ...data,
-            examInstructions: instructions,
             examStartTime: startDate.toISO(),
             examEndTime: endDate.toISO(),
         };
@@ -95,13 +129,17 @@ const CreateExam = () => {
                             <Typography variant="body1" sx={{ mt: 2, mb: 3 }}>
                                 Exam Instructions
                             </Typography>
-                            <ReactQuill
-                                value={instructions}
-                                onChange={setInstructions}
-                                modules={CreateExam.modules}
-                                formats={CreateExam.formats}
-                                placeholder="Enter instructions for the exam..."
-                            />
+                            <ThemeProvider theme={theme}>
+                                <MUIRichTextEditor
+                                    label="Start typing here..."
+                                    onChange={(value) => {
+                                        const content = convertToRaw(
+                                            value.getCurrentContent()
+                                        );
+                                        setValue("examInstructions", content);
+                                    }}
+                                />
+                            </ThemeProvider>
                         </Grid>
                     </FormContainer>
                 </Grid>
@@ -154,42 +192,5 @@ const CreateExam = () => {
         </Box>
     );
 };
-
-CreateExam.modules = {
-    toolbar: [
-        [{ header: "1" }, { header: "2" }, { font: [] }],
-        [{ size: [] }],
-        ["bold", "italic", "underline", "strike", "blockquote"],
-        [
-            { list: "ordered" },
-            { list: "bullet" },
-            { indent: "-1" },
-            { indent: "+1" },
-        ],
-        ["link", "image", "video"],
-        ["clean"],
-    ],
-    clipboard: {
-        // toggle to add extra line breaks when pasting HTML:
-        matchVisual: false,
-    },
-};
-
-CreateExam.formats = [
-    "header",
-    "font",
-    "size",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "blockquote",
-    "list",
-    "bullet",
-    "indent",
-    "link",
-    "image",
-    "video",
-];
 
 export default CreateExam;

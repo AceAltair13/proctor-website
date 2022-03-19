@@ -20,7 +20,7 @@ const persistConfig = {
     key: "root",
     version: 1,
     storage,
-    whitelist: ["user"],
+    whitelist: ["user", "supervisor", "student"],
 };
 
 const persistedReducer = persistCombineReducers(persistConfig, {

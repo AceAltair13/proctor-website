@@ -540,6 +540,9 @@ const getQuestionPaper = async (req, res) => {
         } catch (error) {
             return res.status(400).json("Please create a question Paper first");
         }
+        if(req.user.isSupervisor){
+            return res.status(200).json(questionPaperAnswers);
+        }
         for (var i = 0; i < questionPaperAnswers.length; i++) {
             var question = {
                 questionId: questionPaperAnswers[i]["questionId"],

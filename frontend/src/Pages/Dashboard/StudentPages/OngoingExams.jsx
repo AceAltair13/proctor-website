@@ -13,6 +13,7 @@ import {
     FormControlLabel,
     Grid,
     Stack,
+    Tooltip,
     Typography,
 } from "@mui/material";
 import { fetchStudentExams } from "../../../Api/student";
@@ -103,9 +104,11 @@ const ExamCard = (props) => {
             <Card>
                 <CardContent>
                     <Stack>
-                        <Typography variant="h6" gutterBottom noWrap>
-                            {examName}
-                        </Typography>
+                        <Tooltip title={examName}>
+                            <Typography variant="h6" gutterBottom noWrap>
+                                {examName}
+                            </Typography>
+                        </Tooltip>
                         <Typography variant="caption">
                             <strong>Started At:</strong>{" "}
                             {examStartTimeDate.toLocaleString(

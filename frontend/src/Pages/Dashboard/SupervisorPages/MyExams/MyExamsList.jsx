@@ -1,12 +1,12 @@
-import { Button, Paper, Tooltip, Typography } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import { Button, Tooltip, Typography } from "@mui/material";
 import { DateTime } from "luxon";
 import React, { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getSupervisorExams } from "../../../Api/supervisor";
-import RefreshablePage from "../CommonPages/RefreshablePage";
+import { getSupervisorExams } from "../../../../Api/supervisor";
+import RefreshablePage from "../../CommonPages/RefreshablePage";
 import EditIcon from "@mui/icons-material/Edit";
 import { Link } from "react-router-dom";
+import CustomDataGrid from "../../../../Components/CustomDataGrid";
 
 const columnSchema = [
     {
@@ -100,33 +100,30 @@ const MyExamsList = () => {
     const dispatch = useDispatch();
     const { exams } = useSelector((state) => state.supervisor);
     const getSupervisorExamsFunc = () => getSupervisorExams(dispatch);
-    const rows = exams.map((exam, index) => ({
-        id: exam.examId,
-        srNo: index + 1,
-        examName: exam.examName,
-        createdAt: DateTime.fromISO(exam.examCreatedAt).toLocaleString(
-            DateTime.DATETIME_MED
-        ),
-        examDescription: exam.examDesc,
-        startsAt: DateTime.fromISO(exam.examStartTime).toLocaleString(
-            DateTime.DATETIME_MED
-        ),
-        endsAt: DateTime.fromISO(exam.examEndTime).toLocaleString(
-            DateTime.DATETIME_MED
-        ),
-    }));
+    const rows = useMemo(
+        () =>
+            exams.map((exam, index) => ({
+                id: exam.examId,
+                srNo: index + 1,
+                examName: exam.examName,
+                createdAt: DateTime.fromISO(exam.examCreatedAt).toLocaleString(
+                    DateTime.DATETIME_MED
+                ),
+                examDescription: exam.examDesc,
+                startsAt: DateTime.fromISO(exam.examStartTime).toLocaleString(
+                    DateTime.DATETIME_MED
+                ),
+                endsAt: DateTime.fromISO(exam.examEndTime).toLocaleString(
+                    DateTime.DATETIME_MED
+                ),
+            })),
+        [exams]
+    );
     const columns = useMemo(() => columnSchema, []);
 
     return (
         <RefreshablePage fetchExamFunction={getSupervisorExamsFunc}>
-            <Paper>
-                <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    autoHeight
-                    disableSelectionOnClick
-                />
-            </Paper>
+            <CustomDataGrid rows={rows} columns={columns} />
         </RefreshablePage>
     );
 };
