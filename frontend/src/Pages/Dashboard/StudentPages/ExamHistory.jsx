@@ -1,10 +1,9 @@
-import { Paper } from "@mui/material";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { DataGrid } from "@mui/x-data-grid";
 import { DateTime } from "luxon";
 import { fetchStudentExams } from "../../../Api/student";
 import RefreshablePage from "../CommonPages/RefreshablePage";
+import CustomDataGrid from "../../../Components/CustomDataGrid";
 
 const columns = [
     {
@@ -76,14 +75,7 @@ const ExamHistory = () => {
             title="Exams History"
             fetchExamFunction={fetchExamsHistory}
         >
-            <Paper>
-                <DataGrid
-                    columns={columns}
-                    rows={rows}
-                    autoHeight
-                    disableRowSelection
-                />
-            </Paper>
+            <CustomDataGrid rows={rows} columns={columns} />
         </RefreshablePage>
     );
 };

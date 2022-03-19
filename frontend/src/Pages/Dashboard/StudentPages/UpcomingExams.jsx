@@ -1,10 +1,9 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Paper } from "@mui/material";
 import { fetchStudentExams } from "../../../Api/student";
-import { DataGrid } from "@mui/x-data-grid";
 import { DateTime } from "luxon";
 import RefreshablePage from "../CommonPages/RefreshablePage";
+import CustomDataGrid from "../../../Components/CustomDataGrid";
 
 const columns = [
     {
@@ -70,14 +69,7 @@ const UpcomingExams = () => {
             title="Upcoming Exams"
             fetchExamFunction={fetchUpcomingExams}
         >
-            <Paper>
-                <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    autoHeight
-                    disableSelectionOnClick
-                />
-            </Paper>
+            <CustomDataGrid rows={rows} columns={columns} />
         </RefreshablePage>
     );
 };
