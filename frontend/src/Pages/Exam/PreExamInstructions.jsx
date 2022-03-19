@@ -14,6 +14,7 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { useSelector } from "react-redux";
 import { useRouteMatch, Link } from "react-router-dom";
 import SimpleBar from "simplebar-react";
+import MUIRichTextEditor from "mui-rte";
 
 const PreExamInstructions = () => {
     const { exam } = useSelector((state) => state.exam);
@@ -53,9 +54,11 @@ const PreExamInstructions = () => {
                     Please read all the instructions carefully
                 </Typography>
                 <SimpleBar style={{ maxHeight: "50vh" }}>
-                    <Typography variant="body1" paragraph>
-                        {exam.examInstructions}
-                    </Typography>
+                    <MUIRichTextEditor
+                        defaultValue={JSON.stringify(exam.examInstructions)}
+                        readOnly
+                        toolbar={false}
+                    />
                 </SimpleBar>
             </Stack>
             <Box

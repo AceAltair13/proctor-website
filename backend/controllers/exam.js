@@ -239,19 +239,14 @@ const getAllExams = async (req, res) => {
                             .get();
                         if (exam) {
                             let examData = exam.data();
-                            let {
-                                examDesc,
-                                examEndTime,
-                                examStartTime,
-                                examId,
-                                examName,
-                              
-                                createdAt,
-                             
-                                ...other
-                            } = examData;
-
-                            examsList.push(examData);
+                            examsList.push({
+                                examId: examData.examId,
+                                examName: examData.examName,
+                                examCreatedAt: examData.createdAt,
+                                examDesc: examData.examDesc,
+                                examStartTime: examData.examStartTime,
+                                examEndTime: examData.examEndTime,
+                            });
                         }
                     }
                 } else {
@@ -545,6 +540,9 @@ const getQuestionPaper = async (req, res) => {
         } catch (error) {
             return res.status(400).json("Please create a question Paper first");
         }
+        if(req.user.isSupervisor){
+            return res.status(200).json(questionPaperAnswers);
+        }
         for (var i = 0; i < questionPaperAnswers.length; i++) {
             var question = {
                 questionId: questionPaperAnswers[i]["questionId"],
@@ -645,14 +643,14 @@ const receiveAnswers = async (req, res) => {
                 try {
                     // const answerResponse = [req.user.userId,req.body.answers]
 
-                    await firebase_firestore
-                        .collection("exams")
-                        .doc(req.body.examId)
-                        .collection("responses")
-                        .doc(req.user.userId)
-                        .set({
-                            ...answerJson,
-                        });
+                    // await firebase_firestore
+                    //     .collection("exams")
+                    //     .doc(req.body.examId)
+                    //     .collection("responses")
+                    //     .doc(req.user.userId)
+                    //     .set({
+                    //         ...answerJson,
+                    //     });
                     let endedExamAt = DateTime.local().toUTC().toString();
                     await firebase_firestore
                         .collection("exams")
@@ -1008,6 +1006,43 @@ const getUpcomingExams = async (req, res) => {
     }
 };
 
+
+const getExamStudents = async (req, res) => {
+    const examId = req.query.examId;
+    try {
+        // const studentIdsList = await firebase_firestore.collection("exams").doc(examId).get().data()["studentsList"];
+        const studentIdsList = await (await firebase_firestore.collection("exams").doc(examId).get()).data()["studentsList"];
+  
+        if (studentIdsList) {
+            var studentsList = [];
+            for (var i = 0; i < studentIdsList.length; i++) {
+      
+                var student = await firebase_firestore
+                    .collection("users")
+                    .doc(studentIdsList[i])
+                    .get();
+                if (student) {
+                    let studentData = student.data();
+                    let filterStudentData = {
+                        studentId: studentData.userId,
+                        studentFirstName: studentData.firstName,
+                        studentLastName: studentData.lastName,
+
+                        studentEmailId: studentData.emailId,
+                        studentPhoneNumber: studentData.phoneNumber,
+
+
+                    }
+                    studentsList.push(filterStudentData);
+                }
+            }
+            return res.status(200).json(studentsList);
+        }
+    } catch (error) {
+        return res.status(500).json("Something went wrong");
+    }
+}
+
 export {
     createExam,
     updateExam,
@@ -1024,4 +1059,5 @@ export {
     getCurrentExam,
     getExamHistory,
     getUpcomingExams,
+    getExamStudents
 };

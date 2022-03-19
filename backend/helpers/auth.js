@@ -158,6 +158,39 @@ export const ExamAndSupervisor = async (req, res, next) => {
 }
 
 
+export const ExamAndSupervisorGetRequest = async (req, res, next) => {
+    try {
+        const examsCreatedList = (await firebase_firestore.collection("users").doc(req.user.userId).get()).data()["examsCreated"]
+        if(!examsCreatedList){
+            return res.status(404).json("No exams created by the user")
+        }
+        req.examIdmatch = false
+
+        for (var i = 0; i < examsCreatedList.length; i++) {
+ 
+
+            if (examsCreatedList[i] === req.query.examId) {
+ 
+
+                req.examIdmatch = true
+                break;
+            }
+        }
+        if (req.examIdmatch) {
+      
+            next()
+        } else {
+
+            return res.status(400).json("You are not authenticated to modify this exam")
+        }
+        
+    } catch (error) {
+        return res.status(500).json("Something went wrong while authenticating supervisor and exam")
+    }
+    
+}
+
+
 
 
 

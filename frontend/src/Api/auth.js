@@ -43,7 +43,7 @@ export const logout = (dispatch) => {
     dispatch(resetSupervisor());
 };
 
-export const registerUser = (dispatch, user, role) => {
+export const registerUser = (dispatch, user, role, history) => {
     dispatch(loginStart());
     // Timeout to prevent loading bar vanishing too fast
     setTimeout(async () => {
@@ -56,6 +56,7 @@ export const registerUser = (dispatch, user, role) => {
                     snackActions.success(
                         "A verification mail has been sent to your email address for your student account"
                     );
+                    history.push("/login");
                     break;
                 case "supervisor":
                     await publicRequest.post(SUPERVISOR_REGISTER_URL, user);
@@ -63,6 +64,7 @@ export const registerUser = (dispatch, user, role) => {
                     snackActions.success(
                         "A verification mail has been sent to your email address for your supervisor account"
                     );
+                    history.push("/login");
                     break;
                 default:
                     break;

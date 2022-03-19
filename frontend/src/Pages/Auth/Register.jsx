@@ -12,7 +12,7 @@ import {
     LinearProgress,
     Card,
 } from "@mui/material";
-import { Link as _Link } from "react-router-dom";
+import { Link as _Link, useHistory } from "react-router-dom";
 import Logo from "../../Components/Logo";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { useForm } from "react-hook-form";
@@ -34,6 +34,7 @@ const roles = [
 ];
 
 function Register() {
+    const history = useHistory();
     const dispatch = useDispatch();
     const { isFetching } = useSelector((state) => state.user);
     const [role, setRole] = useState(roles[0].value);
@@ -52,7 +53,7 @@ function Register() {
     const onSubmit = (data) => {
         console.log(data);
         const { confirmPassword, ...rest } = data;
-        registerUser(dispatch, rest, role);
+        registerUser(dispatch, rest, role, history);
     };
 
     return (

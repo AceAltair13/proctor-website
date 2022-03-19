@@ -19,7 +19,7 @@ function DashboardContent(props) {
                 flexGrow: 1,
                 p: 3,
                 width: { sm: `calc(100% - ${drawerWidth}px)` },
-                bgcolor: "rgb(248, 249, 250)",
+                bgcolor: "whitesmoke",
                 minHeight: "100vh",
             }}
         >
