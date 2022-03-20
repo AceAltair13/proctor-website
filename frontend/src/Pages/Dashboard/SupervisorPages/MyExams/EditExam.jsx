@@ -2,6 +2,7 @@ import { Breadcrumbs, Link, Typography } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import React from "react";
 import { useSelector } from "react-redux";
+import ExamForm from "../Common/ExamForm";
 
 const EditExam = () => {
     const { examName, examId } = useSelector(
@@ -27,8 +28,9 @@ const EditExam = () => {
                 >
                     {examName}
                 </Link>
-                <Typography>EditExam</Typography>
+                <Typography>Edit Exam</Typography>
             </Breadcrumbs>
+            <ExamForm edit />
         </>
     );
 };

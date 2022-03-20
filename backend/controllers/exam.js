@@ -78,7 +78,7 @@ const updateExam = async (req, res) => {
             .update(examJson);
         // await firebase_firestore.collection('users').doc(req.user.userId).set({examsCreated:presentExamsCreated},{merge:true})
         // await firebase_firestore.collection('users').doc(req.user.userId).update({ examsCreated: fieldValue.arrayUnion(newId) });
-        return res.status(200).json("Exam details updated" + result);
+        return res.status(200).json("Exam details updated successfully!");
     } catch (error) {
         return res.status(500).json("Failed to update exam " + error);
     }
@@ -150,7 +150,7 @@ const deleteExam = async (req, res) => {
             });
             await firebase_firestore.collection("exams").doc(exam.id).delete();
 
-            return res.status(200).json("exam deleted ");
+            return res.status(200).json("Exam deleted successfully!");
         } else {
             return res.status(400).json("Provide examId");
         }
@@ -540,7 +540,7 @@ const getQuestionPaper = async (req, res) => {
         } catch (error) {
             return res.status(400).json("Please create a question Paper first");
         }
-        if(req.user.isSupervisor){
+        if (req.user.isSupervisor) {
             return res.status(200).json(questionPaperAnswers);
         }
         for (var i = 0; i < questionPaperAnswers.length; i++) {
@@ -1006,17 +1006,17 @@ const getUpcomingExams = async (req, res) => {
     }
 };
 
-
 const getExamStudents = async (req, res) => {
     const examId = req.query.examId;
     try {
         // const studentIdsList = await firebase_firestore.collection("exams").doc(examId).get().data()["studentsList"];
-        const studentIdsList = await (await firebase_firestore.collection("exams").doc(examId).get()).data()["studentsList"];
-  
+        const studentIdsList = await (
+            await firebase_firestore.collection("exams").doc(examId).get()
+        ).data()["studentsList"];
+
         if (studentIdsList) {
             var studentsList = [];
             for (var i = 0; i < studentIdsList.length; i++) {
-      
                 var student = await firebase_firestore
                     .collection("users")
                     .doc(studentIdsList[i])
@@ -1030,9 +1030,7 @@ const getExamStudents = async (req, res) => {
 
                         studentEmailId: studentData.emailId,
                         studentPhoneNumber: studentData.phoneNumber,
-
-
-                    }
+                    };
                     studentsList.push(filterStudentData);
                 }
             }
@@ -1041,7 +1039,7 @@ const getExamStudents = async (req, res) => {
     } catch (error) {
         return res.status(500).json("Something went wrong");
     }
-}
+};
 
 export {
     createExam,
@@ -1059,5 +1057,5 @@ export {
     getCurrentExam,
     getExamHistory,
     getUpcomingExams,
-    getExamStudents
+    getExamStudents,
 };
