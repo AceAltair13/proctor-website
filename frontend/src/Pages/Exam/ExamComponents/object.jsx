@@ -1,23 +1,15 @@
-import * as tf from "@tensorflow/tfjs";
+// import * as tf from "@tensorflow/tfjs";
 import * as cocoSsd from "@tensorflow-models/coco-ssd";
 
 async function runObjectDetection(webcamRef) {
     const net = await cocoSsd.load();
-    setInterval(() => {
-        detect(net, webcamRef);
-    }, 60);
+    detect(net, webcamRef);
 }
 
 async function detect(net, webcamRef) {
-    if (
-        typeof webcamRef.current !== "undefined" &&
-        webcamRef.current !== null &&
-        webcamRef.current.video.readyState === 4
-    ) {
-        const video = webcamRef.current.video;
-        const predictions = await net.detect(video);
-        getPrediction(predictions);
-    }
+    const video = webcamRef.current.video;
+    const predictions = await net.detect(video);
+    getPrediction(predictions);
 }
 
 function getPrediction(predictions) {
@@ -47,4 +39,3 @@ function getPrediction(predictions) {
 }
 
 export default runObjectDetection;
-        
