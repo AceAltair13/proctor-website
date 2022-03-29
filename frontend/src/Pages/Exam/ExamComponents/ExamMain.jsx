@@ -31,10 +31,7 @@ function ExamMain(props) {
             <Grid item xs={5}>
                 <Container>
                     <Stack>
-                        <Typography
-                            variant="body1"
-                            fontWeight="fontWeightBold"
-                        >
+                        <Typography variant="body1" fontWeight="fontWeightBold">
                             Question {currentQuestionId + 1} of {totalQuestions}
                         </Typography>
                         <Typography variant="subtitle2" gutterBottom>
@@ -101,7 +98,7 @@ ExamMain.propTypes = {
             optionDesc: PropTypes.string.isRequired,
         })
     ).isRequired,
-    selectedOption: PropTypes.number.isRequired,
+    selectedOption: PropTypes.number,
     weightage: PropTypes.number.isRequired,
 };
 

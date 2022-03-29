@@ -9,7 +9,6 @@ import { Link } from "react-router-dom";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { submitAnswers } from "../../Api/exam";
-import screenfull from "screenfull";
 
 const ExamSubmitPage = () => {
     const dispatch = useDispatch();
@@ -17,13 +16,6 @@ const ExamSubmitPage = () => {
         (state) => state.questionPaper
     );
     const { examId } = useSelector((state) => state.exam.exam);
-
-    const exitFullScreen = () => {
-        screenfull.off("change");
-        if (screenfull.isEnabled) {
-            screenfull.exit();
-        }
-    };
 
     useEffect(() => {
         console.log("Response is being submittted...");
@@ -50,7 +42,6 @@ const ExamSubmitPage = () => {
                     <Button
                         color="success"
                         size="large"
-                        onClick={exitFullScreen}
                         component={Link}
                         to="/dashboard"
                     >
