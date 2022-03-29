@@ -13,6 +13,19 @@ import {
     DialogTitle,
 } from "@mui/material";
 import screenfull from "screenfull";
+import { snackActions } from "../../Utils/SnackBarUtils";
+
+export const showRightClickWarning = (e) => {
+    e.preventDefault();
+    snackActions.warning("Right click is not allowed!");
+};
+
+const exitFullScreen = () => {
+    screenfull.off("change");
+    if (screenfull.isEnabled) {
+        screenfull.exit();
+    }
+};
 
 const FullScreenViolationDialog = (props) => {
     return (
@@ -51,6 +64,12 @@ const ExamRoutes = () => {
                 }
             });
         }
+        window.addEventListener("contextmenu", showRightClickWarning);
+
+        return () => {
+            window.removeEventListener("contextmenu", showRightClickWarning);
+            exitFullScreen();
+        };
     }, []);
 
     return (
