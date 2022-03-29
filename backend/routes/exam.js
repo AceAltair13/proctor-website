@@ -20,6 +20,7 @@ import {
   getUpcomingExams,
   getExamHistory,
   getExamStudents,
+  getExamResponses,
 
 } from "../controllers/exam.js";
 import * as verifyRequests from "../helpers/verifyRequests.js"
@@ -51,4 +52,6 @@ router.delete("/question-paper", [auth.Token,auth.Supervisor,auth.ExamAndSupervi
 router.post("/submit-answer", [auth.Token], receiveAnswers);
 router.get("/students", [auth.Token,auth.Supervisor,auth.ExamAndSupervisorGetRequest],getExamStudents)
 
+
+router.get("/responses", [auth.Token,auth.Supervisor,auth.ExamAndSupervisorGetRequest],getExamResponses);
 export const routes = router;

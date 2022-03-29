@@ -1,5 +1,5 @@
 import Webcam from "react-webcam";
-import React from "react";
+import React, { useState } from "react";
 import * as faceapi from '@vladmandic/face-api';
 import { useSelector } from "react-redux";
 import runObjectDetection from "./object";
@@ -10,7 +10,7 @@ function App() {
     // const [color, setColor] = React.useState("red");
     const userImageLin = useSelector((state) => state.questionPaper.userImageLink);
     const userImageLink_1 = "https://firebasestorage.googleapis.com/v0/b/examinator-2c5f7.appspot.com/o/jetha1.jpg?alt=media&token=a68d1461-9342-4ff2-83d0-574907848437";
-
+    const [timeoutFlag, setTimeoutFlag] = useState(1000);
     const loadImage = () => {
         const labels = ["Person Found"];
         return Promise.all(
@@ -58,7 +58,12 @@ function App() {
                 results.forEach((result, _) => {
                     if (result.label === "Person Found") {
                         console.log("Person Found");
-                    } else {
+                    } else 
+                    // if(unknownPersonTimeout!=true)
+                     {
+                        // upload unknown person malpractice post request
+                        // setUnkownPersonTimeout(true);
+                        
                         console.log("Unkown Person");
                     }
                 });

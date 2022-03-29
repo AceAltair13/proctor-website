@@ -269,6 +269,51 @@ const getAllExams = async (req, res) => {
 };
 
 // CRUD QUESTION PAPER
+// const assignQuestionPaper = async (req, res) => {
+//     try {
+//         if (!req.body.examId) {
+//             return res.status(400).json("Provide examId in request body");
+//         }
+//         const qpe = await questionPaperFromExam(req.body.examId);
+
+//         if (qpe) {
+//             return res
+//                 .status(400)
+//                 .json("Question Paper already exists for the exam ");
+//         }
+//         var maxMarks = 0;
+//         for (var i = 0; i < req.body.questionAnswers.length; i++) {
+//             maxMarks += req.body.questionAnswers[i].weightage;
+//         }
+//         const questionPaper = new QuestionPaper(
+//             req.body.examId,
+//             req.body.questionAnswers,
+//             maxMarks
+//         );
+
+//         const questionPaperJson = JSON.parse(JSON.stringify(questionPaper));
+//         const newId = uid();
+
+//         const result1 = await firebase_firestore
+//             .collection("questionPapers")
+//             .doc(newId)
+//             .create(questionPaperJson);
+//         const result2 = await firebase_firestore
+//             .collection("exams")
+//             .doc(req.body.examId)
+//             .update({
+//                 questionPaperId: newId,
+//             });
+//         return res
+//             .status(200)
+//             .json("Question Paper created successfull" + result1 + result2);
+//     } catch (error) {
+//         return res.status(400).json("Failed to create questionPaper" + error);
+//     }
+// };
+
+
+
 const assignQuestionPaper = async (req, res) => {
     try {
         if (!req.body.examId) {
@@ -447,9 +492,10 @@ const enrollStudent = async (req, res) => {
         return res
             .status(200)
             .json(
-                "Students enrolled successfully and users:- " +
-                    invalidUsers +
-                    " doesn't exists"
+                invalidUsers
+                // "Students enrolled successfully and users:- " +
+                //     invalidUsers +
+                //     " doesn't exists"
             );
     } catch (error) {
         res.status(500).json("Something went wrong try again later" + error);
@@ -500,9 +546,10 @@ const removeStudents = async (req, res) => {
         return res
             .status(200)
             .json(
-                "Students removed from exam successfully and users:- " +
-                    invalidUsers +
-                    " doesn't exists"
+                invalidUsers
+                // "Students removed from exam successfully and users:- " +
+                //     invalidUsers +
+                //     " doesn't exists"
             );
     } catch (error) {
         res.status(500).json("Something went wrong try again later" + error);
@@ -1043,6 +1090,54 @@ const getExamStudents = async (req, res) => {
     }
 }
 
+const getExamResponses = async (req, res) => {
+
+    const examId = req.query.examId;
+    try {
+        const questionPaperId = await(await firebase_firestore.collection("exams").doc(examId).get()).data()["questionPaperId"];
+        const questionPaper = await firebase_firestore.collection("questionPapers").doc(questionPaperId).get();
+        console.log(questionPaper.data());
+
+        var details = {};
+        details.questionPaper = questionPaper.data();
+        const studentIdsList = await (await firebase_firestore.collection("exams").doc(examId).get()).data()["studentsList"];
+        if (studentIdsList) {
+            var studentsList = [];
+            
+            for (var i = 0; i < studentIdsList.length; i++) {
+                var student = await firebase_firestore
+
+                    .collection("exams")
+                    .doc(examId).collection("candidates").doc(studentIdsList[i]).get();
+                if (student.data()) {
+                    let studentData = student.data();
+
+
+                    let filterStudentData = {
+                        studentId: studentIdsList[i],
+                        studentResponse: studentData.response??[],
+                        studentMarksScored: studentData.score??"",
+                    }
+                    studentsList.push(filterStudentData);
+                }else{
+                    let filterStudentData = {
+                        studentId: studentIdsList[i],
+                        studentResponse: [],
+                        studentMarksScored: "",
+                    }
+                    studentsList.push(filterStudentData);
+                }
+            }
+            details.studentsList = studentsList;
+            return res.status(200).json(details);
+        }
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+}
+
+
+
 export {
     createExam,
     updateExam,
@@ -1059,5 +1154,6 @@ export {
     getCurrentExam,
     getExamHistory,
     getUpcomingExams,
-    getExamStudents
+    getExamStudents,
+    getExamResponses
 };
