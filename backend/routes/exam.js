@@ -20,6 +20,7 @@ import {
   getUpcomingExams,
   getExamHistory,
   getExamStudents,
+  getExamResponses,
 
 } from "../controllers/exam.js";
 import * as verifyRequests from "../helpers/verifyRequests.js"
@@ -40,6 +41,7 @@ router.get("/history", [auth.Token], getExamHistory);
 router.delete("/", [auth.Token,auth.ExamAndSupervisor], deleteExam);
 router.post("/students", [auth.Token,auth.Supervisor,auth.ExamAndSupervisor,exam.examCreatedBySupervisor], enrollStudent);
 router.delete("/students", [auth.Token,auth.Supervisor,auth.ExamAndSupervisor,exam.examCreatedBySupervisor], removeStudents);
+router.get("/responses", [auth.Token,auth.Supervisor,auth.ExamAndSupervisorGetRequest],getExamResponses);
 
 
 
@@ -50,5 +52,4 @@ router.put("/question-paper", [auth.Token,auth.Supervisor,auth.ExamAndSupervisor
 router.delete("/question-paper", [auth.Token,auth.Supervisor,auth.ExamAndSupervisor], deleteQuestionPaper);
 router.post("/submit-answer", [auth.Token], receiveAnswers);
 router.get("/students", [auth.Token,auth.Supervisor,auth.ExamAndSupervisorGetRequest],getExamStudents)
-
 export const routes = router;

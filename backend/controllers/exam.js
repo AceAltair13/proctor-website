@@ -447,9 +447,10 @@ const enrollStudent = async (req, res) => {
         return res
             .status(200)
             .json(
-                "Students enrolled successfully and users:- " +
-                    invalidUsers +
-                    " doesn't exists"
+                // "Students enrolled successfully and users:- " +
+                    invalidUsers 
+                    // +
+                    // " doesn't exists"
             );
     } catch (error) {
         res.status(500).json("Something went wrong try again later" + error);
@@ -500,9 +501,10 @@ const removeStudents = async (req, res) => {
         return res
             .status(200)
             .json(
-                "Students removed from exam successfully and users:- " +
-                    invalidUsers +
-                    " doesn't exists"
+                // "Students removed from exam successfully and users:- " +
+                    invalidUsers 
+                    // +
+                    // " doesn't exists"
             );
     } catch (error) {
         res.status(500).json("Something went wrong try again later" + error);
@@ -1041,6 +1043,55 @@ const getExamStudents = async (req, res) => {
     }
 };
 
+const getExamResponses = async (req, res) => {
+
+    const examId = req.query.examId;
+    try {
+        const questionPaperId = await(await firebase_firestore.collection("exams").doc(examId).get()).data()["questionPaperId"];
+        const questionPaper = await firebase_firestore.collection("questionPapers").doc(questionPaperId).get();
+        console.log(questionPaper.data());
+
+        var details = {};
+        details.questionPaper = questionPaper.data();
+        const studentIdsList = await (await firebase_firestore.collection("exams").doc(examId).get()).data()["studentsList"];
+        if (studentIdsList) {
+            var studentsList = [];
+
+            for (var i = 0; i < studentIdsList.length; i++) {
+                var student = await firebase_firestore
+
+                    .collection("exams")
+                    .doc(examId).collection("candidates").doc(studentIdsList[i]).get();
+                if (student.data()) {
+                    let studentData = student.data();
+
+
+                    let filterStudentData = {
+                        studentId: studentIdsList[i],
+                        studentResponse: studentData.response??[],
+                        studentMarksScored: studentData.score??"",
+                    }
+                    studentsList.push(filterStudentData);
+                }else{
+                    let filterStudentData = {
+                        studentId: studentIdsList[i],
+                        studentResponse: [],
+                        studentMarksScored: "",
+                    }
+                    studentsList.push(filterStudentData);
+                }
+            }
+            details.studentsList = studentsList;
+            return res.status(200).json(details);
+        }
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+}
+
+
+
+
 export {
     createExam,
     updateExam,
@@ -1058,4 +1109,5 @@ export {
     getExamHistory,
     getUpcomingExams,
     getExamStudents,
+    getExamResponses
 };
