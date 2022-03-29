@@ -5,14 +5,22 @@ import PropTypes from "prop-types";
 import SubmitDialog from "./SubmitDialog";
 import { useDispatch } from "react-redux";
 import { setSubmitDialogOpen } from "../../../Features/questionPaperSlice";
+import { useTimer } from "react-timer-hook";
+import { useSelector } from "react-redux";
+import { DateTime } from "luxon";
 
 function ExamHeader(props) {
     const dispatch = useDispatch();
     const { userId, examName } = props;
-
     const handleClickOpen = () => {
         dispatch(setSubmitDialogOpen(true));
     };
+    const { examEndTime } = useSelector((state) => state.exam.exam);
+    console.log(examEndTime);
+    const { seconds, minutes, hours, days } = useTimer({
+        expiryTimestamp: DateTime.fromISO(examEndTime).toJSDate(),
+        onExpire: () => console.log("expired"),
+    });
 
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -58,7 +66,7 @@ function ExamHeader(props) {
                                     sx={{ mr: 2 }}
                                     textAlign="center"
                                 >
-                                    Time Remaining: <strong>10:00</strong>
+                                    {`Time Remaining: ${days}:${hours}:${minutes}:${seconds}`}
                                 </Typography>
                             </Grid>
                         </Grid>

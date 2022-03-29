@@ -41,7 +41,7 @@ const ManageExam = () => {
         {
             icon: DescriptionIcon,
             color: "primary.main",
-            text: "Manage Question Bank",
+            text: "Question Bank",
             path: `${url}/manage-question-paper`,
         },
         {
@@ -81,7 +81,14 @@ const ManageExam = () => {
                 {examName ? (
                     <Grid container spacing={4}>
                         {manageExamItems.map((item, index) => (
-                            <Grid item lg={3} md={6} sm={12} xs={12}>
+                            <Grid
+                                item
+                                lg={3}
+                                md={6}
+                                sm={12}
+                                xs={12}
+                                key={index}
+                            >
                                 <Card key={index}>
                                     <CardActionArea
                                         component={RouterLink}

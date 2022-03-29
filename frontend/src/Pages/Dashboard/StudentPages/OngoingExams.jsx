@@ -20,6 +20,7 @@ import { fetchStudentExams } from "../../../Api/student";
 import { DateTime } from "luxon";
 import { Redirect } from "react-router-dom";
 import RefreshablePage from "../CommonPages/RefreshablePage";
+import screenfull from "screenfull";
 
 const PreExamDialog = (props) => {
     const { open, onClose, examName, duration, examId } = props;
@@ -29,6 +30,12 @@ const PreExamDialog = (props) => {
     if (redirect) {
         return <Redirect to={`/take-exam/${examId}`} />;
     }
+
+    const toggleFullScreen = () => {
+        if (screenfull.isEnabled) {
+            screenfull.request();
+        }
+    };
 
     return (
         <Dialog open={open} onClose={onClose} scroll="paper">
@@ -72,7 +79,12 @@ const PreExamDialog = (props) => {
                     Close
                 </Button>
                 <Button
-                    onClick={() => setRedirect(true)}
+                    onClick={() => {
+                        if (instructionsRead) {
+                            toggleFullScreen();
+                            setRedirect(true);
+                        }
+                    }}
                     color="primary"
                     variant="text"
                     disabled={!instructionsRead}

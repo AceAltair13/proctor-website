@@ -5,7 +5,12 @@ const initialState = {
     selectedExam: {},
     selectedQuestionPaper: [],
     selectedQuestionId: 0,
+    selectedStudent: {
+        studentId: "",
+        studentName: "",
+    },
     supervisorDialogOpen: false,
+    enrolledStudents: [],
 };
 
 const supervisorSlice = createSlice({
@@ -24,8 +29,14 @@ const supervisorSlice = createSlice({
         setSelectedQuestionId: (state, action) => {
             state.selectedQuestionId = action.payload;
         },
+        setSelectedStudent: (state, action) => {
+            state.selectedStudent = action.payload;
+        },
         setSupervisorDialogOpen: (state, action) => {
             state.supervisorDialogOpen = action.payload;
+        },
+        setEnrolledStudents: (state, action) => {
+            state.enrolledStudents = action.payload;
         },
         resetSupervisor: () => initialState,
     },
@@ -36,7 +47,9 @@ export const {
     setSelectedExam,
     setSelectedQuestionPaper,
     setSelectedQuestionId,
+    setSelectedStudent,
     setSupervisorDialogOpen,
     resetSupervisor,
+    setEnrolledStudents,
 } = supervisorSlice.actions;
 export default supervisorSlice.reducer;
