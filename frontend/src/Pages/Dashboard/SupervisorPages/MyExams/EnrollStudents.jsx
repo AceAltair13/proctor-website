@@ -63,7 +63,7 @@ const EnrollStudents = () => {
                 </Link>
                 <Typography>Enroll Students</Typography>
             </Breadcrumbs>
-            <Paper sx={{ p: 3 }}>
+            <Paper sx={{ p: 3 }} elevation={4}>
                 <TextField
                     label="Enter Comma Separated Student Email IDs"
                     fullWidth

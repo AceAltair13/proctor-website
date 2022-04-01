@@ -12,6 +12,7 @@ import {
     DialogTitle,
     DialogContent,
     DialogActions,
+    Paper,
 } from "@mui/material";
 import DateTimePicker from "@mui/lab/DateTimePicker";
 import { DateTime } from "luxon";
@@ -29,16 +30,14 @@ import { setSupervisorDialogOpen } from "../../../../Features/supervisorSlice";
 
 const FormContainer = (props) => {
     return (
-        <Card>
-            <CardContent sx={{ p: 3 }}>
-                <Typography variant="body1" gutterBottom>
-                    {props.title}
-                </Typography>
-                <Grid container spacing={2} mt={1}>
-                    {props.children}
-                </Grid>
-            </CardContent>
-        </Card>
+        <Paper sx={{ p: 3 }} elevation={4}>
+            <Typography variant="body1" gutterBottom>
+                {props.title}
+            </Typography>
+            <Grid container spacing={2} mt={1}>
+                {props.children}
+            </Grid>
+        </Paper>
     );
 };
 

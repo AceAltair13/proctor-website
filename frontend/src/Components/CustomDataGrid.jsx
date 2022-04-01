@@ -2,20 +2,20 @@ import { DataGrid } from "@mui/x-data-grid";
 import React from "react";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
-import { Box } from "@mui/material";
+import { Paper } from "@mui/material";
 
 const CustomDataGrid = (props) => {
     const { rows, columns, ...other } = props;
     const { isFetching } = useSelector((state) => state.dashboard);
 
     return (
-        <Box
+        <Paper
             sx={{
-                bgcolor: "background.paper",
                 "& .custom-data-grid--isCorrect": {
                     bgcolor: "rgb(0, 255, 0, 0.2)",
                 },
             }}
+            elevation={4}
         >
             <DataGrid
                 rows={isFetching ? [] : rows}
@@ -30,7 +30,7 @@ const CustomDataGrid = (props) => {
                 }}
                 {...other}
             />
-        </Box>
+        </Paper>
     );
 };
 

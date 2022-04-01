@@ -20,7 +20,7 @@ const ChangePassword = () => {
     return (
         <Grid container component="form" onSubmit={handleSubmit(onSubmit)}>
             <Grid item lg={4} md={6} sm={12} xs={12}>
-                <Paper sx={{ p: 3 }}>
+                <Paper sx={{ p: 3 }} elevation={4}>
                     <Stack direction="column" spacing={3}>
                         <TextField
                             label="Old Password"
