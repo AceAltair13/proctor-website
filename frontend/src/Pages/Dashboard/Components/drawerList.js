@@ -95,7 +95,7 @@ const commonDrawerItems = [
             {
                 text: "Change Password",
                 icon: <VpnKeyIcon />,
-                to: "/dashboard/profile/change-password",
+                to: "/dashboard/change-password",
                 component: ChangePassword,
             },
         ],
