@@ -89,7 +89,7 @@ function Features() {
                     {features.map((feature, index) => (
                         <Grid item md={6} lg={4} key={index}>
                             <Card
-                                elevation={4}
+                                elevation={8}
                                 sx={{
                                     p: 5,
                                 }}

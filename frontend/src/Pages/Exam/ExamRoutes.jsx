@@ -15,18 +15,6 @@ import {
 import screenfull from "screenfull";
 import { snackActions } from "../../Utils/SnackBarUtils";
 
-export const showRightClickWarning = (e) => {
-    e.preventDefault();
-    snackActions.warning("Right click is not allowed!");
-};
-
-const exitFullScreen = () => {
-    screenfull.off("change");
-    if (screenfull.isEnabled) {
-        screenfull.exit();
-    }
-};
-
 const FullScreenViolationDialog = (props) => {
     return (
         <Dialog open={props.open} onClose={props.switchToFullScreen}>
@@ -57,6 +45,11 @@ const ExamRoutes = () => {
     };
 
     useEffect(() => {
+        const showRightClickWarning = (e) => {
+            e.preventDefault();
+            snackActions.warning("Right click is not allowed!");
+        };
+
         if (screenfull.isEnabled) {
             screenfull.on("change", () => {
                 if (!screenfull.isFullscreen) {
@@ -68,7 +61,10 @@ const ExamRoutes = () => {
 
         return () => {
             window.removeEventListener("contextmenu", showRightClickWarning);
-            exitFullScreen();
+            screenfull.off("change");
+            if (screenfull.isEnabled) {
+                screenfull.exit();
+            }
         };
     }, []);
 

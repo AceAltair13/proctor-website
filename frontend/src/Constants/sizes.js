@@ -1,3 +1,1 @@
-const drawerWidth = 240;
-
-export { drawerWidth };
+export const drawerWidth = 240;

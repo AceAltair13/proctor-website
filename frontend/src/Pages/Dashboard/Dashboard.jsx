@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 import DashboardNavbar from "./Components/DashboardNavbar";
 import DashboardDrawer from "./Components/DashboardDrawer";
 import DashboardContent from "./Components/DashboardContent";
-import { Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import { drawerItems } from "./Components/drawerList";
 import { useSelector } from "react-redux";
 
@@ -24,6 +24,9 @@ function Dashboard() {
                         </Route>
                     ))
                 )}
+                <Route path="/">
+                    <Redirect to={drawerItems[role][0].items[0].to} />
+                </Route>
             </Switch>
         </Box>
     );
