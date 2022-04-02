@@ -18,6 +18,7 @@ import AddIcon from "@mui/icons-material/Add";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import PublishIcon from "@mui/icons-material/Publish";
 import { GridActionsCellItem } from "@mui/x-data-grid";
 import { getQuestionPaperForSupervisor } from "../../../../Api/supervisor";
 import {
@@ -112,7 +113,7 @@ const QuestionDialog = () => {
 };
 
 const ManageQuestionPaper = () => {
-    const { selectedQuestionPaper, selectedExam } = useSelector(
+    const { selectedQuestionPaper, selectedExam, unsavedChanges } = useSelector(
         (state) => state.supervisor
     );
     const { examName } = selectedExam;
@@ -228,9 +229,17 @@ const ManageQuestionPaper = () => {
             </Breadcrumbs>
             <RefreshablePage fetchExamFunction={getQuestionPaper}>
                 <Box sx={{ display: "flex", justifyContent: "end", mb: 2 }}>
-                    <Button color="success" startIcon={<AddIcon />}>
-                        Add Question
-                    </Button>
+                    <Stack direction="row" spacing={2}>
+                        <Button color="success" startIcon={<AddIcon />}>
+                            Add Question
+                        </Button>
+                        <Button
+                            startIcon={<PublishIcon />}
+                            disabled={!unsavedChanges}
+                        >
+                            Save Changes
+                        </Button>
+                    </Stack>
                 </Box>
                 <CustomDataGrid rows={rows} columns={columns} />
             </RefreshablePage>

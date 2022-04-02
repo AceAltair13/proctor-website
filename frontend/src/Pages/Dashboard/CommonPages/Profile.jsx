@@ -1,25 +1,16 @@
-import {
-    Avatar,
-    Button,
-    Divider,
-    Grid,
-    Paper,
-    Stack,
-    Typography,
-} from "@mui/material";
+import { Avatar, Divider, Grid, Paper, Stack, Typography } from "@mui/material";
 import React from "react";
 import { useSelector } from "react-redux";
 import NumbersIcon from "@mui/icons-material/Numbers";
 import SchoolIcon from "@mui/icons-material/School";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import EmailIcon from "@mui/icons-material/Email";
-import EditIcon from "@mui/icons-material/Edit";
 
 const FeatureStack = (props) => {
     const { Icon, text } = props;
     return (
         <Stack direction="row" spacing={1}>
-            <Icon color="text.secondary" />
+            <Icon sx={{ color: "text.secondary" }} />
             <Typography variant="body1" color="text.secondary" noWrap>
                 {text}
             </Typography>
@@ -82,15 +73,6 @@ const Profile = () => {
                                 Icon={EmailIcon}
                                 text={currentUser.emailId}
                             />
-                            <Button
-                                fullWidth
-                                variant="outlined"
-                                color="success"
-                                startIcon={<EditIcon />}
-                                sx={{ mt: 3 }}
-                            >
-                                Edit Profile
-                            </Button>
                         </Stack>
                     </Stack>
                 </Paper>

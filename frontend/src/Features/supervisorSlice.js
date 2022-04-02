@@ -11,6 +11,7 @@ const initialState = {
     },
     supervisorDialogOpen: false,
     enrolledStudents: [],
+    unsavedChanges: false,
 };
 
 const supervisorSlice = createSlice({
@@ -38,6 +39,9 @@ const supervisorSlice = createSlice({
         setEnrolledStudents: (state, action) => {
             state.enrolledStudents = action.payload;
         },
+        setUnsavedChanges: (state, action) => {
+            state.unsavedChanges = action.payload;
+        },
         resetSupervisor: () => initialState,
     },
 });
@@ -51,5 +55,6 @@ export const {
     setSupervisorDialogOpen,
     resetSupervisor,
     setEnrolledStudents,
+    setUnsavedChanges,
 } = supervisorSlice.actions;
 export default supervisorSlice.reducer;

@@ -1,5 +1,8 @@
 // Root URL
-export const URL = "http://localhost:8080/api";
+export const URL =
+    process.env.NODE_ENV === "development"
+        ? "http://localhost:8080/api"
+        : "http://examinator-ai.southindia.cloudapp.azure.com:8080/api";
 
 // Auth
 export const STUDENT_REGISTER_URL = "/user/register-student";
