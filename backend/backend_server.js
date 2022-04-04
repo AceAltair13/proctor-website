@@ -33,25 +33,30 @@ import cookieParser from 'cookie-parser'
 import { routes as proctorRoutes } from "./routes/proctor.js"
 // import { routes as proctorRoutes } from "./routes/proctor.js"
 import { sendMail } from './helpers/email.js'
+import path from "path"
+import https from "https"
+import fs from "fs"
 
-
-
+const __dirname = path.resolve();
 // var store = new FirestoreStore({
 //     dataset: firebase_firestore,
 //     // dataset:new Firestore(),
 //     kind: 'session'
 // })
 
+var privateKey = fs.readFileSync( 'privkey.pem' );
+var certificate = fs.readFileSync( 'fullchain.pem' );
+
 const app = express()
 app.use(express.json())
 // app.use(json())
-app.use(cors({
-    origin:"http://localhost:3000",
-    methods:"GET,POST,DELETE,PUT",
-    credentials:true,
-    exposedHeaders:["set-cookie"]
-}
-))
+//app.use(cors({
+//    origin:[],
+//    methods:"GET,POST,DELETE,PUT",
+//    credentials:true,
+//    exposedHeaders:["set-cookie"]
+//}
+//))
 // app.use(bodyParser.json())
 
 // app.use(bodyParser.urlencoded({ extended: true }));
@@ -73,11 +78,40 @@ app.use(cookieParser());
 // }))
 
 // app.use(session({secret: session_key,resave:true,saveUninitialized: true,httponly:false,cookie: {}}))
+app.use(express.static(path.join(__dirname, 'build')));
 app.use("/api/user", userRoutes)
 app.use("/api/exam", examRoutes)
 app.use("/api/proctor", proctorRoutes)
 
+app.get('/game', function (req, res) {
+	res.write("hello");
+	res.end();
+	//res.sendFile(path.join(__dirname, 'build', 'index.html'));
+	//res.end();
+});
 
-app.listen(port, () => {
-    console.log(`Server is running on ${url}`);
-})
+
+app.get('/pubg', function (req, res) {
+        res.write("pubg");
+        res.end();
+        //res.sendFile(path.join(__dirname, 'build', 'index.html'));
+        //res.end();
+});
+
+app.get('/cod', function (req, res) {
+        res.write("cod");
+        res.end();
+        //res.sendFile(path.join(__dirname, 'build', 'index.html'));
+        //res.end();
+});
+
+https.createServer({
+    key: privateKey,
+    cert: certificate
+}, app).listen(443);
+
+//app.listen(8080, () => {
+//    console.log(`Server is running on ${url}`);
+//})
+
+

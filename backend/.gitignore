@@ -2,3 +2,6 @@
 firebase_key.json
 .env
 TODOS.txt
+fullchain.pem
+privkey.pem
+/build

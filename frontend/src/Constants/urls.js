@@ -2,7 +2,7 @@
 export const URL =
     process.env.NODE_ENV === "development"
         ? "http://localhost:8080/api"
-        : "http://examinator-ai.southindia.cloudapp.azure.com:8080/api";
+        : "https://examinator-ai.southindia.cloudapp.azure.com/api";
 
 // Auth
 export const STUDENT_REGISTER_URL = "/user/register-student";
