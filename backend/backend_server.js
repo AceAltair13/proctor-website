@@ -44,8 +44,8 @@ const __dirname = path.resolve();
 //     kind: 'session'
 // })
 
-var privateKey = fs.readFileSync( 'privkey.pem' );
-var certificate = fs.readFileSync( 'fullchain.pem' );
+// var privateKey = fs.readFileSync( 'privkey.pem' );
+// var certificate = fs.readFileSync( 'fullchain.pem' );
 
 const app = express()
 app.use(express.json())
@@ -83,35 +83,37 @@ app.use("/api/user", userRoutes)
 app.use("/api/exam", examRoutes)
 app.use("/api/proctor", proctorRoutes)
 
-app.get('/game', function (req, res) {
-	res.write("hello");
-	res.end();
-	//res.sendFile(path.join(__dirname, 'build', 'index.html'));
-	//res.end();
-});
+// app.get('/game', function (req, res) {
+// 	res.write("hello");
+// 	res.end();
+// 	//res.sendFile(path.join(__dirname, 'build', 'index.html'));
+// 	//res.end();
+// });
 
 
-app.get('/pubg', function (req, res) {
-        res.write("pubg");
-        res.end();
-        //res.sendFile(path.join(__dirname, 'build', 'index.html'));
-        //res.end();
-});
+// app.get('/pubg', function (req, res) {
+//         res.write("pubg");
+//         res.end();
+//         //res.sendFile(path.join(__dirname, 'build', 'index.html'));
+//         //res.end();
+// });
 
-app.get('/cod', function (req, res) {
-        res.write("cod");
-        res.end();
-        //res.sendFile(path.join(__dirname, 'build', 'index.html'));
-        //res.end();
-});
+// app.get('/cod', function (req, res) {
+//         res.write("cod");
+//         res.end();
+//         //res.sendFile(path.join(__dirname, 'build', 'index.html'));
+//         //res.end();
+// });
 
-https.createServer({
-    key: privateKey,
-    cert: certificate
-}, app).listen(443);
+// https.createServer({
+//     key: privateKey,
+//     cert: certificate
+// }, app).listen(443);
 
-//app.listen(8080, () => {
-//    console.log(`Server is running on ${url}`);
-//})
+
+
+app.listen(8080, () => {
+   console.log(`Server is running on ${url}`);
+})
 
 

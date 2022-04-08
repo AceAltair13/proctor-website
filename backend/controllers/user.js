@@ -526,6 +526,39 @@ const logout = async (req, res) => {
     }
 };
 
+
+const changePassword = async (req, res) => {
+    try {
+        const user = req.user;
+        const hashedPassword = CryptoJs.AES.decrypt(
+            user.password,
+            config.passKey
+        );
+        const OriginalPassword = hashedPassword.toString(CryptoJs.enc.Utf8);
+        if (OriginalPassword !== req.body.oldPassword) {
+            return res.status(401).json("Wrong Password");
+        }
+        const hashedPasswordNew = CryptoJs.AES.encrypt(
+            req.body.newPassword,
+            config.passKey
+        );
+        await firebase_firestore
+            .collection("users")
+            .doc(user.userId)
+            .update({ password: hashedPasswordNew.toString() });
+        return res.status(200).json("Password changed successfully");
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(err);
+    }
+};
+
+const forgotPassword = async (req, res) => {}
+
+
+
+
+
 const refreshToken = async (req, res) => {};
 
 export {
@@ -535,4 +568,5 @@ export {
     logout,
     refreshToken,
     emailverify,
+    changePassword
 };

@@ -64,9 +64,9 @@ const malpractices = async (req, res) => {
     const metadata = { contentType: "image/jpeg; charset=utf-8" };
     const folder =
         req.user.userId +
-        req.body.exam +
+        req.body.examId +
         "/" +
-        req.body.type +
+        req.body.malpracticeType +
         "/" +
         newId +
         ".jpeg";
@@ -94,10 +94,10 @@ const malpractices = async (req, res) => {
     async function updating_into_firestore(url) {
         await firebase_firestore
             .collection("exams")
-            .doc(req.body.exam)
+            .doc(req.body.examId)
             .collection("candidates")
             .doc(req.user.userId)
-            .collection(req.body.type)
+            .collection(req.body.malpracticeType)
             .add({ imageUrl: url, time: req.body.time });
     }
     async function download_link() {
