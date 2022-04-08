@@ -436,9 +436,9 @@ const enrollStudent = async (req, res) => {
                     });
                 }
 
-                // const subject = "Link for exam" + " " + Test_name.examId
-                // const body = "http://localhost:8080/api/user/" + student_details.userId + "/" + req.body.examId
-                // await sendMail(filteredStudentsList[i].emailId, subject, body)
+                const subject = "Exam Enrollment";
+                const body = "You have been enrolled in " + Test_name.examName + " " + "Exam" + " Check your dasboard for more details";
+                await sendMail(filteredStudentsList[i].emailId, subject, body)
             } catch (error) {
                 console.log(error);
             }
@@ -448,9 +448,9 @@ const enrollStudent = async (req, res) => {
             .status(200)
             .json(
                 // "Students enrolled successfully and users:- " +
-                    invalidUsers 
-                    // +
-                    // " doesn't exists"
+                invalidUsers
+                // +
+                // " doesn't exists"
             );
     } catch (error) {
         res.status(500).json("Something went wrong try again later" + error);
@@ -479,7 +479,7 @@ const removeStudents = async (req, res) => {
                                         ),
                                 })
                         );
-                    } catch (error) {}
+                    } catch (error) { }
                 } else {
                     invalidUsers.push(req.body.emailId);
                 }
@@ -495,16 +495,16 @@ const removeStudents = async (req, res) => {
                             filteredStudentsList[i].userId
                         ),
                     });
-            } catch (error) {}
+            } catch (error) { }
         }
 
         return res
             .status(200)
             .json(
                 // "Students removed from exam successfully and users:- " +
-                    invalidUsers 
-                    // +
-                    // " doesn't exists"
+                invalidUsers
+                // +
+                // " doesn't exists"
             );
     } catch (error) {
         res.status(500).json("Something went wrong try again later" + error);
@@ -1047,7 +1047,7 @@ const getExamResponses = async (req, res) => {
 
     const examId = req.query.examId;
     try {
-        const questionPaperId = await(await firebase_firestore.collection("exams").doc(examId).get()).data()["questionPaperId"];
+        const questionPaperId = await (await firebase_firestore.collection("exams").doc(examId).get()).data()["questionPaperId"];
         const questionPaper = await firebase_firestore.collection("questionPapers").doc(questionPaperId).get();
         console.log(questionPaper.data());
 
@@ -1068,11 +1068,11 @@ const getExamResponses = async (req, res) => {
 
                     let filterStudentData = {
                         studentId: studentIdsList[i],
-                        studentResponse: studentData.response??[],
-                        studentMarksScored: studentData.score??"",
+                        studentResponse: studentData.response ?? [],
+                        studentMarksScored: studentData.score ?? "",
                     }
                     studentsList.push(filterStudentData);
-                }else{
+                } else {
                     let filterStudentData = {
                         studentId: studentIdsList[i],
                         studentResponse: [],

@@ -13,7 +13,7 @@ const upload_face = async (req, res) => {
     const metadata = { contentType: "image/jpeg; charset=utf-8" };
     const folder =
         req.user.userId +
-        req.body.exam +
+        req.body.examId +
         "/" +
         "faceRecoginition" +
         "/" +
@@ -41,7 +41,7 @@ const upload_face = async (req, res) => {
     }
     async function updating_into_firestore(url) {
         await firebase_firestore.collection("exams").doc(req.body.exam).collection("candidates").doc(req.user.userId).set({ "face": url, folderLocation: folder })
-        return res.status(200).json({"userImageLink": url})
+        return res.status(200).json({ "userImageLink": url })
 
     }
     async function download_link() {
@@ -71,6 +71,18 @@ const malpractices = async (req, res) => {
         newId +
         ".jpeg";
     const storageRef_1 = ref(storageRef, folder);
+    if (req.body.type === "screeenChanged" || req.body.type === "fullscreenExit") {
+        await firebase_firestore
+            .collection("exams")
+            .doc(req.body.examId)
+            .collection("candidates")
+            .doc(req.user.userId)
+            .collection(req.body.malpracticeType)
+            .add({ time: req.body.time });
+        res.status(200).json("file is uploaded successfully");
+        res.end();
+        return;
+    }
     upload();
     // fs.readFile(path.join(__dirname) + "/controllers" + newId + ".jpeg", function (err, buffer) {
     //     upload(buffer)
@@ -110,6 +122,6 @@ const malpractices = async (req, res) => {
                 console.log("errr", error);
             });
     }
-    setTimeout(download_link, 300);
+    setTimeout(download_link, 110);
 };
 export { upload_face, malpractices };

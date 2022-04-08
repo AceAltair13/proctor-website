@@ -31,9 +31,9 @@ import {
 import bodyParser from "body-parser"
 import cookieParser from 'cookie-parser'
 import { routes as proctorRoutes } from "./routes/proctor.js"
+import path from 'path'
 // import { routes as proctorRoutes } from "./routes/proctor.js"
 import { sendMail } from './helpers/email.js'
-import path from "path"
 import https from "https"
 import fs from "fs"
 
@@ -50,13 +50,13 @@ const __dirname = path.resolve();
 const app = express()
 app.use(express.json())
 // app.use(json())
-//app.use(cors({
-//    origin:[],
-//    methods:"GET,POST,DELETE,PUT",
-//    credentials:true,
-//    exposedHeaders:["set-cookie"]
-//}
-//))
+app.use(cors({
+   origin:[],
+   methods:"GET,POST,DELETE,PUT",
+   credentials:true,
+   exposedHeaders:["set-cookie"]
+}
+))
 // app.use(bodyParser.json())
 
 // app.use(bodyParser.urlencoded({ extended: true }));
@@ -79,9 +79,20 @@ app.use(cookieParser());
 
 // app.use(session({secret: session_key,resave:true,saveUninitialized: true,httponly:false,cookie: {}}))
 app.use(express.static(path.join(__dirname, 'build')));
+
 app.use("/api/user", userRoutes)
 app.use("/api/exam", examRoutes)
 app.use("/api/proctor", proctorRoutes)
+
+app.get('/', function (req, res) {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  });
+// app.get("/", (req, res) => {
+//     console.log(req.session);
+//     res.write("hello world");
+//     res.end();
+// });
+
 
 // app.get('/game', function (req, res) {
 // 	res.write("hello");
@@ -109,8 +120,6 @@ app.use("/api/proctor", proctorRoutes)
 //     key: privateKey,
 //     cert: certificate
 // }, app).listen(443);
-
-
 
 app.listen(8080, () => {
    console.log(`Server is running on ${url}`);

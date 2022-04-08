@@ -191,7 +191,7 @@ const registerStudent = async (req, res) => {
         </div>
         </body>
         </html>`;
-        await sendMail(student.emailId, "Email Verification",mailBody);
+        await sendMail(student.emailId, "Email Verification", mailBody);
         // return res.status(200).json(result);
         return res.status(200).json({});
     } catch (error) {
@@ -526,40 +526,70 @@ const logout = async (req, res) => {
     }
 };
 
+const refreshToken = async (req, res) => {
+    res.redirect("");
+};
+const forgotpassword = async (req, res) => {
+    const forgotpasswordemail = req.body.emailId;
+    if (req.body.userExists === false) {
+        return res.status(400).json("User With this email does not exists");
+    }
+    const user = req.body.userExists;
+    const token = jwt.sign({
+        userId: user.userId,
+        emailId: user.emailId,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        isStudent: user.isStudent,
+        isSupervisor: user.isSupervisor,
+        isAdmin: user.isAdmin,
+    }, config.jwt_passKey, { expiresIn: "5m" })
+    const url = `http://localhost:8080/api/user/resetpassword?token=${token}`;
+    const body = `<h1>Reset Password</h1><p>This is a unique link to reset password it is only active for 5 minutes</p><p>Click on the below link to reset your password</p><a href=${url}>Reset Password</a>`;
 
-const changePassword = async (req, res) => {
+    await sendMail(forgotpasswordemail, "Reset Password", body);
+    return res.status(200).json("Email has been sent to your email id");
+
+};
+
+const resetpassword = async (req, res) => {
+    const token = req.query.token;
+    auth.emailToken(token, req, res);
+    console.log(req.user);
+    res.write(JSON.stringify(req.user));
+    res.end();
+}
+
+const changepassword = async (req, res) => {
     try {
+        auth.emailToken(req.body.token, req, res);
         const user = req.user;
-        const hashedPassword = CryptoJs.AES.decrypt(
-            user.password,
-            config.passKey
-        );
-        const OriginalPassword = hashedPassword.toString(CryptoJs.enc.Utf8);
-        if (OriginalPassword !== req.body.oldPassword) {
-            return res.status(401).json("Wrong Password");
-        }
+        console.log(req.body.newpassword);
+        console.log(req.body.confirmnewpassword);
+        // const hashedPassword = CryptoJs.AES.decrypt(
+        //     user.password,
+        //     config.passKey
+        // );
+        // const OriginalPassword = hashedPassword.toString(CryptoJs.enc.Utf8);
+        // if (OriginalPassword !== req.body.oldPassword) {
+        //     return res.status(401).json("Wrong Password");
+        // }
         const hashedPasswordNew = CryptoJs.AES.encrypt(
-            req.body.newPassword,
+            req.body.newpassword,
             config.passKey
         );
+        console.log(hashedPasswordNew.toString());
         await firebase_firestore
             .collection("users")
             .doc(user.userId)
             .update({ password: hashedPasswordNew.toString() });
         return res.status(200).json("Password changed successfully");
     } catch (err) {
-        console.log(err);
-        res.status(500).json(err);
+        console.log("ignore this err");
+        // res.status(500).json(err);
     }
 };
 
-const forgotPassword = async (req, res) => {}
-
-
-
-
-
-const refreshToken = async (req, res) => {};
 
 export {
     registerStudent,
@@ -568,5 +598,7 @@ export {
     logout,
     refreshToken,
     emailverify,
-    changePassword
+    forgotpassword,
+    resetpassword,
+    changepassword
 };
