@@ -124,4 +124,17 @@ const malpractices = async (req, res) => {
     }
     setTimeout(download_link, 110);
 };
-export { upload_face, malpractices };
+const getmalpractice = async (req, res) => {
+    const malpracticedata=[]
+    const studentmalpracticelist = await firebase_firestore.collection("exams").doc(req.body.examId).collection("candidates").doc(req.user.userId).collection(req.body.malpracticeType).get();
+    if (studentmalpracticelist.empty) {
+        return res.status(200).json("no data found")
+    }
+    else {
+        studentmalpracticelist.forEach((doc) => {
+            malpracticedata.push(doc.data())
+        })
+    }
+    res.status(200).json(malpracticedata);
+}
+export { upload_face, malpractices, getmalpractice };
