@@ -545,7 +545,7 @@ const forgotpassword = async (req, res) => {
         isAdmin: user.isAdmin,
     }, config.jwt_passKey, { expiresIn: "5m" })
     const url = `http://localhost:8080/api/user/resetpassword?token=${token}`;
-    const body = `<h1>Reset Password</h1><p>This is a unique link to reset password it is only active for 5 minutes</p><p>Click on the below link to reset your password</p><a href=${url}>Reset Password</a>`;
+    const body = `<h1>Reset Password</h1><p>This is a unique link to reset password it is only active for 5 minutes</p><br>Click on the below link to reset your password</br><br><a href=${url}>Reset Password</a></br>`;
 
     await sendMail(forgotpasswordemail, "Reset Password", body);
     return res.status(200).json("Email has been sent to your email id");
@@ -583,6 +583,8 @@ const changepassword = async (req, res) => {
             .collection("users")
             .doc(user.userId)
             .update({ password: hashedPasswordNew.toString() });
+        const body="<h1>Password Changed</h1><p>Your password has been changed successfully</p>"
+        await sendMail(user.emailId, "Password Changed",body);
         return res.status(200).json("Password changed successfully");
     } catch (err) {
         console.log("ignore this err");
