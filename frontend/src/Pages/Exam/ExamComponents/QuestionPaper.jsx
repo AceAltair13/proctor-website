@@ -4,7 +4,7 @@ import ExamHeader from "./ExamHeader";
 import ExamMain from "./ExamMain";
 import ExamFooter from "./ExamFooter";
 import { useSelector } from "react-redux";
-
+import LoadAI from "../AI/LoadAI";
 const QuestionPaper = () => {
     const { userId } = useSelector((state) => state.user.currentUser);
     const { exam } = useSelector((state) => state.exam);
@@ -41,6 +41,7 @@ const QuestionPaper = () => {
                         totalQuestions={totalQuestions}
                     />
                 </Grid>
+                <LoadAI />
             </Grid>
         )
     );
