@@ -22,3 +22,4 @@ export const FETCH_RESPONSES_OF_EXAM = "/exam/responses";
 
 // Proctor
 export const UPLOAD_FACE_URL = "/proctor/upload-face";
+export const MALPRACTICE_URL = "/proctor/malpractices";

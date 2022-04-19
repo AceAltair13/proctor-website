@@ -1,17 +1,18 @@
 import * as cocoSsd from "@tensorflow-models/coco-ssd";
+import { sendExamEvent } from "../../../Api/proctor";
 
-async function runObjectDetection(webcamRef) {
+async function runObjectDetection(webcamRef, examId) {
     const net = await cocoSsd.load();
-    detect(net, webcamRef);
+    detect(net, webcamRef, examId);
 }
 
-async function detect(net, webcamRef) {
+async function detect(net, webcamRef, examId) {
     const video = webcamRef.current.video;
     const predictions = await net.detect(video);
-    getPrediction(predictions);
+    getPrediction(predictions, webcamRef.current.getScreenshot(), examId);
 }
 
-function getPrediction(predictions) {
+function getPrediction(predictions, image, examId) {
     let count = 0;
     predictions.forEach((obj) => {
         if (obj.score > 0.5) {
@@ -21,19 +22,24 @@ function getPrediction(predictions) {
                     count++;
                     break;
                 case "cell phone":
-                    console.log("Cell Phone Detected !")
+                    console.log("Cell Phone Detected !");
+                    sendExamEvent(image, examId, "CELL_PHONE_DETECTED");
                     break;
                 case "laptop":
-                    console.log("Laptop detected !")
+                    console.log("Laptop detected !");
+                    sendExamEvent(image, examId, "LAPTOP_DETECTED");
                     break;
-                default: break;
+                default:
+                    break;
             }
         }
     });
     if (count > 1) {
-        console.log("More than one person detected !")
+        console.log("More than one person detected !");
+        sendExamEvent(image, examId, "MORE_THAN_ONE_PERSON_DETECTED");
     } else if (count === 0) {
-        console.log("No Person Detected !")
+        console.log("No Person Detected !");
+        sendExamEvent(image, examId, "NO_PERSON_DETECTED");
     }
 }
 

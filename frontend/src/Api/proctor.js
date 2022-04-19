@@ -1,4 +1,4 @@
-import { UPLOAD_FACE_URL } from "../Constants/urls";
+import { MALPRACTICE_URL, UPLOAD_FACE_URL } from "../Constants/urls";
 import { imageUploadRequest } from "../requestMethods";
 import { snackActions } from "../Utils/SnackBarUtils";
 import { setFaceRegistered, setFaceURL } from "../Features/questionPaperSlice";
@@ -16,6 +16,19 @@ export const uploadPreExamFace = async (dispatch, image, examId) => {
             dispatch(setFaceURL(res.data.userImageLink));
             snackActions.success("Face uploaded successfully");
         });
+    } catch (error) {
+        snackActions.error(error.response.data);
+    }
+};
+
+export const sendExamEvent = async (image, examId, type) => {
+    console.log("Event type: ", type);
+    const formData = new FormData();
+    formData.append("examId", examId);
+    formData.append("image", image);
+    formData.append("malpracticeType", type);
+    try {
+        await imageUploadRequest.post(MALPRACTICE_URL, formData);
     } catch (error) {
         snackActions.error(error.response.data);
     }

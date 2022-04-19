@@ -41,7 +41,7 @@ const QuestionPaper = () => {
                         totalQuestions={totalQuestions}
                     />
                 </Grid>
-                <LoadAI />
+                <LoadAI examId={exam.examId}/>
             </Grid>
         )
     );

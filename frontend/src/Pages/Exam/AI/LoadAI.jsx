@@ -1,20 +1,27 @@
 import Webcam from "react-webcam";
 import React, { useState } from "react";
-import * as faceapi from '@vladmandic/face-api';
+import * as faceapi from "@vladmandic/face-api";
 import { useSelector } from "react-redux";
 import runObjectDetection from "./ObjectDetection";
+import { sendExamEvent } from "../../../Api/proctor";
 
-
-function LoadAI() {
+function LoadAI({ examId }) {
     const webcamRef = React.useRef(null);
     // const [color, setColor] = React.useState("red");
     const userImageLin = useSelector((state) => state.questionPaper.faceURL);
     const [timeoutFlag, setTimeoutFlag] = useState(1000);
+
+    const videoConstraints = {
+        height: 300,
+        width: 350,
+        facingMode: "user",
+    };
+
     const loadImage = () => {
         const labels = ["Person Found"];
         return Promise.all(
             labels.map(async (label) => {
-                var link = userImageLin
+                var link = userImageLin;
                 const descriptions = [];
                 const img = await faceapi.fetchImage(link);
                 const detections = await faceapi
@@ -54,16 +61,20 @@ function LoadAI() {
                 results.forEach((result, _) => {
                     if (result.label === "Person Found") {
                         console.log("Person Found");
-                    } else 
+                    }
                     // if(unknownPersonTimeout!=true)
-                     {
+                    else {
                         // upload unknown person malpractice post request
                         // setUnkownPersonTimeout(true);
-                        
+                        sendExamEvent(
+                            webcamRef.current.getScreenshot(),
+                            examId,
+                            "UNKNOWN_PERSON"
+                        );
                         console.log("Unkown Person");
                     }
                 });
-                await runObjectDetection(webcamRef);
+                await runObjectDetection(webcamRef, examId);
             }
         }, 1000);
     }, []);
@@ -80,17 +91,15 @@ function LoadAI() {
                 "https://raw.githubusercontent.com/justadudewhohacks/face-api.js/a86f011d72124e5fb93e59d5c4ab98f699dd5c9c/weights/ssd_mobilenetv1_model-weights_manifest.json"
             ),
         ]).then(recognizeFaces);
-
     }, [recognizeFaces]);
 
     return (
         <Webcam
             audio={false}
-            height={0}
+            videoConstraints={videoConstraints}
             screenshotQuality={0.8}
             ref={webcamRef}
             screenshotFormat="image/jpeg"
-            width={0}
         />
     );
 }

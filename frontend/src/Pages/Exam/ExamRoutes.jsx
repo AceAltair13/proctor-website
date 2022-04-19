@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import screenfull from "screenfull";
 import { snackActions } from "../../Utils/SnackBarUtils";
+import { sendExamEvent } from "../../Api/proctor";
 
 const FullScreenViolationDialog = (props) => {
     return (
@@ -54,6 +55,7 @@ const ExamRoutes = () => {
             screenfull.on("change", () => {
                 if (!screenfull.isFullscreen) {
                     setShowFullScreenViolationDialog(true);
+                    sendExamEvent("", id, "FULL_SCREEN_EXIT");
                 }
             });
         }
