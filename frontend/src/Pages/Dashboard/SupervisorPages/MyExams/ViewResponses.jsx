@@ -110,27 +110,15 @@ const ViewResponses = () => {
             </Breadcrumbs>
             <RefreshablePage fetchExamFunction={() => {}}>
                 <Stack spacing={2}>
-                    <Typography variant="h6">Examination Details</Typography>
-                    <Divider />
+                    {/* <Typography variant="h6">Examination Details</Typography>
+                    <Divider /> */}
                     <Paper
                         elevation={4}
                         sx={{ borderLeft: "8px solid #1976d2" }}
                     >
-                        <Stack sx={{ p: 3 }}>
-                            <Typography variant="h6">
-                                <strong>Exam Id:</strong> {examId}
-                            </Typography>
-                            <Typography variant="h6">
-                                <strong>Exam Name: </strong>
-                                {examName}
-                            </Typography>
-                            <Typography variant="h6">
-                                <strong>Exam Description:</strong> {examDesc}
-                            </Typography>
-                            <Typography variant="h6">
-                                <strong>Maximum Marks:</strong> 100
-                            </Typography>
-                        </Stack>
+                        <Typography variant="body1" sx={{ p: 3 }}>
+                            <strong>Maximum Marks:</strong> 100
+                        </Typography>
                     </Paper>
                     <Typography variant="h6">Student Responses</Typography>
                     <Divider />

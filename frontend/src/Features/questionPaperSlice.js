@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     faceRegistered: false,
+    faceURL: "",
     isFetching: false,
     currentQuestionId: 0,
     totalQuestions: 0,
@@ -40,6 +41,9 @@ const questionPaperSlice = createSlice({
         setSubmitDialogOpen: (state, action) => {
             state.submitDialogOpen = action.payload;
         },
+        setFaceURL: (state, action) => {
+            state.faceURL = action.payload;
+        },
         resetQuestionPaper: () => initialState,
     },
 });
@@ -51,7 +55,8 @@ export const {
     setQuestionAttempted,
     setQuestionMarkedForReview,
     setIsQuestionPaperFetching,
-    resetQuestionPaper,
     setSubmitDialogOpen,
+    setFaceURL,
+    resetQuestionPaper,
 } = questionPaperSlice.actions;
 export default questionPaperSlice.reducer;
