@@ -9,7 +9,7 @@ export const uploadPreExamFace = async (dispatch, image, examId) => {
     const formData = new FormData();
     formData.append("image", image);
     // formData.append("type", uploadType);
-    formData.append("exam", examId);
+    formData.append("examId", examId);
     try {
         await imageUploadRequest.post(UPLOAD_FACE_URL, formData).then(() => {
             dispatch(setFaceRegistered(true));
