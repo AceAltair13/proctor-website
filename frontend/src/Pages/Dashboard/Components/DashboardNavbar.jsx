@@ -22,7 +22,7 @@ import {
 } from "material-ui-popup-state/hooks";
 import { Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import EditIcon from "@mui/icons-material/Edit";
+// import EditIcon from "@mui/icons-material/Edit";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
@@ -79,12 +79,12 @@ function DashboardNavbar() {
                 </Typography>
             </Stack>
             <Divider variant="middle" sx={{ my: 1 }} />
-            <MenuItem onClick={popupState.close}>
+            {/* <MenuItem onClick={popupState.close}>
                 <ListItemIcon>
                     <EditIcon />
                 </ListItemIcon>
                 <ListItemText>Edit Profile</ListItemText>
-            </MenuItem>
+            </MenuItem> */}
             <MenuItem onClick={logoutUser}>
                 <ListItemIcon>
                     <LogoutIcon />

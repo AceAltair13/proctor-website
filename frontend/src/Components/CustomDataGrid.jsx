@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { Paper } from "@mui/material";
 
 const CustomDataGrid = (props) => {
-    const { rows, columns, ...other } = props;
+    const { rows, columns, noShadow, ...other } = props;
     const { isFetching } = useSelector((state) => state.dashboard);
 
     return (
@@ -15,7 +15,8 @@ const CustomDataGrid = (props) => {
                     bgcolor: "rgb(0, 255, 0, 0.2)",
                 },
             }}
-            elevation={4}
+            variant={noShadow ? "outlined" : "elevation"}
+            elevation={noShadow ? 0 : 4}
         >
             <DataGrid
                 rows={isFetching ? [] : rows}

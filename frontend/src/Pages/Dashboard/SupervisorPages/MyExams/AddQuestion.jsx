@@ -2,10 +2,11 @@ import { Breadcrumbs, Link, Typography } from "@mui/material";
 import React from "react";
 import { useSelector } from "react-redux";
 import { Link as RouterLink, useParams } from "react-router-dom";
+import QuestionForm from "../Common/QuestionForm";
 
-const QuestionForm = () => {
-    const { examId } = useParams();
+const AddQuestion = () => {
     const { examName } = useSelector((state) => state.supervisor.selectedExam);
+    const { examId } = useParams();
 
     return (
         <>
@@ -26,11 +27,19 @@ const QuestionForm = () => {
                 >
                     {examName}
                 </Link>
-                <Typography>Manage Question Bank</Typography>
+                <Link
+                    color="black"
+                    underline="hover"
+                    component={RouterLink}
+                    to={`/dashboard/exam/my-exams/${examId}/manage-question-paper`}
+                >
+                    Manage Question Bank
+                </Link>
                 <Typography>Add Question</Typography>
             </Breadcrumbs>
+            <QuestionForm />
         </>
     );
 };
 
-export default QuestionForm;
+export default AddQuestion;

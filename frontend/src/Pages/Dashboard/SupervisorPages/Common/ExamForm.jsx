@@ -10,7 +10,6 @@ import {
     DialogTitle,
     DialogContent,
     DialogActions,
-    Paper,
 } from "@mui/material";
 import DateTimePicker from "@mui/lab/DateTimePicker";
 import { DateTime } from "luxon";
@@ -25,19 +24,7 @@ import { convertToRaw } from "draft-js";
 import PropTypes from "prop-types";
 import theme from "../../../../Themes/rte_theme";
 import { setSupervisorDialogOpen } from "../../../../Features/supervisorSlice";
-
-const FormContainer = (props) => {
-    return (
-        <Paper sx={{ p: 3 }} elevation={4}>
-            <Typography variant="body1" gutterBottom>
-                {props.title}
-            </Typography>
-            <Grid container spacing={2} mt={1}>
-                {props.children}
-            </Grid>
-        </Paper>
-    );
-};
+import FormContainer from "../../../../Components/FormContainer";
 
 const DeleteConfirmationDialog = () => {
     const { supervisorDialogOpen, selectedExam } = useSelector(
@@ -132,6 +119,20 @@ const ExamForm = ({ edit }) => {
         }
     };
 
+    const muiRteProps = {
+        label: "Start typing here...",
+        onChange: (value) => {
+            const content = convertToRaw(value.getCurrentContent());
+            setValue("examInstructions", content);
+        },
+    };
+
+    if (edit) {
+        muiRteProps.defaultValue = JSON.stringify(
+            selectedExam.examInstructions
+        );
+    }
+
     return (
         <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)}>
             <DeleteConfirmationDialog />
@@ -177,40 +178,16 @@ const ExamForm = ({ edit }) => {
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <Typography variant="body1" sx={{ mt: 2, mb: 3 }}>
+                            <Typography
+                                variant="body1"
+                                sx={{ mt: 2, mb: 3 }}
+                                fontWeight="fontWeightBold"
+                                color="text.secondary"
+                            >
                                 Exam Instructions
                             </Typography>
                             <ThemeProvider theme={theme}>
-                                {edit ? (
-                                    <MUIRichTextEditor
-                                        label="Start typing here..."
-                                        defaultValue={JSON.stringify(
-                                            selectedExam.examInstructions
-                                        )}
-                                        onChange={(value) => {
-                                            const content = convertToRaw(
-                                                value.getCurrentContent()
-                                            );
-                                            setValue(
-                                                "examInstructions",
-                                                content
-                                            );
-                                        }}
-                                    />
-                                ) : (
-                                    <MUIRichTextEditor
-                                        label="Start typing here..."
-                                        onChange={(value) => {
-                                            const content = convertToRaw(
-                                                value.getCurrentContent()
-                                            );
-                                            setValue(
-                                                "examInstructions",
-                                                content
-                                            );
-                                        }}
-                                    />
-                                )}
+                                <MUIRichTextEditor {...muiRteProps} />
                             </ThemeProvider>
                         </Grid>
                     </FormContainer>
@@ -266,6 +243,7 @@ const ExamForm = ({ edit }) => {
                     )}
                 </Grid>
             </Grid>
+            <Box sx={{ py: 8 }} />
         </Box>
     );
 };

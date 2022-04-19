@@ -71,7 +71,7 @@ function About() {
                     {teamMembers.map((member, index) => (
                         <Grid item md={4} key={index}>
                             <Card
-                                elevation={8}
+                                variant="outlined"
                                 sx={{
                                     p: 5,
                                 }}

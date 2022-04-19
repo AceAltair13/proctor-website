@@ -116,6 +116,25 @@ export const getQuestionPaperForSupervisor = (dispatch, examId) => {
     }, 1000);
 };
 
+export const editQuestionPaper = (dispatch, history, questionPaper) => {
+    dispatch(setDashboardFetching(true));
+    // Timeout to prevent loading bar vanishing too fast
+    setTimeout(async () => {
+        try {
+            const res = await userRequest.put(
+                FETCH_QUESTION_PAPER,
+                questionPaper
+            );
+            history.go(0);
+            snackActions.success(res.data);
+        } catch (error) {
+            snackActions.error(error.response.data);
+        } finally {
+            dispatch(setDashboardFetching(false));
+        }
+    }, 1000);
+};
+
 export const getStudentsOfExam = (dispatch, examId) => {
     dispatch(setDashboardFetching(true));
     // Timeout to prevent loading bar vanishing too fast

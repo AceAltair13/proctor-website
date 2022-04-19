@@ -7,10 +7,9 @@ import {
     Divider,
     Link,
     Stack,
-    Tooltip,
     Typography,
 } from "@mui/material";
-import { Link as RouterLink, useParams } from "react-router-dom";
+import { Link as RouterLink, useParams, useRouteMatch } from "react-router-dom";
 import React, { useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import RefreshablePage from "../../CommonPages/RefreshablePage";
@@ -103,6 +102,7 @@ const QuestionDialog = () => {
                             <CustomDataGrid
                                 columns={optionsColumnSchema}
                                 rows={optionRows}
+                                noShadow
                             />
                         </Stack>
                     </DialogContent>
@@ -128,44 +128,35 @@ const ManageQuestionPaper = () => {
         },
         [dispatch]
     );
+    const { url } = useRouteMatch();
 
     const columns = useMemo(
         () => [
             {
                 headerName: "Sr No",
                 field: "srNo",
-                width: 100,
+                flex: 1,
                 headerAlign: "center",
                 align: "center",
             },
             {
-                headerName: "Question",
-                field: "question",
+                headerName: "Question ID",
+                field: "questionId",
+                flex: 1,
                 headerAlign: "center",
                 align: "center",
-                renderCell: (params) => {
-                    return (
-                        <Tooltip title={params.value}>
-                            <Typography variant="body2" noWrap>
-                                {params.value}
-                            </Typography>
-                        </Tooltip>
-                    );
-                },
-                minWidth: 400,
-                flex: 1,
             },
             {
                 headerName: "Total Options",
                 field: "totalOptions",
+                flex: 1,
                 headerAlign: "center",
                 align: "center",
-                width: 150,
             },
             {
                 headerName: "Weightage",
                 field: "weightage",
-                width: 150,
+                flex: 1,
                 headerAlign: "center",
                 align: "center",
             },
@@ -174,11 +165,6 @@ const ManageQuestionPaper = () => {
                 field: "action",
                 type: "actions",
                 getActions: (params) => [
-                    <GridActionsCellItem
-                        icon={<DeleteIcon color="error" />}
-                        label="Delete"
-                        onClick={() => console.log(params.id)}
-                    />,
                     <GridActionsCellItem
                         icon={<DriveFileRenameOutlineIcon color="success" />}
                         label="Edit"
@@ -201,7 +187,7 @@ const ManageQuestionPaper = () => {
     const rows = selectedQuestionPaper.map((question, index) => ({
         id: question.questionId,
         srNo: index + 1,
-        question: question.question,
+        questionId: question.questionId,
         totalOptions: question.options.length,
         weightage: question.weightage,
     }));
@@ -230,7 +216,12 @@ const ManageQuestionPaper = () => {
             <RefreshablePage fetchExamFunction={getQuestionPaper}>
                 <Box sx={{ display: "flex", justifyContent: "end", mb: 2 }}>
                     <Stack direction="row" spacing={2}>
-                        <Button color="success" startIcon={<AddIcon />}>
+                        <Button
+                            color="success"
+                            startIcon={<AddIcon />}
+                            component={RouterLink}
+                            to={`${url}/add-question`}
+                        >
                             Add Question
                         </Button>
                         <Button
@@ -241,7 +232,11 @@ const ManageQuestionPaper = () => {
                         </Button>
                     </Stack>
                 </Box>
-                <CustomDataGrid rows={rows} columns={columns} />
+                <CustomDataGrid
+                    rows={rows}
+                    columns={columns}
+                    checkboxSelection
+                />
             </RefreshablePage>
             <QuestionDialog />
         </>

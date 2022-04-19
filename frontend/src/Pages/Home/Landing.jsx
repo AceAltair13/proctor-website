@@ -47,10 +47,10 @@ function Landing() {
                         </Grid>
                         <Grid item sx={{ my: 5 }}>
                             <Button
-                                size="large"
                                 startIcon={<SchoolIcon />}
                                 component={Link}
                                 to="/login"
+                                sx={{py: 2, px: 4}}
                             >
                                 Get Started
                             </Button>

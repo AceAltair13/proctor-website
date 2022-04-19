@@ -18,6 +18,7 @@ export const FETCH_CURRENT_EXAM_URL = "/exam/current";
 export const FETCH_QUESTION_PAPER = "/exam/question-paper";
 export const SUBMIT_EXAM_RESPONSE = "/exam/submit-answer";
 export const FETCH_STUDENTS_OF_EXAM = "/exam/students";
+export const FETCH_RESPONSES_OF_EXAM = "/exam/responses";
 
 // Proctor
 export const UPLOAD_FACE_URL = "/proctor/upload-face";
