@@ -1052,33 +1052,40 @@ const getExamResponses = async (req, res) => {
         console.log(questionPaper.data());
 
         var details = {};
-        details.questionPaper = questionPaper.data();
+        // details.questionPaper = questionPaper.data();
+        details.totalMarks = questionPaper.data().maxMarks;
         const studentIdsList = await (await firebase_firestore.collection("exams").doc(examId).get()).data()["studentsList"];
         if (studentIdsList) {
             var studentsList = [];
 
             for (var i = 0; i < studentIdsList.length; i++) {
                 var student = await firebase_firestore
-
                     .collection("exams")
                     .doc(examId).collection("candidates").doc(studentIdsList[i]).get();
                 if (student.data()) {
                     let studentData = student.data();
-
-
-                    let filterStudentData = {
-                        studentId: studentIdsList[i],
-                        studentResponse: studentData.response ?? [],
-                        studentMarksScored: studentData.score ?? "",
-                    }
-                    studentsList.push(filterStudentData);
+                    let studentInfo = await firebase_firestore
+                        .collection("users")
+                        .doc(studentIdsList[i])
+                        .get();
+                        if(studentInfo.data()){
+                        
+                            let filterStudentData = {
+                                studentId: studentIdsList[i],
+                                studentFirstName: studentInfo.data().firstName,
+                                studentLastName: studentInfo.data().lastName,
+                                // studentResponse: studentData.response ?? [],
+                                studentMarksScored: studentData.score ?? 0,
+                            }
+                            studentsList.push(filterStudentData);
+                        }
                 } else {
-                    let filterStudentData = {
-                        studentId: studentIdsList[i],
-                        studentResponse: [],
-                        studentMarksScored: "",
-                    }
-                    studentsList.push(filterStudentData);
+                    // let filterStudentData = {
+                    //     studentId: studentIdsList[i],
+                    //     studentResponse: [],
+                    //     studentMarksScored: 0,
+                    // }
+                    // studentsList.push(filterStudentData);
                 }
             }
             details.studentsList = studentsList;
