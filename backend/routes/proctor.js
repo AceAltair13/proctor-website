@@ -1,6 +1,7 @@
 import { Router } from "express"
 import * as auth from "../helpers/auth.js"
 import { userExists} from "../helpers/users.js";
+import * as exam from "../helpers/exams.js"
 
 
 import multer from "multer"
@@ -23,7 +24,7 @@ const router = Router()
 
 router.post("/upload-face", auth.Token, upload.single('image'),upload_face)
 router.post("/malpractices", auth.Token, upload.single('image'),malpractices)
-router.get("/getmalpractice", userExists, getmalpractice)
+router.get("/getmalpractice",[auth.Token,auth.Supervisor,exam.examCreatedBySupervisor] ,userExists, getmalpractice)
 
 
 
