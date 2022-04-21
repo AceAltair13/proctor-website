@@ -12,6 +12,9 @@ const initialState = {
     supervisorDialogOpen: false,
     enrolledStudents: [],
     unsavedChanges: false,
+    studentResponses: {},
+    selectedStudentResponse: {},
+    malpracticeImages: [],
 };
 
 const supervisorSlice = createSlice({
@@ -42,6 +45,15 @@ const supervisorSlice = createSlice({
         setUnsavedChanges: (state, action) => {
             state.unsavedChanges = action.payload;
         },
+        setStudentResponses: (state, action) => {
+            state.studentResponses = action.payload;
+        },
+        setSelectedStudentResponse: (state, action) => {
+            state.selectedStudentResponse = action.payload;
+        },
+        setMalpracticeImages: (state, action) => {
+            state.malpracticeImages = action.payload;
+        },
         resetSupervisor: () => initialState,
     },
 });
@@ -53,8 +65,11 @@ export const {
     setSelectedQuestionId,
     setSelectedStudent,
     setSupervisorDialogOpen,
-    resetSupervisor,
     setEnrolledStudents,
     setUnsavedChanges,
+    setStudentResponses,
+    setSelectedStudentResponse,
+    setMalpracticeImages,
+    resetSupervisor,
 } = supervisorSlice.actions;
 export default supervisorSlice.reducer;

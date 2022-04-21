@@ -16,7 +16,7 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import PeopleIcon from "@mui/icons-material/People";
 import EditIcon from "@mui/icons-material/Edit";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
-import { useParams, useRouteMatch } from "react-router-dom";
+import { useHistory, useParams, useRouteMatch } from "react-router-dom";
 import { getExamDetailsForSupervisor } from "../../../../Api/supervisor";
 import { useDispatch, useSelector } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
@@ -26,6 +26,7 @@ import {
 } from "../../../../Features/supervisorSlice";
 
 const ManageExam = () => {
+    const history = useHistory();
     const params = useParams();
     const { url } = useRouteMatch();
     const dispatch = useDispatch();
@@ -89,10 +90,9 @@ const ManageExam = () => {
                                 xs={12}
                                 key={index}
                             >
-                                <Card elevation={4} key={index}>
+                                <Card key={index}>
                                     <CardActionArea
-                                        component={RouterLink}
-                                        to={item.path}
+                                        onClick={() => history.push(item.path)}
                                     >
                                         <CardContent sx={{ p: 4 }}>
                                             <Stack>

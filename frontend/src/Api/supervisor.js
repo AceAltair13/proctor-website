@@ -1,13 +1,19 @@
 import {
     FETCH_EXAMS_URL,
     FETCH_QUESTION_PAPER,
+    FETCH_RESPONSES_OF_EXAM,
+    FETCH_RESPONSES_OF_SINGLE_STUDENT,
     FETCH_STUDENTS_OF_EXAM,
+    MALPRACTIC_FETCH_URL,
 } from "../Constants/urls";
 import { setDashboardFetching } from "../Features/dashboardSlice";
 import {
     setEnrolledStudents,
+    setMalpracticeImages,
     setSelectedExam,
     setSelectedQuestionPaper,
+    setSelectedStudentResponse,
+    setStudentResponses,
     setSupervisorExams,
 } from "../Features/supervisorSlice";
 import { userRequest } from "../requestMethods";
@@ -186,4 +192,60 @@ export const addStudentToExam = (dispatch, history, examId, studentIds) => {
             dispatch(setDashboardFetching(false));
         }
     }, 1000);
+};
+
+export const getStudentResponses = (dispatch, examId) => {
+    dispatch(setDashboardFetching(true));
+    // Timeout to prevent loading bar vanishing too fast
+    setTimeout(async () => {
+        try {
+            const res = await userRequest.get(
+                `${FETCH_RESPONSES_OF_EXAM}?examId=${examId}`
+            );
+            dispatch(setStudentResponses(res.data));
+        } catch (error) {
+            snackActions.error(error.response.data);
+        } finally {
+            dispatch(setDashboardFetching(false));
+        }
+    }, 1000);
+};
+
+export const fetchSingleStudentResponseForSupervisor = async (
+    dispatch,
+    examId,
+    studentId
+) => {
+    dispatch(setDashboardFetching(true));
+    try {
+        const res = await userRequest.get(
+            `${FETCH_RESPONSES_OF_SINGLE_STUDENT}?examId=${examId}&studentId=${studentId}`
+        );
+        console.log(res.data);
+        dispatch(setSelectedStudentResponse(res.data));
+    } catch (error) {
+        snackActions.error(error.response.data);
+    } finally {
+        dispatch(setDashboardFetching(false));
+    }
+};
+
+export const fetchMalpracticeByType = async (
+    dispatch,
+    examId,
+    studentId,
+    type
+) => {
+    dispatch(setDashboardFetching(true));
+    try {
+        const res = await userRequest.get(
+            `${MALPRACTIC_FETCH_URL}?examId=${examId}&studentId=${studentId}&malpracticeType=${type}`
+        );
+        console.log(res.data);
+        dispatch(setMalpracticeImages(res.data));
+    } catch (error) {
+        snackActions.error(error.response.data);
+    } finally {
+        dispatch(setDashboardFetching(false));
+    }
 };

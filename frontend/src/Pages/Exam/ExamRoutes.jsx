@@ -68,7 +68,7 @@ const ExamRoutes = () => {
                 screenfull.exit();
             }
         };
-    }, []);
+    }, [id]);
 
     return (
         <Box sx={{ bgcolor: "#fff" }}>

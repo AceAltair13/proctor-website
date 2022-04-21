@@ -2,9 +2,7 @@ import {
     Box,
     Breadcrumbs,
     Button,
-    Divider,
     Link,
-    Paper,
     Stack,
     Typography,
 } from "@mui/material";
@@ -14,16 +12,23 @@ import {
     useRouteMatch,
 } from "react-router-dom";
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import RefreshablePage from "../../CommonPages/RefreshablePage";
 import CustomDataGrid from "../../../../Components/CustomDataGrid";
+import { getStudentResponses } from "../../../../Api/supervisor";
 
 const ViewResponses = () => {
     const history = useHistory();
+    const dispatch = useDispatch();
     const { url } = useRouteMatch();
-    const { examName, examId, examDesc } = useSelector(
+    const { examName, examId } = useSelector(
         (state) => state.supervisor.selectedExam
     );
+    const { studentsList } = useSelector(
+        (state) => state.supervisor.studentResponses
+    );
+    const fetchStudentRespones = () => getStudentResponses(dispatch, examId);
+
     const columns = [
         {
             headerName: "Sr No",
@@ -66,26 +71,14 @@ const ViewResponses = () => {
         },
     ];
 
-    const rows = [
-        {
-            id: 1,
-            srNo: 1,
-            studentName: "Student 1",
-            marksScored: "10",
-        },
-        {
-            id: 2,
-            srNo: 2,
-            studentName: "Student 2",
-            marksScored: "7",
-        },
-        {
-            id: 3,
-            srNo: 3,
-            studentName: "Student 3",
-            marksScored: "6",
-        },
-    ];
+    const _rows = studentsList
+        ? studentsList.map((student, index) => ({
+              id: student.studentId,
+              srNo: index + 1,
+              studentName: `${student.studentFirstName} ${student.studentLastName}`,
+              marksScored: student.studentMarksScored,
+          }))
+        : [];
 
     return (
         <>
@@ -108,21 +101,12 @@ const ViewResponses = () => {
                 </Link>
                 <Typography>View Responses</Typography>
             </Breadcrumbs>
-            <RefreshablePage fetchExamFunction={() => {}}>
+            <RefreshablePage fetchExamFunction={fetchStudentRespones}>
                 <Stack spacing={2}>
-                    {/* <Typography variant="h6">Examination Details</Typography>
-                    <Divider /> */}
-                    <Paper
-                        elevation={4}
-                        sx={{ borderLeft: "8px solid #1976d2" }}
-                    >
-                        <Typography variant="body1" sx={{ p: 3 }}>
-                            <strong>Maximum Marks:</strong> 100
-                        </Typography>
-                    </Paper>
-                    <Typography variant="h6">Student Responses</Typography>
-                    <Divider />
-                    <CustomDataGrid columns={columns} rows={rows} />
+                    <Typography variant="h6">
+                        Student Responses ({_rows.length})
+                    </Typography>
+                    <CustomDataGrid columns={columns} rows={_rows} />
                     <Box sx={{ py: 5 }} />
                 </Stack>
             </RefreshablePage>
