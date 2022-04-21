@@ -24,7 +24,7 @@ const router = Router()
 
 router.post("/upload-face", auth.Token, upload.single('image'),upload_face)
 router.post("/malpractices", auth.Token, upload.single('image'),malpractices)
-router.get("/getmalpractice",[auth.Token,auth.Supervisor,exam.examCreatedBySupervisor] ,userExists, getmalpractice)
+router.get("/getmalpractice",[auth.Token,auth.Supervisor,exam.examCreatedBySupervisor] , getmalpractice)
 
 
 

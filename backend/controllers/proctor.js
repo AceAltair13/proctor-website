@@ -115,13 +115,10 @@ const malpractices = async (req, res) => {
 
 };
 const getmalpractice = async (req, res) => {
-    if (req.body.userExists === false) {
-        return res.status(400).json("User does not exists");
-    }
     const malpracticedata = []
-    const studentmalpracticelist = await firebase_firestore.collection("exams").doc(req.body.examId).collection("candidates").doc(req.body.userExists.userId).collection(req.body.malpracticeType).get();
+    const studentmalpracticelist = await firebase_firestore.collection("exams").doc(req.body.examId).collection("candidates").doc(req.body.studentId).collection(req.body.malpracticeType).get();
     if (studentmalpracticelist.empty) {
-        return res.status(200).json("no data found")
+        return res.status(200).json(malpracticedata);
     }
     else {
         studentmalpracticelist.forEach((doc) => {
