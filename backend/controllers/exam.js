@@ -1109,6 +1109,9 @@ const getIndividualExamResponse  = async(req,res)=>{
         returnJson.studentLastName = studentInfo.data().lastName;
         returnJson.studentMarksScored = studentExamInfo.data().score;
         returnJson.studentResponse = studentExamInfo.data().response;
+        returnJson.studentEmailId = studentInfo.data().emailId;
+        returnJson.studentPhoneNumber = studentInfo.data().phoneNumber;
+        returnJson.studentId = studentInfo.data().userId;
 
         let events = []
 
