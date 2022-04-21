@@ -1102,13 +1102,13 @@ const getIndividualExamResponse  = async(req,res)=>{
         const studentExamInfo = await firebase_firestore.collection("exams").doc(req.query.examId).collection("candidates").doc(req.query.studentId).get();
         // const questionPaperId = await (await firebase_firestore.collection("exams").doc(req.query.examId).get()).data()["questionPaperId"];
         // const questionPaper = await firebase_firestore.collection("questionPapers").doc(questionPaperId).get();
-
+        if(studentInfo.data() && studentExamInfo.data()){
         let returnJson = {};
-        returnJson.studentImageURL = studentExamInfo.data().face;
+        returnJson.studentImageURL = studentExamInfo.data().face??"";
         returnJson.studentFirstName = studentInfo.data().firstName;
         returnJson.studentLastName = studentInfo.data().lastName;
-        returnJson.studentMarksScored = studentExamInfo.data().score;
-        returnJson.studentResponse = studentExamInfo.data().response;
+        returnJson.studentMarksScored = studentExamInfo.data().score??0;
+        returnJson.studentResponse = studentExamInfo.data().response??[];
         returnJson.studentEmailId = studentInfo.data().emailId;
         returnJson.studentPhoneNumber = studentInfo.data().phoneNumber;
         returnJson.studentId = studentInfo.data().userId;
@@ -1157,7 +1157,9 @@ const getIndividualExamResponse  = async(req,res)=>{
 
 
 
-
+        }else{
+            return res.status(500).json("Improper details");
+        }
     } catch (error) {
         console.log("error :-"+ error);
         return res.status(500).json(error);
