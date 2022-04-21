@@ -645,14 +645,14 @@ const receiveAnswers = async (req, res) => {
                 try {
                     // const answerResponse = [req.user.userId,req.body.answers]
 
-                    await firebase_firestore
-                        .collection("exams")
-                        .doc(req.body.examId)
-                        .collection("responses")
-                        .doc(req.user.userId)
-                        .set({
-                            ...answerJson,
-                        });
+                    // await firebase_firestore
+                    //     .collection("exams")
+                    //     .doc(req.body.examId)
+                    //     .collection("responses")
+                    //     .doc(req.user.userId)
+                    //     .set({
+                    //         ...answerJson,
+                    //     });
                     let endedExamAt = DateTime.local().toUTC().toString();
                     await firebase_firestore
                         .collection("exams")
@@ -1096,6 +1096,112 @@ const getExamResponses = async (req, res) => {
     }
 }
 
+const getIndividualExamResponse  = async(req,res)=>{
+    try {
+        const studentInfo = await firebase_firestore.collection("users").doc(req.query.studentId).get();
+        const studentExamInfo = await firebase_firestore.collection("exams").doc(req.query.examId).collection("candidates").doc(req.query.studentId).get();
+        // const questionPaperId = await (await firebase_firestore.collection("exams").doc(req.query.examId).get()).data()["questionPaperId"];
+        // const questionPaper = await firebase_firestore.collection("questionPapers").doc(questionPaperId).get();
+
+        let returnJson = {};
+        returnJson.studentImageURL = studentExamInfo.data().face;
+        returnJson.studentFirstName = studentInfo.data().firstName;
+        returnJson.studentLastName = studentInfo.data().lastName;
+        returnJson.studentMarksScored = studentExamInfo.data().score;
+        returnJson.studentResponse = studentExamInfo.data().response;
+
+        let events = []
+
+            // await firebase_firestore.collection("exams").doc(req.query.examId).collection("candidates").doc(req.query.studentId).listCollections().then(async collections => {
+            //     collections.forEach(async(collection) => {
+            //         await collection.listDocuments().then(async documents => {
+            //             let eventCount = 0;
+            //             documents.forEach(document => {
+                            
+            //                 eventCount++;
+            //             });
+            //             let event = {
+            //                 eventName: collection.id,
+            //                 eventCount: eventCount
+            //             }
+            //             console.log(event);
+            //             events.push(event);
+            //         });
+            //     }
+            //     )}).then(()=>{
+
+            //         console.log(events);
+            //         returnJson.events = events;
+            //         return res.status(200).json(returnJson);
+            //     })
+
+            let collections = await firebase_firestore.collection("exams").doc(req.query.examId).collection("candidates").doc(req.query.studentId).listCollections();
+            for(let i=0;i<collections.length;i++){
+                let documents = await collections[i].listDocuments();
+                let eventCount = 0;
+                for(let j=0;j<documents.length;j++){
+                    eventCount++;
+                }
+                let event = {
+                    eventName: collections[i].id,
+                    eventCount: eventCount
+                }
+                events.push(event);
+            }
+            console.log(events)
+            returnJson.events = events;
+            return res.status(200).json(returnJson);
+
+
+
+
+    } catch (error) {
+        console.log("error :-"+ error);
+        return res.status(500).json(error);
+    }
+    
+
+}
+
+const getMalpracticeTypeImagesOfStudent = async (req, res) => {
+    try {
+        const studentId = req.query.studentId;
+        const examId = req.query.examId;
+        const malpracticeType = req.query.malpracticeType;
+        if(studentId && examId && malpracticeType){
+            try{
+
+                const malpracticeCollection = await firebase_firestore.collection("exams").doc(examId).collection("candidates").doc(studentId).listCollections();
+                for(let i=0;i<malpracticeCollection.length;i++){
+                    if(malpracticeCollection[i].id == malpracticeType){
+                        let returnList = [];
+                        let documents = await malpracticeCollection[i].listDocuments();
+                        for(let j=0;j<documents.length;j++){
+                            let malpracticeDetail = {};
+                            let document = await documents[j].get();
+                            console.log(document.data())
+            
+                            malpracticeDetail.imageURL = document.data().imageUrl??"";
+                            malpracticeDetail.time = document.data().time;
+                            returnList.push(malpracticeDetail);
+                        }
+                        return res.status(200).json(returnList);
+                    }
+                }
+            }catch(error){
+                console.log(error);
+                return res.status(500).json(error);
+
+            }
+        return res.status(200).json(returnList);
+    }else{
+        return res.status(500).json("Invalid Request");
+    }
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+}
+
 
 
 
@@ -1116,5 +1222,7 @@ export {
     getExamHistory,
     getUpcomingExams,
     getExamStudents,
-    getExamResponses
+    getExamResponses,
+    getIndividualExamResponse,
+    getMalpracticeTypeImagesOfStudent
 };

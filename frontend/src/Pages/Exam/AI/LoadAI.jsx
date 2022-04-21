@@ -9,7 +9,7 @@ function LoadAI({ examId }) {
     const webcamRef = React.useRef(null);
     // const [color, setColor] = React.useState("red");
     const userImageLin = useSelector((state) => state.questionPaper.faceURL);
-    const [timeoutFlag, setTimeoutFlag] = useState(1000);
+    // const [noPersonDetectedFlag, setnoPersonDetectedFlag] = useState(false);
 
     const videoConstraints = {
         height: 300,
@@ -95,6 +95,7 @@ function LoadAI({ examId }) {
 
     return (
         <Webcam
+            style={{zIndex: "-1", position: "absolute", top: "0", left: "0"}}
             audio={false}
             videoConstraints={videoConstraints}
             screenshotQuality={0.8}
