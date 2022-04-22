@@ -11,6 +11,7 @@ import QuestionPaper from "../models/QuestionPaper.js";
 import {
     examAccess,
     hasSubmitted,
+   
     inTime,
     questionPaperExists,
     questionPaperFromExam,
@@ -722,7 +723,16 @@ const getCurrentExam = async (req, res) => {
                         .collection("exams")
                         .doc(examIdsList[i])
                         .get();
+
                     if (exam) {
+                        
+                            // check if the student have already submitted the exam
+                            const examSubmitted = await hasSubmitted(exam.data()["examId"], studentId);
+                            if (examSubmitted) {
+                                continue;
+                            }
+                            
+  
                         inTime(exam, studentId, req);
                         if (req.timeStatus === "inTime") {
                             let examData = exam.data();
@@ -826,8 +836,9 @@ const getExamHistory = async (req, res) => {
                         .doc(examIdsList[i])
                         .get();
                     if (exam) {
+                        const examSubmitted = await hasSubmitted(exam.data()["examId"], studentId);
                         inTime(exam, studentId, req);
-                        if (req.timeStatus === "afterTime") {
+                        if (req.timeStatus === "afterTime" || examSubmitted === true) {
                             let examData = exam.data();
                             if (examData) {
                                 let examData = exam.data();
