@@ -215,7 +215,14 @@ export const addStudentToExam = (dispatch, history, examId, studentIds) => {
                 studentsList: studentIds,
             });
             history.push(`/dashboard/exam/my-exams/${examId}/manage-students`);
-            snackActions.success(res.data);
+            if (res.data.length > 0) {
+                snackActions.warning(
+                    "Some students were not enrolled - " +
+                    res.data
+                );
+            } else {
+                snackActions.success("Students enrolled successfully");
+            }
         } catch (error) {
             console.log("there was some error");
             snackActions.error(error.response.data);
