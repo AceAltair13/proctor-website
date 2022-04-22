@@ -35,31 +35,31 @@ const eventList = [
         icon: <BadgeIcon />,
         title: "Face Not Detected",
         code: "NO_PERSON_DETECTED",
-        count: 134,
+        count: 0,
     },
     {
         icon: <BadgeIcon />,
         title: "Unknown Person",
         code: "UNKNOWN_PERSON",
-        count: 24,
+        count: 0,
     },
     {
         icon: <BadgeIcon />,
         title: "Multiple Faces Detected",
         code: "MORE_THAN_ONE_PERSON_DETECTED",
-        count: 55,
+        count: 0,
     },
     {
         icon: <BadgeIcon />,
         title: "Mobile Detected",
         code: "CELL_PHONE_DETECTED",
-        count: 197,
+        count: 0,
     },
     {
         icon: <BadgeIcon />,
         title: "Laptop Detected",
         code: "LAPTOP_DETECTED",
-        count: 12,
+        count: 0,
     },
     // {
     //     icon: <BadgeIcon />,
@@ -71,19 +71,19 @@ const eventList = [
         icon: <BadgeIcon />,
         title: "Full Screen Exited",
         code: "FULL_SCREEN_EXIT",
-        count: 13,
+        count: 0,
     },
     {
         icon: <BadgeIcon />,
         title: "Tab Changed",
         code: "TAB_CHANGED",
-        count: 12,
+        count: 0,
     },
     {
         icon: <BadgeIcon />,
         title: "Inspect Element",
         code: "INSPECT_ELEMENT_OPENED",
-        count: 5,
+        count: 0,
     },
 ];
 
@@ -114,7 +114,7 @@ const ViewStudentResponse = () => {
         fetchSingleStudentResponseForSupervisor(dispatch, examId, studentId);
     const _eventList = eventList.map((event) => ({
         ...event,
-        count: events.find((response) => response.eventName === event.code)?.eventCount ?? 0,
+        count: events?.find((response) => response.eventName === event.code)?.eventCount ?? 0,
     }));
 
     const StudentDetailItem = ({ title, content }) => {

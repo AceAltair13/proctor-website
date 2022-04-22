@@ -21,7 +21,7 @@ const ViewResponses = () => {
     const history = useHistory();
     const dispatch = useDispatch();
     const { url } = useRouteMatch();
-    const { examName, examId } = useSelector(
+    const { examName, examId, questionPaperId } = useSelector(
         (state) => state.supervisor.selectedExam
     );
     const { studentsList } = useSelector(
@@ -101,15 +101,21 @@ const ViewResponses = () => {
                 </Link>
                 <Typography>View Responses</Typography>
             </Breadcrumbs>
-            <RefreshablePage fetchExamFunction={fetchStudentRespones}>
-                <Stack spacing={2}>
-                    <Typography variant="h6">
-                        Student Responses ({_rows.length})
-                    </Typography>
-                    <CustomDataGrid columns={columns} rows={_rows} />
-                    <Box sx={{ py: 5 }} />
-                </Stack>
-            </RefreshablePage>
+            {questionPaperId ? (
+                <RefreshablePage fetchExamFunction={fetchStudentRespones}>
+                    <Stack spacing={2}>
+                        <Typography variant="h6">
+                            Student Responses ({_rows.length})
+                        </Typography>
+                        <CustomDataGrid columns={columns} rows={_rows} />
+                        <Box sx={{ py: 5 }} />
+                    </Stack>
+                </RefreshablePage>
+            ) : (
+                <Typography variant="h6">
+                    No question paper available to download responses.
+                </Typography>
+            )}
         </>
     );
 };
