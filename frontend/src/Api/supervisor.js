@@ -134,6 +134,7 @@ export const createQuestionPaper = async (
             examId,
             questionAnswers,
         });
+        getExamDetailsForSupervisor(dispatch, examId);
         snackActions.success(res.data);
         history.push(
             `/dashboard/exam/my-exams/${examId}/manage-question-paper`

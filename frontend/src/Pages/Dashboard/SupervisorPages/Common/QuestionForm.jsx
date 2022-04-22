@@ -148,9 +148,11 @@ const QuestionForm = ({ edit, qid }) => {
 
     const submitForm = (data) => {
         console.log([data]);
-        if (!questionPaperId) {
+        if (!questionPaperId && selectedQuestionPaper.length === 0) {
+            console.log("Question Paper is being created")
             createQuestionPaper(dispatch, history, examId, [data]);
         } else {
+            console.log("Question Paper is being updated");
             if (edit) {
                 let qb = [...selectedQuestionPaper];
                 qb[qid] = data;

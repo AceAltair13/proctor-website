@@ -14,6 +14,7 @@ import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import { setQuestionAttempted } from "../../../Features/questionPaperSlice";
 import SimpleBar from "simplebar-react";
+import MUIRichTextEditor from "mui-rte";
 
 function ExamMain(props) {
     const dispatch = useDispatch();
@@ -45,7 +46,11 @@ function ExamMain(props) {
                                 pb: 1,
                             }}
                         >
-                            <Typography variant="body1">{question}</Typography>
+                            <MUIRichTextEditor
+                                value={question}
+                                readOnly
+                                toolbar={false}
+                            />
                         </Box>
                     </Stack>
                 </Container>
