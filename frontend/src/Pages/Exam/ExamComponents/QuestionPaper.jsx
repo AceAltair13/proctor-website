@@ -5,6 +5,9 @@ import ExamMain from "./ExamMain";
 import ExamFooter from "./ExamFooter";
 import { useSelector } from "react-redux";
 import LoadAI from "../AI/LoadAI";
+import Hotkeys from "react-hot-keys";
+import { snackActions } from "../../../Utils/SnackBarUtils";
+
 const QuestionPaper = () => {
     const { userId } = useSelector((state) => state.user.currentUser);
     const { exam } = useSelector((state) => state.exam);
@@ -14,6 +17,13 @@ const QuestionPaper = () => {
 
     return (
         questions.length > 0 && (
+            <Hotkeys
+            keyName="shift+a,alt+s,ctrl+shift+k,f10,alt+tab"
+            onKeyDown={(keyName, e, handle) =>{
+                e.preventDefault();
+                snackActions.warning(keyName +" is not allowed. You are monitored")
+              }}
+          >
             <Grid
                 height="100vh"
                 direction="column"
@@ -43,6 +53,7 @@ const QuestionPaper = () => {
                 </Grid>
                 <LoadAI examId={exam.examId}/>
             </Grid>
+            </Hotkeys>
         )
     );
 };

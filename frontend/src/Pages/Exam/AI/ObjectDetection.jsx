@@ -1,8 +1,10 @@
 import * as cocoSsd from "@tensorflow-models/coco-ssd";
 import { sendExamEvent } from "../../../Api/proctor";
 
+
+let net;
 async function runObjectDetection(webcamRef, examId) {
-    const net = await cocoSsd.load();
+    net = await cocoSsd.load();
     detect(net, webcamRef, examId);
 }
 
@@ -20,14 +22,19 @@ function getPrediction(predictions, image, examId) {
             switch (user) {
                 case "person":
                     count++;
+                    net.dispose();
                     break;
                 case "cell phone":
                     console.log("Cell Phone Detected !");
                     sendExamEvent(image, examId, "CELL_PHONE_DETECTED");
+                    net.dispose();
+
                     break;
                 case "laptop":
                     console.log("Laptop detected !");
                     sendExamEvent(image, examId, "LAPTOP_DETECTED");
+                    net.dispose();
+
                     break;
                 default:
                     break;
@@ -37,9 +44,13 @@ function getPrediction(predictions, image, examId) {
     if (count > 1) {
         console.log("More than one person detected !");
         sendExamEvent(image, examId, "MORE_THAN_ONE_PERSON_DETECTED");
+        net.dispose();
+
     } else if (count === 0) {
         console.log("No Person Detected !");
         sendExamEvent(image, examId, "NO_PERSON_DETECTED");
+        net.dispose();
+
     }
 }
 
