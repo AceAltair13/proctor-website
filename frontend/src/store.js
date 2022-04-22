@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import userSlice from "./Features/userSlice";
 import studentSlice from "./Features/studentSlice";
 import dashboardSlice from "./Features/dashboardSlice";
+import malpracticeFlagSlice from "./Features/malpracticeFlagSlice";
 import {
     FLUSH,
     REHYDRATE,
@@ -30,6 +31,7 @@ const persistedReducer = persistCombineReducers(persistConfig, {
     supervisor: supervisorSlice,
     questionPaper: questionPaperSlice,
     exam: examSlice,
+    malpracticeTypes: malpracticeFlagSlice,
 });
 
 export default configureStore({

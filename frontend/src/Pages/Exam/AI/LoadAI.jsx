@@ -1,15 +1,56 @@
 import Webcam from "react-webcam";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as faceapi from "@vladmandic/face-api";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import runObjectDetection from "./ObjectDetection";
 import { sendExamEvent } from "../../../Api/proctor";
+import { flipKnownPerson } from "../../../Features/malpracticeFlagSlice";
 
 function LoadAI({ examId }) {
     const webcamRef = React.useRef(null);
     // const [color, setColor] = React.useState("red");
     const userImageLin = useSelector((state) => state.questionPaper.faceURL);
-    // const [noPersonDetectedFlag, setnoPersonDetectedFlag] = useState(false);
+
+
+
+    // Load malpractice Types reducers
+    // const [knownPerson, setKnownPerson] = useState(false);
+    // const [knowPersonTrigger, setKnowPersonTrigger] = useState(false);
+    // useEffect(() => {
+     
+    //     setTimeout(() => {
+    //         setKnownPerson(false);
+    //         console.log("KNOWN PERSON SET TO  "+ knownPerson);
+    //     }, 60000);
+ 
+    // }, [knowPersonTrigger])
+    
+
+    const knownPerson = useSelector((state) => state.malpracticeTypes.knownPerson);
+   
+    const [knowPersonTrigger, setKnowPersonTrigger] = useState(false);
+
+    // const {faceDetected,noPerson,multiPerson,mobileFound,laptopFound} = useSelector((state) => state.malpracticeTypes);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        const activate = ()=> {
+            dispatch(flipKnownPerson(true));
+            setTimeout(() => {
+            console.log("Starting activating Unknown person");
+            dispatch(flipKnownPerson(false));
+            console.log(" UNKNOWN PERSON DETECTION Activated");
+        }, 60000);
+    }
+        if(knownPerson){
+        activate();
+        }
+    
+    }, [dispatch,knowPersonTrigger,knownPerson]);
+    
+
+    
+
 
     const videoConstraints = {
         height: 300,
@@ -60,18 +101,27 @@ function LoadAI({ examId }) {
                 });
                 results.forEach((result, _) => {
                     if (result.label === "Person Found") {
-                        console.log("Person Found");
+                        console.log("Person AUTHENTICATED");
                     }
                     // if(unknownPersonTimeout!=true)
                     else {
+
                         // upload unknown person malpractice post request
-                        // setUnkownPersonTimeout(true);
-                        sendExamEvent(
-                            webcamRef.current.getScreenshot(),
-                            examId,
-                            "UNKNOWN_PERSON"
-                        );
-                        console.log("Unkown Person");
+                        console.log("person unkwon is  "+knownPerson);
+                        if(knownPerson===false){
+                            sendExamEvent(
+                                webcamRef.current.getScreenshot(),
+                                examId,
+                                "UNKNOWN_PERSON"
+                                );
+                                // console.log("Unkown Person");
+                                // setKnownPerson(true);
+                                setKnowPersonTrigger(!knowPersonTrigger);
+                                // dispatch(flipKnownPerson(true));
+                                console.log("unknown person detected and sent to server " + knownPerson);
+                            
+                            
+                        }
                     }
                 });
                 await runObjectDetection(webcamRef, examId);

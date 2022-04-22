@@ -10,6 +10,7 @@ import {
     setIsQuestionPaperFetching,
     setQuestionList,
 } from "../Features/questionPaperSlice";
+import { resetMalpracticeTypes } from "../Features/malpracticeFlagSlice";
 
 export const fetchSingleStudentExam = (dispatch, examId) => {
     dispatch(setIsCurrentExamFetching(true));
@@ -75,6 +76,8 @@ export const submitAnswers = (dispatch, examId, questions) => {
             snackActions.error(error.response.data);
         } finally {
             dispatch(setIsQuestionPaperFetching(false));
+            dispatch(resetMalpracticeTypes());
+
         }
     }, 1000);
 };
