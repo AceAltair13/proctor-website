@@ -30,6 +30,9 @@ const supervisorSlice = createSlice({
         setSelectedQuestionPaper: (state, action) => {
             state.selectedQuestionPaper = action.payload;
         },
+        addQuestionToQuestionPaper: (state, action) => {
+            state.selectedQuestionPaper.push(action.payload);
+        },
         setSelectedQuestionId: (state, action) => {
             state.selectedQuestionId = action.payload;
         },
@@ -62,6 +65,7 @@ export const {
     setSupervisorExams,
     setSelectedExam,
     setSelectedQuestionPaper,
+    addQuestionToQuestionPaper,
     setSelectedQuestionId,
     setSelectedStudent,
     setSupervisorDialogOpen,

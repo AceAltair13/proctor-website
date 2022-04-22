@@ -8,6 +8,10 @@ const CustomDataGrid = (props) => {
     const { rows, columns, noShadow, ...other } = props;
     const { isFetching } = useSelector((state) => state.dashboard);
 
+    const noShadowProps = {
+        variant: "outlined",
+    };
+
     return (
         <Paper
             sx={{
@@ -15,8 +19,7 @@ const CustomDataGrid = (props) => {
                     bgcolor: "rgb(0, 255, 0, 0.2)",
                 },
             }}
-            variant={noShadow ? "outlined" : "elevation"}
-            elevation={noShadow ? 0 : 4}
+            {...(noShadow ? noShadowProps : {})}
         >
             <DataGrid
                 rows={isFetching ? [] : rows}

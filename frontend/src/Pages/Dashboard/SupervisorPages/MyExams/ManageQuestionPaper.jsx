@@ -9,8 +9,13 @@ import {
     Stack,
     Typography,
 } from "@mui/material";
-import { Link as RouterLink, useParams, useRouteMatch } from "react-router-dom";
-import React, { useCallback, useMemo } from "react";
+import {
+    Link as RouterLink,
+    useHistory,
+    useParams,
+    useRouteMatch,
+} from "react-router-dom";
+import React, { useCallback, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import RefreshablePage from "../../CommonPages/RefreshablePage";
 import AddIcon from "@mui/icons-material/Add";
@@ -19,56 +24,55 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import PublishIcon from "@mui/icons-material/Publish";
 import { GridActionsCellItem } from "@mui/x-data-grid";
-import { getQuestionPaperForSupervisor } from "../../../../Api/supervisor";
+import {
+    getQuestionPaperForSupervisor,
+    updateQuestionPaper,
+} from "../../../../Api/supervisor";
 import {
     setSelectedQuestionId,
     setSupervisorDialogOpen,
 } from "../../../../Features/supervisorSlice";
 import CustomDataGrid from "../../../../Components/CustomDataGrid";
+import MUIRichTextEditor from "mui-rte";
+import EditQuestion from "./EditQuestion";
 
 const QuestionDialog = () => {
     const dispatch = useDispatch();
     const { selectedQuestionId, supervisorDialogOpen, selectedQuestionPaper } =
         useSelector((state) => state.supervisor);
-    const optionsColumnSchema = useMemo(
-        () => [
-            {
-                headerName: "ID",
-                field: "op_id",
-                width: 100,
-                headerAlign: "center",
-                align: "center",
-            },
-            {
-                headerName: "Option",
-                field: "option",
-                minWidth: 200,
-                headerAlign: "center",
-                align: "center",
-                flex: 1,
-            },
-            {
-                headerName: "Correct",
-                field: "isCorrect",
-                width: 100,
-                headerAlign: "center",
-                align: "center",
-                type: "boolean",
-            },
-        ],
-        []
-    );
-    const optionRows = useMemo(
-        () =>
-            selectedQuestionPaper[selectedQuestionId]?.options?.map(
-                (option, index) => ({
-                    id: index,
-                    op_id: option.optionId,
-                    option: option.optionDesc,
-                    isCorrect: option.isCorrect,
-                })
-            ),
-        [selectedQuestionPaper, selectedQuestionId]
+    const optionsColumnSchema = [
+        {
+            headerName: "Sr No",
+            field: "srNo",
+            width: 100,
+            headerAlign: "center",
+            align: "center",
+        },
+        {
+            headerName: "Option",
+            field: "option",
+            minWidth: 200,
+            headerAlign: "center",
+            align: "center",
+            flex: 1,
+        },
+        {
+            headerName: "Correct",
+            field: "isCorrect",
+            width: 100,
+            headerAlign: "center",
+            align: "center",
+            type: "boolean",
+        },
+    ];
+
+    const optionRows = selectedQuestionPaper[selectedQuestionId]?.options?.map(
+        (option, index) => ({
+            id: index,
+            srNo: index + 1,
+            option: option.optionDesc,
+            isCorrect: option.isCorrect,
+        })
     );
 
     return (
@@ -82,8 +86,15 @@ const QuestionDialog = () => {
                 <>
                     <DialogContent>
                         <Typography variant="body1">
-                            <strong>Question: </strong>
-                            {selectedQuestionPaper[selectedQuestionId].question}
+                            <strong>Question</strong>
+                            <MUIRichTextEditor
+                                value={
+                                    selectedQuestionPaper[selectedQuestionId]
+                                        .question
+                                }
+                                readOnly
+                                toolbar={false}
+                            />
                         </Typography>
                         <Typography variant="body2" textAlign="end">
                             Marks Assigned:{" "}
@@ -113,10 +124,12 @@ const QuestionDialog = () => {
 };
 
 const ManageQuestionPaper = () => {
+    const history = useHistory();
+    const { url } = useRouteMatch();
     const { selectedQuestionPaper, selectedExam, unsavedChanges } = useSelector(
         (state) => state.supervisor
     );
-    const { examName } = selectedExam;
+    const { examName, questionPaperId } = selectedExam;
     const { examId } = useParams();
     const dispatch = useDispatch();
     const getQuestionPaper = () =>
@@ -128,66 +141,94 @@ const ManageQuestionPaper = () => {
         },
         [dispatch]
     );
-    const { url } = useRouteMatch();
+    const [selectionModel, setSelectionModel] = useState([]);
 
-    const columns = useMemo(
-        () => [
-            {
-                headerName: "Sr No",
-                field: "srNo",
-                flex: 1,
-                headerAlign: "center",
-                align: "center",
-            },
-            {
-                headerName: "Question ID",
-                field: "questionId",
-                flex: 1,
-                headerAlign: "center",
-                align: "center",
-            },
-            {
-                headerName: "Total Options",
-                field: "totalOptions",
-                flex: 1,
-                headerAlign: "center",
-                align: "center",
-            },
-            {
-                headerName: "Weightage",
-                field: "weightage",
-                flex: 1,
-                headerAlign: "center",
-                align: "center",
-            },
-            {
-                headerName: "Action",
-                field: "action",
-                type: "actions",
-                getActions: (params) => [
-                    <GridActionsCellItem
-                        icon={<DriveFileRenameOutlineIcon color="success" />}
-                        label="Edit"
-                        onClick={() => console.log(params.id)}
-                    />,
-                    <GridActionsCellItem
-                        icon={<VisibilityIcon color="info" />}
-                        label="View"
-                        onClick={viewQuestion(params.id)}
-                    />,
-                ],
-                width: 150,
-                headerAlign: "center",
-                sortable: false,
-                filterable: false,
-            },
-        ],
-        [viewQuestion]
+    const editQuestion = useCallback(
+        (id) => () => {
+            history.push(`${url}/edit-question/${id}`);
+        },
+        [history, url]
     );
+
+    const deleteQuestions = () => {
+        const selectedRows = new Set(selectionModel);
+        const newQuestionList = selectedQuestionPaper.filter(
+            (_, index) => !selectedRows.has(index)
+        );
+        updateQuestionPaper(
+            dispatch,
+            history,
+            examId,
+            questionPaperId,
+            newQuestionList
+        );
+    };
+
+    const columns = [
+        {
+            headerName: "Sr No",
+            field: "srNo",
+            width: 100,
+            headerAlign: "center",
+            align: "center",
+        },
+        {
+            headerName: "Question",
+            field: "question",
+            minWidth: 200,
+            flex: 1,
+            headerAlign: "center",
+            renderCell: (params) => {
+                return (
+                    <MUIRichTextEditor
+                        value={params.row.question}
+                        readOnly
+                        toolbar={false}
+                    />
+                );
+            },
+        },
+        {
+            headerName: "Total Options",
+            field: "totalOptions",
+            width: 150,
+            headerAlign: "center",
+            align: "center",
+        },
+        {
+            headerName: "Weightage",
+            field: "weightage",
+            width: 150,
+            headerAlign: "center",
+            align: "center",
+        },
+        {
+            headerName: "Action",
+            field: "action",
+            type: "actions",
+            getActions: (params) => [
+                <GridActionsCellItem
+                    icon={<DriveFileRenameOutlineIcon color="success" />}
+                    label="Edit"
+                    onClick={editQuestion(params.id)}
+                />,
+                <GridActionsCellItem
+                    icon={<VisibilityIcon color="info" />}
+                    label="View"
+                    onClick={viewQuestion(params.id)}
+                />,
+            ],
+            width: 150,
+            headerAlign: "center",
+            sortable: false,
+            filterable: false,
+        },
+    ];
+
     const rows = selectedQuestionPaper.map((question, index) => ({
-        id: question.questionId,
+        id: index,
         srNo: index + 1,
-        questionId: question.questionId,
+        question: question.question,
         totalOptions: question.options.length,
         weightage: question.weightage,
     }));
@@ -216,19 +257,21 @@ const ManageQuestionPaper = () => {
             <RefreshablePage fetchExamFunction={getQuestionPaper}>
                 <Box sx={{ display: "flex", justifyContent: "end", mb: 2 }}>
                     <Stack direction="row" spacing={2}>
+                        {selectionModel.length > 0 && (
+                            <Button
+                                color="error"
+                                variant="contained"
+                                onClick={deleteQuestions}
+                            >
+                                Delete selected
+                            </Button>
+                        )}
                         <Button
                             color="success"
                             startIcon={<AddIcon />}
-                            component={RouterLink}
-                            to={`${url}/add-question`}
+                            onClick={() => history.push(`${url}/add-question`)}
                         >
                             Add Question
-                        </Button>
-                        <Button
-                            startIcon={<PublishIcon />}
-                            disabled={!unsavedChanges}
-                        >
-                            Save Changes
                         </Button>
                     </Stack>
                 </Box>
@@ -236,6 +279,8 @@ const ManageQuestionPaper = () => {
                     rows={rows}
                     columns={columns}
                     checkboxSelection
+                    selectionModel={selectionModel}
+                    onSelectionModelChange={setSelectionModel}
                 />
             </RefreshablePage>
             <QuestionDialog />

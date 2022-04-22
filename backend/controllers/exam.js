@@ -313,6 +313,7 @@ const assignQuestionPaper = async (req, res) => {
 };
 
 const updateQuestionPaper = async (req, res) => {
+    console.log(req.body);
     try {
         if (req.body.questionPaperId && req.body.examId) {
             var maxMarks = 0;

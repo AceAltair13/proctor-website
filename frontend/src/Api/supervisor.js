@@ -122,23 +122,53 @@ export const getQuestionPaperForSupervisor = (dispatch, examId) => {
     }, 1000);
 };
 
-export const editQuestionPaper = (dispatch, history, questionPaper) => {
+export const createQuestionPaper = async (
+    dispatch,
+    history,
+    examId,
+    questionAnswers
+) => {
     dispatch(setDashboardFetching(true));
-    // Timeout to prevent loading bar vanishing too fast
-    setTimeout(async () => {
-        try {
-            const res = await userRequest.put(
-                FETCH_QUESTION_PAPER,
-                questionPaper
-            );
-            history.go(0);
-            snackActions.success(res.data);
-        } catch (error) {
-            snackActions.error(error.response.data);
-        } finally {
-            dispatch(setDashboardFetching(false));
-        }
-    }, 1000);
+    try {
+        const res = await userRequest.post(FETCH_QUESTION_PAPER, {
+            examId,
+            questionAnswers,
+        });
+        snackActions.success(res.data);
+        history.push(
+            `/dashboard/exam/my-exams/${examId}/manage-question-paper`
+        );
+    } catch (error) {
+        snackActions.error(error.response.data);
+    } finally {
+        dispatch(setDashboardFetching(false));
+    }
+};
+
+export const updateQuestionPaper = async (
+    dispatch,
+    history,
+    examId,
+    questionPaperId,
+    questionAnswers
+) => {
+    dispatch(setDashboardFetching(true));
+    try {
+        const res = await userRequest.put(FETCH_QUESTION_PAPER, {
+            examId,
+            questionPaperId,
+            questionAnswers,
+        });
+        snackActions.success(res.data);
+        getQuestionPaperForSupervisor(dispatch, examId);
+        history.push(
+            `/dashboard/exam/my-exams/${examId}/manage-question-paper`
+        );
+    } catch (error) {
+        snackActions.error(error.response.data);
+    } finally {
+        dispatch(setDashboardFetching(false));
+    }
 };
 
 export const getStudentsOfExam = (dispatch, examId) => {

@@ -2,6 +2,7 @@ import React from "react";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 import AddQuestion from "./MyExams/AddQuestion";
 import EditExam from "./MyExams/EditExam";
+import EditQuestion from "./MyExams/EditQuestion";
 import EnrollStudents from "./MyExams/EnrollStudents";
 import MalpracticeImages from "./MyExams/MalpracticeImages";
 import ManageExam from "./MyExams/ManageExam";
@@ -16,6 +17,9 @@ const MyExams = () => {
 
     return (
         <Switch>
+            <Route path={`${path}/:examId/manage-question-paper/edit-question/:qid`}>
+                <EditQuestion />
+            </Route>
             <Route path={`${path}/:examId/manage-question-paper/add-question`}>
                 <AddQuestion />
             </Route>
