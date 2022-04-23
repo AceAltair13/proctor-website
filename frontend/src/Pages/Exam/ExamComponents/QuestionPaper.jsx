@@ -18,7 +18,7 @@ const QuestionPaper = () => {
     return (
         questions.length > 0 && (
             <Hotkeys
-            keyName="shift+a,alt+s,ctrl+shift+k,f10,alt+tab"
+            keyName="shift+a,alt+s,ctrl+shift+k,f10,alt+tab,ctrl+shift+i"
             onKeyDown={(keyName, e, handle) =>{
                 e.preventDefault();
                 snackActions.warning(keyName +" is not allowed. You are monitored")

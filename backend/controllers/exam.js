@@ -715,7 +715,7 @@ const getCurrentExam = async (req, res) => {
                         .get()
                 ).data()["examsEnrolled"];
             } catch (error) {
-                return res.status.json([]);
+                return res.status().json([]);
             }
             if (examIdsList) {
                 for (var i = 0; i < examIdsList.length; i++) {
