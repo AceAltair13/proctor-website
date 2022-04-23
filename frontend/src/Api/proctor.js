@@ -1,10 +1,15 @@
 import { MALPRACTICE_URL, UPLOAD_FACE_URL } from "../Constants/urls";
 import { imageUploadRequest } from "../requestMethods";
 import { snackActions } from "../Utils/SnackBarUtils";
-import { setFaceRegistered, setFaceURL } from "../Features/questionPaperSlice";
+import {
+    setFaceRegistered,
+    setFaceURL,
+    setIsFaceUploading,
+} from "../Features/questionPaperSlice";
 import FormData from "form-data";
 
 export const uploadPreExamFace = async (dispatch, image, examId) => {
+    dispatch(setIsFaceUploading(true));
     console.log("uploadpreexam", image);
     const formData = new FormData();
     formData.append("image", image);
@@ -19,6 +24,7 @@ export const uploadPreExamFace = async (dispatch, image, examId) => {
     } catch (error) {
         snackActions.error(error.response.data);
     }
+    dispatch(setIsFaceUploading(false));
 };
 
 export const sendExamEvent = async (image, examId, type) => {

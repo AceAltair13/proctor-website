@@ -5,6 +5,7 @@ import {
     Container,
     Divider,
     Grid,
+    Stack,
     Toolbar,
     Typography,
 } from "@mui/material";
@@ -28,8 +29,11 @@ const PreExamFaceCapture = ({ examId }) => {
     const [image, setImage] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
     const [showUploadBtn, setShowUploadBtn] = useState(false);
-    const { faceRegistered } = useSelector((state) => state.questionPaper);
+    const { faceRegistered, isFaceUploading } = useSelector(
+        (state) => state.questionPaper
+    );
     const [startExam, setStartExam] = useState(false);
+    const [isPredicting, setIsPredicting] = useState(false);
 
     useEffect(() => {
         const loadModel = async () => {
@@ -91,6 +95,11 @@ const PreExamFaceCapture = ({ examId }) => {
     const ButtonList = () => {
         return (
             <>
+                {isPredicting && (
+                    <Typography variant="h6" align="center">
+                        Your face is being processed. Please wait...
+                    </Typography>
+                )}
                 {!!image ? (
                     <Button
                         size="large"
@@ -125,6 +134,7 @@ const PreExamFaceCapture = ({ examId }) => {
                         color="success"
                         sx={{ mt: 1 }}
                         onClick={uploadImage}
+                        disabled={isFaceUploading}
                     >
                         Upload Image
                     </Button>
@@ -166,7 +176,27 @@ const PreExamFaceCapture = ({ examId }) => {
                         </Typography>
                     </Grid>
                     <Grid item container justifyContent="center" spacing={2}>
-                        <Grid item xs={5}></Grid>
+                        <Grid item xs={5}>
+                            <Stack>
+                                <Typography variant="h6">
+                                    Instructions for Face Capture
+                                </Typography>
+                                <ol>
+                                    <li>
+                                        Please ensure that your face is clearly
+                                        visible in the camera.
+                                    </li>
+                                    <li>
+                                        Please ensure that your face is in the
+                                        center of the camera.
+                                    </li>
+                                    <li>
+                                        Please be alone in the room during the
+                                        examination.
+                                    </li>
+                                </ol>
+                            </Stack>
+                        </Grid>
                         <Grid item xs={2} container justifyContent="center">
                             <Divider orientation="vertical" />
                         </Grid>

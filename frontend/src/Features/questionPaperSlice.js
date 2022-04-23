@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     faceRegistered: false,
     faceURL: "",
+    isFaceUploading: false,
     isFetching: false,
     currentQuestionId: 0,
     totalQuestions: 0,
@@ -44,6 +45,9 @@ const questionPaperSlice = createSlice({
         setFaceURL: (state, action) => {
             state.faceURL = action.payload;
         },
+        setIsFaceUploading: (state, action) => {
+            state.isFaceUploading = action.payload;
+        },
         resetQuestionPaper: () => initialState,
     },
 });
@@ -57,6 +61,7 @@ export const {
     setIsQuestionPaperFetching,
     setSubmitDialogOpen,
     setFaceURL,
+    setIsFaceUploading,
     resetQuestionPaper,
 } = questionPaperSlice.actions;
 export default questionPaperSlice.reducer;
