@@ -183,6 +183,10 @@ const PreExamFaceCapture = ({ examId }) => {
                                 </Typography>
                                 <ol>
                                     <li>
+                                        Please make sure that there is a
+                                        proper lighting in the room
+                                    </li>
+                                    <li>
                                         Please ensure that your face is clearly
                                         visible in the camera.
                                     </li>
@@ -193,6 +197,9 @@ const PreExamFaceCapture = ({ examId }) => {
                                     <li>
                                         Please be alone in the room during the
                                         examination.
+                                    </li>
+                                    <li>
+                                        Please Wait for UploadImage Button to Appear
                                     </li>
                                 </ol>
                             </Stack>

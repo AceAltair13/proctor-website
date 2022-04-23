@@ -10,6 +10,7 @@ import { uid } from "../helpers/other.js";
 import { sendMail } from "../helpers/email.js";
 import { async } from "@firebase/util";
 import * as auth from "../helpers/auth.js";
+import { url } from "../config.js";
 
 const registerStudent = async (req, res) => {
     try {
@@ -177,7 +178,7 @@ const registerStudent = async (req, res) => {
         </table></td>
         </tr>
         <tr>
-        <td align="center" class="es-m-txt-l" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px"><span class="es-button-border" style="border-style:solid;border-color:#999999;background:#ffffff;border-width:1px;display:inline-block;border-radius:0px;width:auto"><a class="es-button" target="_blank" style="mso-style-priority:100 !important;text-decoration:none;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;color:#666666;font-size:16px;border-style:solid;border-color:#ffffff;border-width:10px 30px 10px 30px;display:inline-block;background:#ffffff;border-radius:0px;font-family:Montserrat, sans-serif;font-weight:normal;font-style:normal;line-height:19px;width:auto;text-align:center" href="http://localhost:8080/api/user/emailverifivation?id=${accessToken}">Verify my email</a></span></td>
+        <td align="center" class="es-m-txt-l" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px"><span class="es-button-border" style="border-style:solid;border-color:#999999;background:#ffffff;border-width:1px;display:inline-block;border-radius:0px;width:auto"><a class="es-button" target="_blank" style="mso-style-priority:100 !important;text-decoration:none;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;color:#666666;font-size:16px;border-style:solid;border-color:#ffffff;border-width:10px 30px 10px 30px;display:inline-block;background:#ffffff;border-radius:0px;font-family:Montserrat, sans-serif;font-weight:normal;font-style:normal;line-height:19px;width:auto;text-align:center" href="${url}/api/user/emailverifivation?id=${accessToken}">Verify my email</a></span></td>
         </tr>
         </table></td>
         </tr>
@@ -368,7 +369,7 @@ const registerSupervisor = async (req, res) => {
         </table></td>
         </tr>
         <tr>
-        <td align="center" class="es-m-txt-l" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px"><span class="es-button-border" style="border-style:solid;border-color:#999999;background:#ffffff;border-width:1px;display:inline-block;border-radius:0px;width:auto"><a class="es-button" target="_blank" style="mso-style-priority:100 !important;text-decoration:none;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;color:#666666;font-size:16px;border-style:solid;border-color:#ffffff;border-width:10px 30px 10px 30px;display:inline-block;background:#ffffff;border-radius:0px;font-family:Montserrat, sans-serif;font-weight:normal;font-style:normal;line-height:19px;width:auto;text-align:center" href="http://localhost:8080/api/user/emailverifivation?id=${accessToken}">Verify my email</a></span></td>
+        <td align="center" class="es-m-txt-l" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px"><span class="es-button-border" style="border-style:solid;border-color:#999999;background:#ffffff;border-width:1px;display:inline-block;border-radius:0px;width:auto"><a class="es-button" target="_blank" style="mso-style-priority:100 !important;text-decoration:none;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;color:#666666;font-size:16px;border-style:solid;border-color:#ffffff;border-width:10px 30px 10px 30px;display:inline-block;background:#ffffff;border-radius:0px;font-family:Montserrat, sans-serif;font-weight:normal;font-style:normal;line-height:19px;width:auto;text-align:center" href="${url}/api/user/emailverifivation?id=${accessToken}">Verify my email</a></span></td>
         </tr>
         </table></td>
         </tr>
@@ -544,7 +545,7 @@ const forgotpassword = async (req, res) => {
         isSupervisor: user.isSupervisor,
         isAdmin: user.isAdmin,
     }, config.jwt_passKey, { expiresIn: "5m" })
-    const url = `http://localhost:8080/api/user/resetpassword?token=${token}`;
+    const url = `${config.url}/api/user/resetpassword?token=${token}`;
     const body = `<h1>Reset Password</h1><p>This is a unique link to reset password it is only active for 5 minutes</p><br>Click on the below link to reset your password</br><br><a href=${url}>Reset Password</a></br>`;
 
     await sendMail(forgotpasswordemail, "Reset Password", body);

@@ -6,6 +6,7 @@ import cors from 'cors'
 import {
     port,
     url,
+    host,
     session_key
 } from './config.js'
 import {
@@ -51,7 +52,7 @@ const app = express()
 app.use(express.json())
 // app.use(json())
 app.use(cors({
-   origin:["http://localhost:3000"],
+   origin:["http://"+host+":3000"],
    methods:"GET,POST,DELETE,PUT",
    credentials:true,
 }

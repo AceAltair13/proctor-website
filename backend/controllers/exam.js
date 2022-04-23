@@ -438,7 +438,7 @@ const enrollStudent = async (req, res) => {
                 }
 
                 const subject = "Exam Enrollment";
-                const body = "You have been enrolled in " + Test_name.examName + " " + "Exam" + " Check your dasboard for more details";
+                const body = "<h1>Exam Enrollement Details<h1><p>You have been enrolled in " + Test_name.examName + " " + "Exam</p>" + "<br>Check your dashboard for more details</br>";
                 await sendMail(filteredStudentsList[i].emailId, subject, body)
             } catch (error) {
                 console.log(error);
@@ -675,7 +675,8 @@ const receiveAnswers = async (req, res) => {
                     //     });
                     // Send email to the student
                     const mailBody =
-                        "Your marks for the exam " +
+                        "<h1>Your Exam Results</h1>"+
+                        "<p>Your marks for the exam " +
                         exam.data()["examName"] +
                         " is " +
                         totalMarks;

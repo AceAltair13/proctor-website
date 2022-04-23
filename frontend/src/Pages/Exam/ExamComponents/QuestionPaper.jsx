@@ -7,16 +7,29 @@ import { useSelector } from "react-redux";
 import LoadAI from "../AI/LoadAI";
 import Hotkeys from "react-hot-keys";
 import { snackActions } from "../../../Utils/SnackBarUtils";
+import PageVisibility from 'react-page-visibility';
+import { sendExamEvent } from "../../../Api/proctor";
+import { useParams } from "react-router-dom";
+
+
 
 const QuestionPaper = () => {
+    const { id } = useParams();
     const { userId } = useSelector((state) => state.user.currentUser);
     const { exam } = useSelector((state) => state.exam);
     const { currentQuestionId, questions, totalQuestions } = useSelector(
         (state) => state.questionPaper
     );
+    const handleVisibilityChange=isVisible=>{
+        if(!isVisible){
+            snackActions.warning("You are not in the exam window. Please return to the exam window to continue.");
+            sendExamEvent("", id, "SCREEN_CHANGED");    
+        }
+}
 
     return (
         questions.length > 0 && (
+            <PageVisibility onChange={handleVisibilityChange}>
             <Hotkeys
             keyName="shift+a,alt+s,ctrl+shift+k,f10,alt+tab,ctrl+shift+i"
             onKeyDown={(keyName, e, handle) =>{
@@ -54,6 +67,7 @@ const QuestionPaper = () => {
                 <LoadAI examId={exam.examId}/>
             </Grid>
             </Hotkeys>
+            </PageVisibility>
         )
     );
 };
