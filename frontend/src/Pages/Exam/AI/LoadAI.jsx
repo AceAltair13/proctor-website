@@ -4,11 +4,14 @@ import * as faceapi from "@vladmandic/face-api";
 import { useSelector } from "react-redux";
 import runObjectDetection from "./ObjectDetection";
 import { sendExamEvent } from "../../../Api/proctor";
+import { snackActions } from "../../../Utils/SnackBarUtils";
 
+let posture=0;
 function LoadAI({ examId }) {
     const webcamRef = React.useRef(null);
     // const [color, setColor] = React.useState("red");
     const userImageLin = useSelector((state) => state.questionPaper.faceURL);
+
     // const [noPersonDetectedFlag, setnoPersonDetectedFlag] = useState(false);
 
     const videoConstraints = {
@@ -61,6 +64,7 @@ function LoadAI({ examId }) {
                 results.forEach((result, _) => {
                     if (result.label === "Person Found") {
                         console.log("Person Found");
+                        console.log("posture: " + posture);
                     }
                     // if(unknownPersonTimeout!=true)
                     else {
@@ -72,6 +76,11 @@ function LoadAI({ examId }) {
                             "UNKNOWN_PERSON"
                         );
                         console.log("Unkown Person");
+                        posture++;
+                        console.log("posture: " + posture);
+                        if(posture%4===0){
+                            snackActions.warning("Make Sure Your posture is correct and and there is no one in the background");
+                        }
                     }
                 });
                 await runObjectDetection(webcamRef, examId);

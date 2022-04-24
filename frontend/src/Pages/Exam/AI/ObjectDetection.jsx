@@ -12,6 +12,7 @@ async function detect(net, webcamRef, examId) {
     const video = webcamRef.current.video;
     const predictions = await net.detect(video);
     getPrediction(predictions, webcamRef.current.getScreenshot(), examId);
+
 }
 
 function getPrediction(predictions, image, examId) {
