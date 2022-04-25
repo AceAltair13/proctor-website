@@ -78,7 +78,7 @@ function LoadAI({ examId }) {
                         console.log("Unkown Person");
                         posture++;
                         console.log("posture: " + posture);
-                        if(posture%4===0){
+                        if(posture%3===0){
                             snackActions.warning("Make Sure Your posture is correct and and there is no one in the background");
                         }
                     }
