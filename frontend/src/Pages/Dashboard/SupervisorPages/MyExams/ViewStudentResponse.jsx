@@ -76,15 +76,15 @@ const eventList = [
     {
         icon: <BadgeIcon />,
         title: "Tab Changed",
-        code: "TAB_CHANGED",
+        code: "SCREEN_CHANGED",
         count: 0,
     },
-    {
-        icon: <BadgeIcon />,
-        title: "Inspect Element",
-        code: "INSPECT_ELEMENT_OPENED",
-        count: 0,
-    },
+    // {
+    //     icon: <BadgeIcon />,
+    //     title: "Inspect Element",
+    //     code: "INSPECT_ELEMENT_OPENED",
+    //     count: 0,
+    // },
 ];
 
 const ViewStudentResponse = () => {
