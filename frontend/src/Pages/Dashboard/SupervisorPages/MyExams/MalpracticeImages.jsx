@@ -62,13 +62,13 @@ const MalpracticeImages = ({ EventType }) => {
                                                         DateTime.DATETIME_FULL_WITH_SECONDS
                                                     )}
                                                 </Typography>
-                                                <Typography
+                                                {/* <Typography
                                                     variant="body2"
                                                     textAlign="center"
                                                 >
                                                     Confidence Score:{" "}
                                                     {Math.random().toFixed(2)}
-                                                </Typography>
+                                                </Typography> */}
                                             </Stack>
                                         </Stack>
                                     </CardContent>

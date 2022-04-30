@@ -72,12 +72,12 @@ const supervisorDrawerItems = [
                 to: "/dashboard/exam/student-monitoring",
                 component: StudentMonitoring,
             },
-            {
-                text: "Analytics",
-                icon: <EqualizerIcon />,
-                to: "/dashboard/exam/analytics",
-                component: Results,
-            },
+            // {
+            //     text: "Analytics",
+            //     icon: <EqualizerIcon />,
+            //     to: "/dashboard/exam/analytics",
+            //     component: Results,
+            // },
         ],
     },
 ];
