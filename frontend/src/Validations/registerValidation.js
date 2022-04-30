@@ -1,10 +1,12 @@
 import * as yup from "yup";
 
+const phoneNumberRegex =
+    /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/;
+
 export const registerValidation = yup.object().shape({
-    emailId: yup
-        .string()
-        .email("Invalid email")
-        .required("Email is required"),
+    firstName: yup.string().required("First name is required"),
+    lastName: yup.string().required("Last name is required"),
+    emailId: yup.string().email("Invalid email").required("Email is required"),
     password: yup
         .string()
         .min(6, "Password must be at least 6 characters")
@@ -12,14 +14,9 @@ export const registerValidation = yup.object().shape({
     confirmPassword: yup
         .string()
         .oneOf([yup.ref("password"), null], "Passwords must match")
-        .required("This field is required"),
-    firstName: yup
-        .string()
-        .required("First name is required"),
-    lastName: yup
-        .string()
-        .required("Last name is required"),
+        .required("Confirm password is required"),
     phoneNumber: yup
         .string()
+        .matches(phoneNumberRegex, "Phone number is not valid")
         .required("Phone number is required"),
 });

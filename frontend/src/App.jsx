@@ -1,7 +1,7 @@
 import React from "react";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import theme from "./Themes/theme";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import {
     Dashboard,
     Home,
@@ -11,13 +11,13 @@ import {
     ExamRoutes,
 } from "./Pages/index";
 import { SnackbarProvider } from "notistack";
-import { useSelector } from "react-redux";
 import { SnackbarUtilsConfigurator } from "./Utils/SnackBarUtils";
+import ChromeOnlyRoute from "./Components/ChromeOnlyRoute";
+import ProtectedRoute from "./Components/ProtectedRoute";
 import "react-image-lightbox/style.css";
+import PublicRoute from "./Components/PublicRoute";
 
 function App() {
-    const user = useSelector((state) => state.user.currentUser);
-
     return (
         <ThemeProvider theme={theme}>
             <SnackbarProvider
@@ -27,18 +27,18 @@ function App() {
                 <SnackbarUtilsConfigurator />
                 <CssBaseline />
                 <Switch>
-                    <Route path="/dashboard">
-                        {user ? <Dashboard /> : <Redirect to="/login" />}
-                    </Route>
-                    <Route path="/login">
-                        {user ? <Redirect to="/dashboard" /> : <Login />}
-                    </Route>
-                    <Route path="/register">
-                        {user ? <Redirect to="/dashboard" /> : <Register />}
-                    </Route>
-                    <Route path="/take-exam/:id">
-                        {user ? <ExamRoutes /> : <Redirect to="/login" />}
-                    </Route>
+                    <ProtectedRoute path="/dashboard">
+                        <Dashboard />
+                    </ProtectedRoute>
+                    <PublicRoute path="/login">
+                        <Login />
+                    </PublicRoute>
+                    <PublicRoute path="/register">
+                        <Register />
+                    </PublicRoute>
+                    <ChromeOnlyRoute path="take-exam/:id">
+                        <ExamRoutes />
+                    </ChromeOnlyRoute>
                     <Route exact path="/">
                         <Home />
                     </Route>

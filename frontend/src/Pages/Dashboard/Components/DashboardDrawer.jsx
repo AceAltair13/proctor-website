@@ -12,7 +12,7 @@ import {
     Toolbar,
     Typography,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Logo from "../../../Components/Logo";
 import { drawerWidth } from "../../../Constants/sizes";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,6 +20,7 @@ import { setMobileOpen } from "../../../Features/dashboardSlice";
 
 const DrawerItems = (props) => {
     const dispatch = useDispatch();
+    const history = useHistory();
 
     return props.drawerItems.map((item, index) => (
         <List
@@ -33,10 +34,11 @@ const DrawerItems = (props) => {
                     button
                     key={i}
                     sx={{ pl: 3 }}
-                    component={Link}
-                    to={item.to}
                     disableGutters
-                    onClick={() => dispatch(setMobileOpen())}
+                    onClick={() => {
+                        dispatch(setMobileOpen());
+                        history.push(item.to);
+                    }}
                 >
                     <ListItemIcon sx={{ minWidth: "40px" }}>
                         {item.icon}
@@ -64,7 +66,7 @@ function DashboardDrawer(props) {
                     p: 2,
                     display: "flex",
                     backgroundColor: "rgba(145, 158, 171, 0.12)",
-                    borderRadius: 2
+                    borderRadius: 2,
                 }}
             >
                 <Box>

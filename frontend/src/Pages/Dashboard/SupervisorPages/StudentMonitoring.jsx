@@ -14,19 +14,18 @@ const StudentMonitoring = () => {
         >
             <Container maxWidth="sm">
                 <Stack textAlign="center">
-                    <img
-                        src={ComingSoon}
-                        alt="Coming Soon"
-                        style={{
-                            width: "100%",
-                            height: "auto",
-                        }}
-                    />
-                    <Typography variant="h4" fontWeight="fontWeightBold" mt={3}>
-                        Coming Soon
-                    </Typography>
-                    <Typography variant="h6" maxWidth="sm">
-                        This feature is currently under development.
+                    <Box sx={{ mb: 4 }}>
+                        <img
+                            src={ComingSoon}
+                            alt="Coming Soon"
+                            style={{
+                                width: "100%",
+                                height: "auto",
+                            }}
+                        />
+                    </Box>
+                    <Typography variant="h5">
+                        This feature is planned for a future update.
                     </Typography>
                 </Stack>
             </Container>

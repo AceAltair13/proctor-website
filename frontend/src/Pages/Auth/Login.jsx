@@ -81,10 +81,9 @@ function Login() {
                                             name="email"
                                             autoComplete="email"
                                             {...register("emailId")}
-                                            error={errors.email ? true : false}
+                                            error={!!errors.emailId}
                                             helperText={
-                                                errors.email &&
-                                                errors.email.message
+                                                errors?.emailId?.message
                                             }
                                         />
                                     </Grid>
@@ -98,12 +97,9 @@ function Login() {
                                             id="password"
                                             autoComplete="new-password"
                                             {...register("password")}
-                                            error={
-                                                errors.password ? true : false
-                                            }
+                                            error={!!errors.password}
                                             helperText={
-                                                errors.password &&
-                                                errors.password.message
+                                                errors?.password?.message
                                             }
                                         />
                                     </Grid>
