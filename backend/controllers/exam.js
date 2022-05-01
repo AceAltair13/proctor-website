@@ -1142,36 +1142,15 @@ const getIndividualExamResponse = async (req, res) => {
             returnJson.studentImageURL = studentExamInfo.data().face ?? "";
             returnJson.studentFirstName = studentInfo.data().firstName;
             returnJson.studentLastName = studentInfo.data().lastName;
-            returnJson.studentMarksScored = studentExamInfo.data().score ?? 0;
-            returnJson.studentResponse = studentExamInfo.data().response ?? [];
             returnJson.studentEmailId = studentInfo.data().emailId;
             returnJson.studentPhoneNumber = studentInfo.data().phoneNumber;
             returnJson.studentId = studentInfo.data().userId;
-
+            returnJson.studentResult = await getStudentAnswerQuestionResponse(req,res,true)
+            
+            // returnJson.studentMarksScored = studentExamInfo.data().score ?? 0;
+            // returnJson.studentResponse = studentExamInfo.data().response ?? [];
             let events = [];
 
-            // await firebase_firestore.collection("exams").doc(req.query.examId).collection("candidates").doc(req.query.studentId).listCollections().then(async collections => {
-            //     collections.forEach(async(collection) => {
-            //         await collection.listDocuments().then(async documents => {
-            //             let eventCount = 0;
-            //             documents.forEach(document => {
-
-            //                 eventCount++;
-            //             });
-            //             let event = {
-            //                 eventName: collection.id,
-            //                 eventCount: eventCount
-            //             }
-            //             console.log(event);
-            //             events.push(event);
-            //         });
-            //     }
-            //     )}).then(()=>{
-
-            //         console.log(events);
-            //         returnJson.events = events;
-            //         return res.status(200).json(returnJson);
-            //     })
 
             let collections = await firebase_firestore
                 .collection("exams")
@@ -1247,8 +1226,12 @@ const getMalpracticeTypeImagesOfStudent = async (req, res) => {
     }
 };
 
-const getStudentAnswerQuestionResponse  = async (req, res) => {
+const getStudentAnswerQuestionResponse  = async (req, res, supervisorMode = false) => {
     try {
+        let studentId;
+        if(supervisorMode){
+            studentId = req.query.studentId;
+        }
         let exam;
 
             try{
@@ -1267,8 +1250,13 @@ const getStudentAnswerQuestionResponse  = async (req, res) => {
                             const maxMarks = questionPaper.data().maxMarks;
                             const questionAnswers = questionPaper.data().questionAnswers;
                             try {
-                                
-                                const studentExam = await firebase_firestore.collection("exams").doc(req.query.examId).collection("candidates").doc(req.user.userId).get();
+                                let studentExam;
+                                if(supervisorMode){
+                                studentExam = await firebase_firestore.collection("exams").doc(req.query.examId).collection("candidates").doc(studentId).get();
+                                }else{
+
+                                studentExam = await firebase_firestore.collection("exams").doc(req.query.examId).collection("candidates").doc(req.user.userId).get();
+                                }
                                 if(studentExam){
             
                                     if(studentExam.data()["attempted"] === true){
@@ -1316,8 +1304,12 @@ const getStudentAnswerQuestionResponse  = async (req, res) => {
 
                                                 finalResult.result = result;
 
-                                            
-                                            return res.status(200).json(finalResult);
+                                            if(supervisorMode){
+                                                return finalResult;
+                                            }else{
+                                                return res.status(200).json(finalResult);
+
+                                            }
                                         }else{
                                             return res.status(400).json("Failed to retreive student response");
                                         }
