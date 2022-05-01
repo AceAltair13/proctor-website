@@ -1247,6 +1247,109 @@ const getMalpracticeTypeImagesOfStudent = async (req, res) => {
     }
 };
 
+const getStudentAnswerQuestionResponse  = async (req, res) => {
+    try {
+        let exam;
+
+            try{
+                exam = await firebase_firestore.collection("exams").doc(req.query.examId).get();
+                
+            }catch(e){
+                return res.status(400).json("Exam doenn't exists");
+            }
+            if(exam.data()){
+                const questionPaperId = exam.data().questionPaperId;
+                if(questionPaperId){
+                    if(examAccess(exam, req.user.userId)){
+                        const questionPaper = await firebase_firestore.collection("questionPapers").doc(questionPaperId).get();
+                        
+                        if(questionPaper.data()){
+                            const maxMarks = questionPaper.data().maxMarks;
+                            const questionAnswers = questionPaper.data().questionAnswers;
+                            try {
+                                
+                                const studentExam = await firebase_firestore.collection("exams").doc(req.query.examId).collection("candidates").doc(req.user.userId).get();
+                                if(studentExam){
+            
+                                    if(studentExam.data()["attempted"] === true){
+                                        const studentResponse = studentExam.data()["response"];
+                                        if(studentResponse){
+                                            let finalResult = {};
+                                            
+                                                finalResult.maxMarks = maxMarks;
+                                                finalResult.marksScored = studentExam.data().score;
+                                                let result = [];
+                                                for(let i=0;i<questionAnswers.length;i++){
+                                                    let currentQuestion = {}
+                                                    let currQuestionId = questionAnswers[i].questionId;
+                                                    let questionWeightage = questionAnswers[i].weightage;
+                                                    let question = questionAnswers[i].question;
+                                                    let correctOptionIds = [];
+                                                    let options = [];
+                                                    currentQuestion.questionId = currQuestionId;
+                                                    currentQuestion.weightage = questionWeightage;
+                                                    currentQuestion.question = question;
+
+                                                    for(let j = 0;j< questionAnswers[i].options.length;j++){
+                                                        let currentOption_ = {}
+                                                        currentOption_.optionId = questionAnswers[i].options[j].optionId;
+                                                        currentOption_.optionDesc = questionAnswers[i].options[j].optionDesc;
+                                                        currentOption_.isCorrect = questionAnswers[i].options[j].isCorrect;
+                                                        for(let k = 0;k<studentResponse.length;k++){
+                                                            let currQuestionId_ = studentResponse[k].questionId;
+                                                            if(currQuestionId === currQuestionId_){
+                                                                let selected = studentResponse[k].userSelection;
+                                                                if(selected === currentOption_.optionId){
+                                                                    currentOption_.isSelected = true;
+                                                                }else{
+                                                                    currentOption_.isSelected = false;
+                                                                }
+                                                                options.push(currentOption_);
+                                                            }
+                                                        }
+                                                
+                                                        currentQuestion.options = options;
+                                                    }
+                                                    
+                                                    result.push(currentQuestion);
+                                                }
+
+                                                finalResult.result = result;
+
+                                            
+                                            return res.status(200).json(finalResult);
+                                        }else{
+                                            return res.status(400).json("Failed to retreive student response");
+                                        }
+                                    }else{
+                                        return res.status(200).json({});
+                                    }
+                                }else{
+                                    return res.status(400).json("Student exam not found");
+                                }
+                            } catch (error) {
+                                res.status.json("Problem fetching student exam's details");
+                            }
+
+                        }else{
+                            return res.status(400).json("Question Paper doesn't exists");
+                        }
+                    }
+                }else{
+                    return res.status(400).json("Question paper ID not found");
+                }
+            }else{
+                return res.status(400).json("Exam doesn't exists");
+            }
+
+        }catch(e){
+            return res.status(500).json("Something went wrong");
+        }
+    }
+
+
+
+
 export {
     createExam,
     updateExam,
@@ -1267,4 +1370,5 @@ export {
     getExamResponses,
     getIndividualExamResponse,
     getMalpracticeTypeImagesOfStudent,
+    getStudentAnswerQuestionResponse
 };

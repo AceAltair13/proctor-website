@@ -23,6 +23,7 @@ import {
   getExamResponses,
   getIndividualExamResponse,
   getMalpracticeTypeImagesOfStudent,
+  getStudentAnswerQuestionResponse,
 
 } from "../controllers/exam.js";
 import * as verifyRequests from "../helpers/verifyRequests.js"
@@ -46,7 +47,7 @@ router.delete("/students", [auth.Token,auth.Supervisor,auth.ExamAndSupervisor,ex
 router.get("/responses", [auth.Token,auth.Supervisor,auth.ExamAndSupervisorGetRequest],getExamResponses);
 router.get("/student", [auth.Token,auth.Supervisor,auth.ExamAndSupervisorGetRequest],getIndividualExamResponse)
 router.get("/malpractice", [auth.Token,auth.Supervisor,auth.ExamAndSupervisorGetRequest],getMalpracticeTypeImagesOfStudent);
-
+router.get("/exam-response", [auth.Token],getStudentAnswerQuestionResponse);
 // CRUD QUESTION PAPER
 router.post("/question-paper", [auth.Token,auth.Supervisor,auth.ExamAndSupervisor], assignQuestionPaper);
 router.get("/question-paper",[auth.Token],getQuestionPaper);
