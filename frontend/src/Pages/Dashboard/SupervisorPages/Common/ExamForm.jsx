@@ -10,6 +10,7 @@ import {
     DialogTitle,
     DialogContent,
     DialogActions,
+    Stack,
 } from "@mui/material";
 import DateTimePicker from "@mui/lab/DateTimePicker";
 import { DateTime } from "luxon";
@@ -24,7 +25,10 @@ import { convertToRaw } from "draft-js";
 import PropTypes from "prop-types";
 import theme from "../../../../Themes/rte_theme";
 import { setSupervisorDialogOpen } from "../../../../Features/supervisorSlice";
-import FormContainer from "../../../../Components/FormContainer";
+import CustomCard from "../../../../Components/CustomCard";
+import InfoIcon from "@mui/icons-material/Info";
+import EventNoteIcon from "@mui/icons-material/EventNote";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 const DeleteConfirmationDialog = () => {
     const { supervisorDialogOpen, selectedExam } = useSelector(
@@ -138,63 +142,60 @@ const ExamForm = ({ edit }) => {
             <DeleteConfirmationDialog />
             <Grid container spacing={3}>
                 <Grid item lg={8} md={8} sm={12} xs={12}>
-                    <FormContainer title="Exam Details">
-                        {edit && (
-                            <Grid item xs={12}>
+                    <Stack spacing={4}>
+                        <CustomCard title="Exam Details" icon={<InfoIcon />}>
+                            <Stack spacing={2}>
+                                {edit && (
+                                    <TextField
+                                        name="examName"
+                                        label="Exam ID"
+                                        InputProps={{
+                                            readOnly: true,
+                                        }}
+                                        value={selectedExam.examId}
+                                        fullWidth
+                                    />
+                                )}
                                 <TextField
-                                    name="examName"
-                                    label="Exam ID"
-                                    InputProps={{
-                                        readOnly: true,
-                                    }}
-                                    value={selectedExam.examId}
+                                    label="Exam Name"
+                                    {...register("examName")}
+                                    error={!!errors.examName}
+                                    helperText={
+                                        errors.examName &&
+                                        errors.examName.message
+                                    }
                                     fullWidth
                                 />
+                                <TextField
+                                    name="examDesc"
+                                    label="Exam Description"
+                                    multiline
+                                    rows={4}
+                                    {...register("examDesc")}
+                                    error={!!errors.examDesc}
+                                    helperText={
+                                        errors.examDesc &&
+                                        errors.examDesc.message
+                                    }
+                                    fullWidth
+                                />
+                            </Stack>
+                        </CustomCard>
+                        <CustomCard
+                            title="Exam Instructions"
+                            icon={<EventNoteIcon />}
+                        >
+                            <Grid item xs={12}>
+                                <ThemeProvider theme={theme}>
+                                    <MUIRichTextEditor {...muiRteProps} />
+                                </ThemeProvider>
                             </Grid>
-                        )}
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Exam Name"
-                                {...register("examName")}
-                                error={!!errors.examName}
-                                helperText={
-                                    errors.examName && errors.examName.message
-                                }
-                                fullWidth
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                name="examDesc"
-                                label="Exam Description"
-                                multiline
-                                rows={4}
-                                {...register("examDesc")}
-                                error={!!errors.examDesc}
-                                helperText={
-                                    errors.examDesc && errors.examDesc.message
-                                }
-                                fullWidth
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography
-                                variant="body1"
-                                sx={{ mt: 2, mb: 3 }}
-                                fontWeight="fontWeightBold"
-                                color="text.secondary"
-                            >
-                                Exam Instructions
-                            </Typography>
-                            <ThemeProvider theme={theme}>
-                                <MUIRichTextEditor {...muiRteProps} />
-                            </ThemeProvider>
-                        </Grid>
-                    </FormContainer>
+                        </CustomCard>
+                    </Stack>
                 </Grid>
                 <Grid item lg={4} md={4} sm={12} xs={12}>
-                    <FormContainer title="Exam Timings">
-                        <Grid item xs={12}>
+                    <CustomCard title="Exam Timings" icon={<AccessTimeIcon />}>
+                        <Stack spacing={2}>
                             <DateTimePicker
                                 label="Starts From"
                                 renderInput={(props) => (
@@ -204,8 +205,7 @@ const ExamForm = ({ edit }) => {
                                 minDateTime={edit ? startDate : DateTime.now()}
                                 onChange={setStartDate}
                             />
-                        </Grid>
-                        <Grid item xs={12}>
+
                             <DateTimePicker
                                 label="Ends At"
                                 renderInput={(props) => (
@@ -215,8 +215,8 @@ const ExamForm = ({ edit }) => {
                                 minDateTime={startDate.plus({ minute: 1 })}
                                 onChange={setEndDate}
                             />
-                        </Grid>
-                    </FormContainer>
+                        </Stack>
+                    </CustomCard>
                     <Button
                         fullWidth
                         color="success"

@@ -11,7 +11,6 @@ import QuestionPaper from "../models/QuestionPaper.js";
 import {
     examAccess,
     hasSubmitted,
-   
     inTime,
     questionPaperExists,
     questionPaperFromExam,
@@ -438,21 +437,24 @@ const enrollStudent = async (req, res) => {
                 }
 
                 const subject = "Exam Enrollment";
-                const body = "<h1>Exam Enrollement Details<h1><p>You have been enrolled in " + Test_name.examName + " " + "Exam</p>" + "<br>Check your dashboard for more details</br>";
-                await sendMail(filteredStudentsList[i].emailId, subject, body)
+                const body =
+                    "<h1>Exam Enrollement Details<h1><p>You have been enrolled in " +
+                    Test_name.examName +
+                    " " +
+                    "Exam</p>" +
+                    "<br>Check your dashboard for more details</br>";
+                await sendMail(filteredStudentsList[i].emailId, subject, body);
             } catch (error) {
                 console.log(error);
             }
         }
 
-        return res
-            .status(200)
-            .json(
-                // "Students enrolled successfully and users:- " +
-                invalidUsers
-                // +
-                // " doesn't exists"
-            );
+        return res.status(200).json(
+            // "Students enrolled successfully and users:- " +
+            invalidUsers
+            // +
+            // " doesn't exists"
+        );
     } catch (error) {
         res.status(500).json("Something went wrong try again later" + error);
     }
@@ -480,7 +482,7 @@ const removeStudents = async (req, res) => {
                                         ),
                                 })
                         );
-                    } catch (error) { }
+                    } catch (error) {}
                 } else {
                     invalidUsers.push(req.body.emailId);
                 }
@@ -496,17 +498,15 @@ const removeStudents = async (req, res) => {
                             filteredStudentsList[i].userId
                         ),
                     });
-            } catch (error) { }
+            } catch (error) {}
         }
 
-        return res
-            .status(200)
-            .json(
-                // "Students removed from exam successfully and users:- " +
-                invalidUsers
-                // +
-                // " doesn't exists"
-            );
+        return res.status(200).json(
+            // "Students removed from exam successfully and users:- " +
+            invalidUsers
+            // +
+            // " doesn't exists"
+        );
     } catch (error) {
         res.status(500).json("Something went wrong try again later" + error);
     }
@@ -675,7 +675,7 @@ const receiveAnswers = async (req, res) => {
                     //     });
                     // Send email to the student
                     const mailBody =
-                        "<h1>Your Exam Results</h1>"+
+                        "<h1>Your Exam Results</h1>" +
                         "<p>Your marks for the exam " +
                         exam.data()["examName"] +
                         " is " +
@@ -726,14 +726,15 @@ const getCurrentExam = async (req, res) => {
                         .get();
 
                     if (exam) {
-                        
-                            // check if the student have already submitted the exam
-                            const examSubmitted = await hasSubmitted(exam.data()["examId"], studentId);
-                            if (examSubmitted) {
-                                continue;
-                            }
-                            
-  
+                        // check if the student have already submitted the exam
+                        const examSubmitted = await hasSubmitted(
+                            exam.data()["examId"],
+                            studentId
+                        );
+                        if (examSubmitted) {
+                            continue;
+                        }
+
                         inTime(exam, studentId, req);
                         if (req.timeStatus === "inTime") {
                             let examData = exam.data();
@@ -837,9 +838,15 @@ const getExamHistory = async (req, res) => {
                         .doc(examIdsList[i])
                         .get();
                     if (exam) {
-                        const examSubmitted = await hasSubmitted(exam.data()["examId"], studentId);
+                        const examSubmitted = await hasSubmitted(
+                            exam.data()["examId"],
+                            studentId
+                        );
                         inTime(exam, studentId, req);
-                        if (req.timeStatus === "afterTime" || examSubmitted === true) {
+                        if (
+                            req.timeStatus === "afterTime" ||
+                            examSubmitted === true
+                        ) {
                             let examData = exam.data();
                             if (examData) {
                                 let examData = exam.data();
@@ -1056,41 +1063,49 @@ const getExamStudents = async (req, res) => {
 };
 
 const getExamResponses = async (req, res) => {
-
     const examId = req.query.examId;
     try {
-        const questionPaperId = await (await firebase_firestore.collection("exams").doc(examId).get()).data()["questionPaperId"];
-        const questionPaper = await firebase_firestore.collection("questionPapers").doc(questionPaperId).get();
+        const questionPaperId = await (
+            await firebase_firestore.collection("exams").doc(examId).get()
+        ).data()["questionPaperId"];
+        const questionPaper = await firebase_firestore
+            .collection("questionPapers")
+            .doc(questionPaperId)
+            .get();
         console.log(questionPaper.data());
 
         var details = {};
         // details.questionPaper = questionPaper.data();
         details.totalMarks = questionPaper.data().maxMarks;
-        const studentIdsList = await (await firebase_firestore.collection("exams").doc(examId).get()).data()["studentsList"];
+        const studentIdsList = await (
+            await firebase_firestore.collection("exams").doc(examId).get()
+        ).data()["studentsList"];
         if (studentIdsList) {
             var studentsList = [];
 
             for (var i = 0; i < studentIdsList.length; i++) {
                 var student = await firebase_firestore
                     .collection("exams")
-                    .doc(examId).collection("candidates").doc(studentIdsList[i]).get();
+                    .doc(examId)
+                    .collection("candidates")
+                    .doc(studentIdsList[i])
+                    .get();
                 if (student.data()) {
                     let studentData = student.data();
                     let studentInfo = await firebase_firestore
                         .collection("users")
                         .doc(studentIdsList[i])
                         .get();
-                        if(studentInfo.data()){
-                        
-                            let filterStudentData = {
-                                studentId: studentIdsList[i],
-                                studentFirstName: studentInfo.data().firstName,
-                                studentLastName: studentInfo.data().lastName,
-                                // studentResponse: studentData.response ?? [],
-                                studentMarksScored: studentData.score ?? 0,
-                            }
-                            studentsList.push(filterStudentData);
-                        }
+                    if (studentInfo.data()) {
+                        let filterStudentData = {
+                            studentId: studentIdsList[i],
+                            studentFirstName: studentInfo.data().firstName,
+                            studentLastName: studentInfo.data().lastName,
+                            // studentResponse: studentData.response ?? [],
+                            studentMarksScored: studentData.score ?? 0,
+                        };
+                        studentsList.push(filterStudentData);
+                    }
                 } else {
                     // let filterStudentData = {
                     //     studentId: studentIdsList[i],
@@ -1106,33 +1121,41 @@ const getExamResponses = async (req, res) => {
     } catch (error) {
         return res.status(500).json(error);
     }
-}
+};
 
-const getIndividualExamResponse  = async(req,res)=>{
+const getIndividualExamResponse = async (req, res) => {
     try {
-        const studentInfo = await firebase_firestore.collection("users").doc(req.query.studentId).get();
-        const studentExamInfo = await firebase_firestore.collection("exams").doc(req.query.examId).collection("candidates").doc(req.query.studentId).get();
+        const studentInfo = await firebase_firestore
+            .collection("users")
+            .doc(req.query.studentId)
+            .get();
+        const studentExamInfo = await firebase_firestore
+            .collection("exams")
+            .doc(req.query.examId)
+            .collection("candidates")
+            .doc(req.query.studentId)
+            .get();
         // const questionPaperId = await (await firebase_firestore.collection("exams").doc(req.query.examId).get()).data()["questionPaperId"];
         // const questionPaper = await firebase_firestore.collection("questionPapers").doc(questionPaperId).get();
-        if(studentInfo.data() && studentExamInfo.data()){
-        let returnJson = {};
-        returnJson.studentImageURL = studentExamInfo.data().face??"";
-        returnJson.studentFirstName = studentInfo.data().firstName;
-        returnJson.studentLastName = studentInfo.data().lastName;
-        returnJson.studentMarksScored = studentExamInfo.data().score??0;
-        returnJson.studentResponse = studentExamInfo.data().response??[];
-        returnJson.studentEmailId = studentInfo.data().emailId;
-        returnJson.studentPhoneNumber = studentInfo.data().phoneNumber;
-        returnJson.studentId = studentInfo.data().userId;
+        if (studentInfo.data() && studentExamInfo.data()) {
+            let returnJson = {};
+            returnJson.studentImageURL = studentExamInfo.data().face ?? "";
+            returnJson.studentFirstName = studentInfo.data().firstName;
+            returnJson.studentLastName = studentInfo.data().lastName;
+            returnJson.studentMarksScored = studentExamInfo.data().score ?? 0;
+            returnJson.studentResponse = studentExamInfo.data().response ?? [];
+            returnJson.studentEmailId = studentInfo.data().emailId;
+            returnJson.studentPhoneNumber = studentInfo.data().phoneNumber;
+            returnJson.studentId = studentInfo.data().userId;
 
-        let events = []
+            let events = [];
 
             // await firebase_firestore.collection("exams").doc(req.query.examId).collection("candidates").doc(req.query.studentId).listCollections().then(async collections => {
             //     collections.forEach(async(collection) => {
             //         await collection.listDocuments().then(async documents => {
             //             let eventCount = 0;
             //             documents.forEach(document => {
-                            
+
             //                 eventCount++;
             //             });
             //             let event = {
@@ -1150,77 +1173,79 @@ const getIndividualExamResponse  = async(req,res)=>{
             //         return res.status(200).json(returnJson);
             //     })
 
-            let collections = await firebase_firestore.collection("exams").doc(req.query.examId).collection("candidates").doc(req.query.studentId).listCollections();
-            for(let i=0;i<collections.length;i++){
+            let collections = await firebase_firestore
+                .collection("exams")
+                .doc(req.query.examId)
+                .collection("candidates")
+                .doc(req.query.studentId)
+                .listCollections();
+            for (let i = 0; i < collections.length; i++) {
                 let documents = await collections[i].listDocuments();
                 let eventCount = 0;
-                for(let j=0;j<documents.length;j++){
+                for (let j = 0; j < documents.length; j++) {
                     eventCount++;
                 }
                 let event = {
                     eventName: collections[i].id,
-                    eventCount: eventCount
-                }
+                    eventCount: eventCount,
+                };
                 events.push(event);
             }
-            console.log(events)
+            console.log(events);
             returnJson.events = events;
             return res.status(200).json(returnJson);
-
-
-
-        }else{
+        } else {
             return res.status(500).json("Improper details");
         }
     } catch (error) {
-        console.log("error :-"+ error);
+        console.log("error :-" + error);
         return res.status(500).json(error);
     }
-    
-
-}
+};
 
 const getMalpracticeTypeImagesOfStudent = async (req, res) => {
     try {
         const studentId = req.query.studentId;
         const examId = req.query.examId;
         const malpracticeType = req.query.malpracticeType;
-        if(studentId && examId && malpracticeType){
-            try{
-
-                const malpracticeCollection = await firebase_firestore.collection("exams").doc(examId).collection("candidates").doc(studentId).listCollections();
+        if (studentId && examId && malpracticeType) {
+            try {
+                const malpracticeCollection = await firebase_firestore
+                    .collection("exams")
+                    .doc(examId)
+                    .collection("candidates")
+                    .doc(studentId)
+                    .listCollections();
                 let returnList = [];
-                for(let i=0;i<malpracticeCollection.length;i++){
-                    if(malpracticeCollection[i].id == malpracticeType){
-                        let documents = await malpracticeCollection[i].listDocuments();
-                        for(let j=0;j<documents.length;j++){
+                for (let i = 0; i < malpracticeCollection.length; i++) {
+                    if (malpracticeCollection[i].id == malpracticeType) {
+                        let documents = await malpracticeCollection[
+                            i
+                        ].listDocuments();
+                        for (let j = 0; j < documents.length; j++) {
                             let malpracticeDetail = {};
                             let document = await documents[j].get();
-                            console.log(document.data())
-            
-                            malpracticeDetail.imageURL = document.data().imageUrl??"";
+                            console.log(document.data());
+
+                            malpracticeDetail.imageURL =
+                                document.data().imageUrl ?? "";
                             malpracticeDetail.time = document.data().time;
                             returnList.push(malpracticeDetail);
                         }
                     }
                 }
                 return res.status(200).json(returnList);
-            }catch(error){
+            } catch (error) {
                 console.log(error);
                 return res.status(500).json(error);
-
             }
-        
-    }else{
-        return res.status(500).json("Invalid Request");
-    }
+        } else {
+            return res.status(500).json("Invalid Request");
+        }
     } catch (error) {
         return res.status(500).json(error);
     }
-}
-
-
-
+};
 
 export {
     createExam,
@@ -1241,5 +1266,5 @@ export {
     getExamStudents,
     getExamResponses,
     getIndividualExamResponse,
-    getMalpracticeTypeImagesOfStudent
+    getMalpracticeTypeImagesOfStudent,
 };

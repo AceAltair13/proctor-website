@@ -30,6 +30,7 @@ import CustomCard from "../../../../Components/CustomCard";
 import Chart from "react-apexcharts";
 import { fetchSingleStudentResponseForSupervisor } from "../../../../Api/supervisor";
 import RefreshablePage from "../../CommonPages/RefreshablePage";
+import { snackActions } from "../../../../Utils/SnackBarUtils";
 
 const eventList = [
     {
@@ -128,7 +129,11 @@ const ViewStudentResponse = () => {
                     {title}
                 </Typography>
                 <Typography variant="h6" fontWeight="fontWeightBold">
-                    {isFetching ? <Skeleton variant="text" animation="wave" /> : content}
+                    {isFetching ? (
+                        <Skeleton variant="text" animation="wave" />
+                    ) : (
+                        content
+                    )}
                 </Typography>
             </Stack>
         );
@@ -139,7 +144,11 @@ const ViewStudentResponse = () => {
             <Grid item lg={6} md={6} sm={12} xs={12}>
                 <Card
                     sx={{
-                        borderLeft: `10px solid ${theme.palette.secondary.main}`,
+                        borderLeft: `10px solid ${
+                            incidentCount > 0
+                                ? theme.palette.secondary.main
+                                : theme.palette.success.main
+                        }`,
                     }}
                     elevation={4}
                 >
@@ -148,14 +157,22 @@ const ViewStudentResponse = () => {
                             avatar={
                                 <Avatar
                                     sx={{
-                                        bgcolor: theme.palette.secondary.main,
+                                        bgcolor:
+                                            incidentCount > 0
+                                                ? theme.palette.secondary.main
+                                                : theme.palette.success.main,
                                     }}
                                 >
                                     {icon}
                                 </Avatar>
                             }
                             title={incidentType}
-                            subheader={`Number of occurrences: ${incidentCount}`}
+                            subheader={
+                                <Typography variant="body2">
+                                    Number of occurrences:{" "}
+                                    <strong>{incidentCount}</strong>
+                                </Typography>
+                            }
                             action={
                                 <IconButton disabled>
                                     <ChevronRightIcon />
@@ -232,18 +249,29 @@ const ViewStudentResponse = () => {
                                         >
                                             <CardContent>
                                                 <Stack spacing={1}>
-                                                    <img
-                                                        src={studentImageURL}
-                                                        alt="Student"
-                                                        onClick={() =>
-                                                            setIsOpen(true)
-                                                        }
-                                                        height="auto"
-                                                        width="100%"
-                                                        style={{
-                                                            cursor: "pointer",
-                                                        }}
-                                                    />
+                                                    {isFetching ? (
+                                                        <Skeleton
+                                                            variant="rectangular"
+                                                            animation="wave"
+                                                            height={150}
+                                                            width="100%"
+                                                        />
+                                                    ) : (
+                                                        <img
+                                                            src={
+                                                                studentImageURL
+                                                            }
+                                                            alt="Student"
+                                                            onClick={() =>
+                                                                setIsOpen(true)
+                                                            }
+                                                            height="auto"
+                                                            width="100%"
+                                                            style={{
+                                                                cursor: "pointer",
+                                                            }}
+                                                        />
+                                                    )}
                                                     <Typography
                                                         variant="body2"
                                                         textAlign="center"
@@ -261,19 +289,28 @@ const ViewStudentResponse = () => {
                     </Grid>
                     <Grid item lg={4} md={4} sm={12} xs={12}>
                         <CustomCard title="Performance" icon={<BarChartIcon />}>
-                            <Chart
-                                series={[
-                                    totalMarks - studentMarksScored,
-                                    studentMarksScored,
-                                ]}
-                                type="pie"
-                                options={{
-                                    labels: ["Incorrect", "Correct"],
-                                    dataLabels: {
-                                        formatter: (val) => val,
-                                    },
-                                }}
-                            />
+                            {!isFetching && (
+                                <Chart
+                                    series={[
+                                        totalMarks - studentMarksScored,
+                                        studentMarksScored,
+                                    ]}
+                                    type="pie"
+                                    options={{
+                                        labels: ["Incorrect", "Correct"],
+                                        dataLabels: {
+                                            formatter: (val) => val,
+                                        },
+                                        noData: {
+                                            text: "Loading...",
+                                            align: "center",
+                                            verticalAlign: "middle",
+                                            offsetX: 0,
+                                            offsetY: 0,
+                                        },
+                                    }}
+                                />
+                            )}
                             <Stack pl={2}>
                                 <StudentDetailItem
                                     title="Score"
@@ -287,53 +324,74 @@ const ViewStudentResponse = () => {
                             title="Incidents"
                             icon={<WarningAmberIcon />}
                         >
-                            <Grid container spacing={4} justifyContent="center">
-                                <Grid item xs={12}>
-                                    <Typography variant="h6">
-                                        Incident Summary
+                            {isFetching ? (
+                                <Stack>
+                                    <Typography variant="body1" gutterBottom>
+                                        Loading...
                                     </Typography>
-                                </Grid>
-                                <Grid item lg={8} md={8} sm={12} xs={12}>
-                                    <Chart
-                                        type="bar"
-                                        options={{
-                                            plotOptions: {
-                                                bar: {
-                                                    horizontal: true,
+                                    <Skeleton variant="text" animation="wave" />
+                                </Stack>
+                            ) : (
+                                <Grid
+                                    container
+                                    spacing={4}
+                                    justifyContent="center"
+                                >
+                                    <Grid item xs={12}>
+                                        <Typography variant="h6">
+                                            Incident Summary
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item lg={8} md={8} sm={12} xs={12}>
+                                        <Chart
+                                            type="bar"
+                                            options={{
+                                                plotOptions: {
+                                                    bar: {
+                                                        horizontal: true,
+                                                    },
                                                 },
-                                            },
-                                        }}
-                                        series={[
-                                            {
-                                                data: _eventList.map(
-                                                    (event) => ({
-                                                        x: event.title,
-                                                        y: event.count,
-                                                    })
-                                                ),
-                                            },
-                                        ]}
-                                    />
+                                            }}
+                                            series={[
+                                                {
+                                                    data: _eventList.map(
+                                                        (event) => ({
+                                                            x: event.title,
+                                                            y: event.count,
+                                                        })
+                                                    ),
+                                                },
+                                            ]}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Typography variant="h6">
+                                            Incident Breakdown
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={12} container spacing={4}>
+                                        {_eventList.map((event, index) => (
+                                            <IncidentCard
+                                                key={index}
+                                                icon={event.icon}
+                                                incidentType={event.title}
+                                                incidentCount={event.count}
+                                                onClick={() => {
+                                                    if (event.count === 0) {
+                                                        snackActions.success(
+                                                            "No incident data for this type"
+                                                        );
+                                                    } else {
+                                                        history.push(
+                                                            `${url}/view-incidents/${event.code}`
+                                                        );
+                                                    }
+                                                }}
+                                            />
+                                        ))}
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs={12}>
-                                    <Typography variant="h6">
-                                        Incident Breakdown
-                                    </Typography>
-                                </Grid>
-                                {_eventList.map((event, index) => (
-                                    <IncidentCard
-                                        key={index}
-                                        icon={event.icon}
-                                        incidentType={event.title}
-                                        incidentCount={event.count}
-                                        onClick={() =>
-                                            history.push(
-                                                `${url}/view-incidents/${event.code}`
-                                            )
-                                        }
-                                    />
-                                ))}
-                            </Grid>
+                            )}
                         </CustomCard>
                     </Grid>
                 </Grid>
