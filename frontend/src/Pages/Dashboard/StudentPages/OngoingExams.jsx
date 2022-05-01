@@ -421,7 +421,7 @@ const OngoingExams = () => {
                         </Grid>
                     ))}
                 </Grid>
-            ) : exams.count > 0 ? (
+            ) : exams.length > 0 ? (
                 <ExamCardGrid exams={exams} />
             ) : (
                 <Container maxWidth="xs">
