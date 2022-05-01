@@ -32,6 +32,7 @@ const ManageExam = () => {
     const dispatch = useDispatch();
     const getExam = () => getExamDetailsForSupervisor(dispatch, params.examId);
     const { examName } = useSelector((state) => state.supervisor.selectedExam);
+    const { isFetching } = useSelector((state) => state.dashboard);
 
     useEffect(() => {
         dispatch(setSelectedExam({}));
@@ -76,10 +77,12 @@ const ManageExam = () => {
                 >
                     My Exams
                 </Link>
-                <Typography>{examName ? examName : "Loading..."}</Typography>
+                <Typography>
+                    {examName && !isFetching ? examName : "Loading..."}
+                </Typography>
             </Breadcrumbs>
             <RefreshablePage fetchExamFunction={getExam}>
-                {examName ? (
+                {examName && !isFetching ? (
                     <Grid container spacing={4}>
                         {manageExamItems.map((item, index) => (
                             <Grid

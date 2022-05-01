@@ -217,8 +217,7 @@ export const addStudentToExam = (dispatch, history, examId, studentIds) => {
             history.push(`/dashboard/exam/my-exams/${examId}/manage-students`);
             if (res.data.length > 0) {
                 snackActions.warning(
-                    "Some students were not enrolled - " +
-                    res.data
+                    "Some students were not enrolled - " + res.data
                 );
             } else {
                 snackActions.success("Students enrolled successfully");
@@ -255,17 +254,19 @@ export const fetchSingleStudentResponseForSupervisor = async (
     studentId
 ) => {
     dispatch(setDashboardFetching(true));
-    try {
-        const res = await userRequest.get(
-            `${FETCH_RESPONSES_OF_SINGLE_STUDENT}?examId=${examId}&studentId=${studentId}`
-        );
-        console.log(res.data);
-        dispatch(setSelectedStudentResponse(res.data));
-    } catch (error) {
-        snackActions.error(error.response.data);
-    } finally {
-        dispatch(setDashboardFetching(false));
-    }
+    setTimeout(async () => {
+        try {
+            const res = await userRequest.get(
+                `${FETCH_RESPONSES_OF_SINGLE_STUDENT}?examId=${examId}&studentId=${studentId}`
+            );
+            console.log(res.data);
+            dispatch(setSelectedStudentResponse(res.data));
+        } catch (error) {
+            snackActions.error(error.response.data);
+        } finally {
+            dispatch(setDashboardFetching(false));
+        }
+    }, 1000);
 };
 
 export const fetchMalpracticeByType = async (

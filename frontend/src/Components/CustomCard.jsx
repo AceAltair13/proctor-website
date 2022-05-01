@@ -6,7 +6,7 @@ const CustomCard = ({ title, icon, children }) => {
         <Card>
             <CardHeader
                 avatar={icon}
-                title={<Typography variant="h5">{title}</Typography>}
+                title={<Typography variant="h6">{title}</Typography>}
                 sx={{
                     color: "white",
                     bgcolor: "primary.main",

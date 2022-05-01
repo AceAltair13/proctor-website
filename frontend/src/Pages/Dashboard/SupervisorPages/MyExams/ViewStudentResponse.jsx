@@ -9,6 +9,7 @@ import {
     Grid,
     IconButton,
     Link,
+    Skeleton,
     Stack,
     Typography,
     useTheme,
@@ -96,6 +97,7 @@ const ViewStudentResponse = () => {
     const { totalMarks } = useSelector(
         (state) => state.supervisor.studentResponses
     );
+    const { isFetching } = useSelector((state) => state.dashboard);
     const {
         studentImageURL,
         studentFirstName,
@@ -104,7 +106,7 @@ const ViewStudentResponse = () => {
         studentResponse,
         studentEmailId,
         studentPhoneNumber,
-        events
+        events,
     } = useSelector((state) => state.supervisor.selectedStudentResponse);
     const [isOpen, setIsOpen] = useState(false);
     const { examId, examName } = useSelector(
@@ -114,7 +116,9 @@ const ViewStudentResponse = () => {
         fetchSingleStudentResponseForSupervisor(dispatch, examId, studentId);
     const _eventList = eventList.map((event) => ({
         ...event,
-        count: events?.find((response) => response.eventName === event.code)?.eventCount ?? 0,
+        count:
+            events?.find((response) => response.eventName === event.code)
+                ?.eventCount ?? 0,
     }));
 
     const StudentDetailItem = ({ title, content }) => {
@@ -124,7 +128,7 @@ const ViewStudentResponse = () => {
                     {title}
                 </Typography>
                 <Typography variant="h6" fontWeight="fontWeightBold">
-                    {content}
+                    {isFetching ? <Skeleton variant="text" animation="wave" /> : content}
                 </Typography>
             </Stack>
         );
@@ -200,7 +204,7 @@ const ViewStudentResponse = () => {
                             title="Student Details"
                             icon={<BadgeIcon />}
                         >
-                            <Grid container spacing={2} alignItems="stretch">
+                            <Grid container spacing={6}>
                                 <Grid item lg={8} md={8} sm={12} xs={12}>
                                     <Stack spacing={2}>
                                         <StudentDetailItem
@@ -258,7 +262,10 @@ const ViewStudentResponse = () => {
                     <Grid item lg={4} md={4} sm={12} xs={12}>
                         <CustomCard title="Performance" icon={<BarChartIcon />}>
                             <Chart
-                                series={[totalMarks - studentMarksScored, studentMarksScored]}
+                                series={[
+                                    totalMarks - studentMarksScored,
+                                    studentMarksScored,
+                                ]}
                                 type="pie"
                                 options={{
                                     labels: ["Incorrect", "Correct"],

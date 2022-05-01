@@ -27,6 +27,7 @@ const ViewResponses = () => {
     const { studentsList } = useSelector(
         (state) => state.supervisor.studentResponses
     );
+    const { isFetching } = useSelector((state) => state.dashboard);
     const fetchStudentRespones = () => getStudentResponses(dispatch, examId);
 
     const columns = [
@@ -105,7 +106,9 @@ const ViewResponses = () => {
                 <RefreshablePage fetchExamFunction={fetchStudentRespones}>
                     <Stack spacing={2}>
                         <Typography variant="h6">
-                            Student Responses ({_rows.length})
+                            {isFetching
+                                ? "Fetching Responses..."
+                                : `Student Responses (${_rows.length})`}
                         </Typography>
                         <CustomDataGrid columns={columns} rows={_rows} />
                         <Box sx={{ py: 5 }} />
