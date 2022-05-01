@@ -18,8 +18,8 @@ const ChangePassword = () => {
     });
 
     const onSubmit = (data) => {
-        console.log(data);
-        // changePassword(dispatch, ...data);
+        // console.log(data);
+        changePassword(dispatch, data);
     };
 
     return (

@@ -1,9 +1,10 @@
 import {
+    CHANGE_PASSWORD,
     LOGIN_URL,
     STUDENT_REGISTER_URL,
     SUPERVISOR_REGISTER_URL,
 } from "../Constants/urls";
-import { publicRequest, removeToken, setToken } from "../requestMethods";
+import { publicRequest, removeToken, setToken, userRequest } from "../requestMethods";
 import { snackActions } from "../Utils/SnackBarUtils";
 import {
     loginFailure,
@@ -79,12 +80,12 @@ export const registerUser = (dispatch, user, role, history) => {
     }, 1000);
 };
 
-export const changePassword = async (dispatch) => {
+export const changePassword = async (dispatch, data) => {
     dispatch(setDashboardFetching(true));
     // Timeout to prevent loading bar vanishing too fast
     setTimeout(async () => {
         try {
-            const res = await publicRequest.post("/changePassword", {});
+            const res = await userRequest.post(CHANGE_PASSWORD, data);
             snackActions.success(res.data);
             logout(dispatch);
         } catch (error) {
