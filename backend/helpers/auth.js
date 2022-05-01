@@ -5,6 +5,36 @@ import {
 } from "../db.js";
 import CryptoJs from "crypto-js";
 
+
+export const userExistsMiddleWare = async (req, res, next) => {
+    try {
+
+        const snapshot = await firebase_firestore.collection("users").where("emailId", "==", req.user.emailId).get();
+        var userExists = false
+        if (snapshot.empty) {
+            userExists = false
+        }
+        else {
+            snapshot.forEach((doc) => {
+
+                if (doc.data().emailVerified) {
+                    userExists = doc.data()
+                }
+
+            })
+        }
+        req.body.userExists = userExists
+
+        next()
+
+
+
+    } catch (error) {
+        console.log(error)
+        res.status(400).json(error)
+    }
+
+}
 export const SessionId = (req, res, next) => {
     if (req.session.userId) {
         next()
@@ -29,7 +59,7 @@ export const Token = (req, res, next) => {
                 return res.status(403).json("invalid token")
             }
             req.user = user
-
+    
             next()
         })
     } else {

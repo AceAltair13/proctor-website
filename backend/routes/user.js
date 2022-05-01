@@ -9,7 +9,8 @@ import {
   emailverify,
   forgotpassword,
   resetpassword,
-  changepassword
+
+  changeprofilepassword
 } from "../controllers/user.js";
 import * as auth from "../helpers/auth.js"
 const router = Router();
@@ -22,7 +23,7 @@ router.post("/refreshToken",auth.Token, refreshToken)
 router.get("/emailverifivation",emailverify)
 router.get("/forgotpassword", userExistsFunction,forgotpassword)
 router.get("/resetpassword",resetpassword)
-router.post("/changepassword",changepassword)
+router.post("/change-password",auth.Token,auth.userExistsMiddleWare,changeprofilepassword);
 
 
 
