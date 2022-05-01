@@ -126,7 +126,7 @@ const QuestionDialog = () => {
 const ManageQuestionPaper = () => {
     const history = useHistory();
     const { url } = useRouteMatch();
-    const { selectedQuestionPaper, selectedExam, unsavedChanges } = useSelector(
+    const { selectedQuestionPaper, selectedExam } = useSelector(
         (state) => state.supervisor
     );
     const { examName, questionPaperId } = selectedExam;

@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import {
     Avatar,
+    Box,
     Breadcrumbs,
     Card,
     CardActionArea,
     CardContent,
     CardHeader,
+    Divider,
     Grid,
     IconButton,
     Link,
@@ -26,11 +28,14 @@ import BadgeIcon from "@mui/icons-material/Badge";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import BarChartIcon from "@mui/icons-material/Equalizer";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ChatIcon from "@mui/icons-material/Chat";
 import CustomCard from "../../../../Components/CustomCard";
 import Chart from "react-apexcharts";
 import { fetchSingleStudentResponseForSupervisor } from "../../../../Api/supervisor";
 import RefreshablePage from "../../CommonPages/RefreshablePage";
 import { snackActions } from "../../../../Utils/SnackBarUtils";
+import MuiRichTextEditor from "mui-rte";
+import CustomDataGrid from "../../../../Components/CustomDataGrid";
 
 const eventList = [
     {
@@ -95,16 +100,12 @@ const ViewStudentResponse = () => {
     const dispatch = useDispatch();
     const { url } = useRouteMatch();
     const { studentId } = useParams();
-    const { totalMarks } = useSelector(
-        (state) => state.supervisor.studentResponses
-    );
     const { isFetching } = useSelector((state) => state.dashboard);
     const {
         studentImageURL,
         studentFirstName,
         studentLastName,
-        studentMarksScored,
-        studentResponse,
+        studentResult,
         studentEmailId,
         studentPhoneNumber,
         events,
@@ -121,6 +122,31 @@ const ViewStudentResponse = () => {
             events?.find((response) => response.eventName === event.code)
                 ?.eventCount ?? 0,
     }));
+    const optionsColumnSchema = [
+        {
+            headerName: "Sr No",
+            field: "srNo",
+            width: 100,
+            headerAlign: "center",
+            align: "center",
+        },
+        {
+            headerName: "Option",
+            field: "option",
+            minWidth: 200,
+            headerAlign: "center",
+            align: "center",
+            flex: 1,
+        },
+        {
+            headerName: "Correct",
+            field: "isCorrect",
+            width: 100,
+            headerAlign: "center",
+            align: "center",
+            type: "boolean",
+        },
+    ];
 
     const StudentDetailItem = ({ title, content }) => {
         return (
@@ -292,8 +318,9 @@ const ViewStudentResponse = () => {
                             {!isFetching && (
                                 <Chart
                                     series={[
-                                        totalMarks - studentMarksScored,
-                                        studentMarksScored,
+                                        studentResult?.maxMarks -
+                                            studentResult?.marksScored,
+                                        studentResult?.marksScored,
                                     ]}
                                     type="pie"
                                     options={{
@@ -314,7 +341,7 @@ const ViewStudentResponse = () => {
                             <Stack pl={2}>
                                 <StudentDetailItem
                                     title="Score"
-                                    content={`${studentMarksScored} / ${totalMarks}`}
+                                    content={`${studentResult?.marksScored} / ${studentResult?.maxMarks}`}
                                 />
                             </Stack>
                         </CustomCard>
@@ -392,6 +419,56 @@ const ViewStudentResponse = () => {
                                     </Grid>
                                 </Grid>
                             )}
+                        </CustomCard>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <CustomCard icon={<ChatIcon />} title="Responses">
+                            <Stack spacing={4}>
+                                {studentResult.result.map((response, index) => (
+                                    <Card variant="outlined" key={index}>
+                                        <CardContent>
+                                            <Stack spacing={2}>
+                                                <Typography
+                                                    variant="body1"
+                                                    gutterBottom
+                                                    fontWeight="fontWeightBold"
+                                                >
+                                                    Question {index + 1}
+                                                </Typography>
+                                                <MuiRichTextEditor
+                                                    readOnly
+                                                    toolbar={false}
+                                                    value={response.question}
+                                                />
+                                                <Divider />
+                                                <Typography
+                                                    variant="body1"
+                                                    gutterBottom
+                                                    fontWeight="fontWeightBold"
+                                                >
+                                                    Options
+                                                </Typography>
+                                                <CustomDataGrid
+                                                    rows={response.options.map(
+                                                        (option, ind) => ({
+                                                            id: option.optionId,
+                                                            srNo: ind + 1,
+                                                            option: option.optionDesc,
+                                                            isCorrect:
+                                                                option.isCorrect,
+                                                            isSelected:
+                                                                option.isSelected,
+                                                        })
+                                                    )}
+                                                    columns={
+                                                        optionsColumnSchema
+                                                    }
+                                                />
+                                            </Stack>
+                                        </CardContent>
+                                    </Card>
+                                ))}
+                            </Stack>
                         </CustomCard>
                     </Grid>
                 </Grid>

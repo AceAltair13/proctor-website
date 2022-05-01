@@ -4,6 +4,7 @@ import { DateTime } from "luxon";
 import { fetchStudentExams } from "../../../Api/student";
 import RefreshablePage from "../CommonPages/RefreshablePage";
 import CustomDataGrid from "../../../Components/CustomDataGrid";
+import { Button } from "@mui/material";
 
 const columns = [
     {
@@ -40,16 +41,24 @@ const columns = [
     {
         headerName: "Exam Description",
         field: "examDesc",
+        minWidth: 200,
         flex: 1,
         headerAlign: "center",
         align: "center",
     },
     {
-        headerName: "Status",
-        field: "status",
+        headerName: "Action",
+        field: "action",
         width: 200,
         headerAlign: "center",
         align: "center",
+        renderCell: (params) => {
+            return (
+                <Button size="small" onClick={() => console.log(params.row.id)}>
+                    View result
+                </Button>
+            );
+        },
     },
 ];
 
@@ -57,7 +66,7 @@ const ExamHistory = () => {
     const dispatch = useDispatch();
     const exams = useSelector((state) => state.student.exams.history);
     const rows = exams.map((exam, index) => ({
-        id: index,
+        id: exam.examId,
         srNo: index + 1,
         examName: exam.examName,
         startTime: DateTime.fromISO(exam.examStartTime).toLocaleString(

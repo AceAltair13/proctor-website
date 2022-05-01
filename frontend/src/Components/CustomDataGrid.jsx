@@ -18,6 +18,9 @@ const CustomDataGrid = (props) => {
                 "& .custom-data-grid--isCorrect": {
                     bgcolor: "rgb(0, 255, 0, 0.2)",
                 },
+                "& .custom-data-grid--isIncorrect": {
+                    bgcolor: "rgb(255, 0, 0, 0.2)",
+                },
             }}
             {...(noShadow ? noShadowProps : {})}
         >
@@ -28,8 +31,11 @@ const CustomDataGrid = (props) => {
                 autoHeight
                 disableSelectionOnClick
                 getRowClassName={(params) => {
-                    if (params.row.isCorrect) {
+                    if (params.row.isSelected && params.row.isCorrect) {
                         return "custom-data-grid--isCorrect";
+                    }
+                    if (params.row.isSelected && !params.row.isCorrect) {
+                        return "custom-data-grid--isIncorrect";
                     }
                 }}
                 {...other}
