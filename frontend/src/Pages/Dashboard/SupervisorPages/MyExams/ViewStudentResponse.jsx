@@ -424,7 +424,7 @@ const ViewStudentResponse = () => {
                     <Grid item xs={12}>
                         <CustomCard icon={<ChatIcon />} title="Responses">
                             <Stack spacing={4}>
-                                {studentResult.result.map((response, index) => (
+                                {studentResult?.result?.map((response, index) => (
                                     <Card variant="outlined" key={index}>
                                         <CardContent>
                                             <Stack spacing={2}>

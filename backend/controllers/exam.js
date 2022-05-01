@@ -1145,12 +1145,15 @@ const getIndividualExamResponse = async (req, res) => {
             returnJson.studentEmailId = studentInfo.data().emailId;
             returnJson.studentPhoneNumber = studentInfo.data().phoneNumber;
             returnJson.studentId = studentInfo.data().userId;
-            returnJson.studentResult = await getStudentAnswerQuestionResponse(req,res,true)
-            
+            returnJson.studentResult = await getStudentAnswerQuestionResponse(
+                req,
+                res,
+                true
+            );
+
             // returnJson.studentMarksScored = studentExamInfo.data().score ?? 0;
             // returnJson.studentResponse = studentExamInfo.data().response ?? [];
             let events = [];
-
 
             let collections = await firebase_firestore
                 .collection("exams")
@@ -1226,121 +1229,206 @@ const getMalpracticeTypeImagesOfStudent = async (req, res) => {
     }
 };
 
-const getStudentAnswerQuestionResponse  = async (req, res, supervisorMode = false) => {
+const getStudentAnswerQuestionResponse = async (
+    req,
+    res,
+    supervisorMode = false
+) => {
     try {
         let studentId;
-        if(supervisorMode){
+        console.log("--------- 1");
+        if (supervisorMode) {
             studentId = req.query.studentId;
         }
         let exam;
-
-            try{
-                exam = await firebase_firestore.collection("exams").doc(req.query.examId).get();
-                
-            }catch(e){
-                return res.status(400).json("Exam doenn't exists");
-            }
-            if(exam.data()){
-                const questionPaperId = exam.data().questionPaperId;
-                if(questionPaperId){
-                    if(examAccess(exam, req.user.userId)){
-                        const questionPaper = await firebase_firestore.collection("questionPapers").doc(questionPaperId).get();
-                        
-                        if(questionPaper.data()){
-                            const maxMarks = questionPaper.data().maxMarks;
-                            const questionAnswers = questionPaper.data().questionAnswers;
-                            try {
-                                let studentExam;
-                                if(supervisorMode){
-                                studentExam = await firebase_firestore.collection("exams").doc(req.query.examId).collection("candidates").doc(studentId).get();
-                                }else{
-
-                                studentExam = await firebase_firestore.collection("exams").doc(req.query.examId).collection("candidates").doc(req.user.userId).get();
+        console.log("--------- 2");
+        try {
+            exam = await firebase_firestore
+                .collection("exams")
+                .doc(req.query.examId)
+                .get();
+            console.log("--------- 3");
+        } catch (e) {
+            return res.status(400).json("Exam doesn't exist");
+        }
+        if (exam.data()) {
+            const questionPaperId = exam.data().questionPaperId;
+            console.log("--------- 4");
+            if (questionPaperId) {
+                if (examAccess(exam, req.user.userId)) {
+                    const questionPaper = await firebase_firestore
+                        .collection("questionPapers")
+                        .doc(questionPaperId)
+                        .get();
+                    console.log("--------- 5");
+                    if (questionPaper.data()) {
+                        const maxMarks = questionPaper.data().maxMarks;
+                        const questionAnswers =
+                            questionPaper.data().questionAnswers;
+                        console.log("--------- 6");
+                        try {
+                            let studentExam;
+                            console.log("--------- 7");
+                            if (supervisorMode) {
+                                console.log("student id is " + studentId);
+                                try {
+                                    studentExam = await firebase_firestore
+                                        .collection("exams")
+                                        .doc(req.query.examId)
+                                        .collection("candidates")
+                                        .doc(studentId)
+                                        .get();
+                                } catch (e) {
+                                    console.log(e);
+                                    return res
+                                        .status(400)
+                                        .json("Student doesn't exist");
                                 }
-                                if(studentExam){
-            
-                                    if(studentExam.data()["attempted"] === true){
-                                        const studentResponse = studentExam.data()["response"];
-                                        if(studentResponse){
-                                            let finalResult = {};
-                                            
-                                                finalResult.maxMarks = maxMarks;
-                                                finalResult.marksScored = studentExam.data().score;
-                                                let result = [];
-                                                for(let i=0;i<questionAnswers.length;i++){
-                                                    let currentQuestion = {}
-                                                    let currQuestionId = questionAnswers[i].questionId;
-                                                    let questionWeightage = questionAnswers[i].weightage;
-                                                    let question = questionAnswers[i].question;
-                                                    let correctOptionIds = [];
-                                                    let options = [];
-                                                    currentQuestion.questionId = currQuestionId;
-                                                    currentQuestion.weightage = questionWeightage;
-                                                    currentQuestion.question = question;
+                            } else {
+                                console.log("--------- 8-2");
+                                studentExam = await firebase_firestore
+                                    .collection("exams")
+                                    .doc(req.query.examId)
+                                    .collection("candidates")
+                                    .doc(req.user.userId)
+                                    .get();
+                                console.log("--------- 8-3");
+                            }
+                            console.log("--------- 9");
+                            if (studentExam) {
+                                if (studentExam.data()["attempted"] === true) {
+                                    console.log("--------- 10");
+                                    const studentResponse =
+                                        studentExam.data()["response"];
+                                    if (studentResponse) {
+                                        console.log("--------- 11");
+                                        let finalResult = {};
 
-                                                    for(let j = 0;j< questionAnswers[i].options.length;j++){
-                                                        let currentOption_ = {}
-                                                        currentOption_.optionId = questionAnswers[i].options[j].optionId;
-                                                        currentOption_.optionDesc = questionAnswers[i].options[j].optionDesc;
-                                                        currentOption_.isCorrect = questionAnswers[i].options[j].isCorrect;
-                                                        for(let k = 0;k<studentResponse.length;k++){
-                                                            let currQuestionId_ = studentResponse[k].questionId;
-                                                            if(currQuestionId === currQuestionId_){
-                                                                let selected = studentResponse[k].userSelection;
-                                                                if(selected === currentOption_.optionId){
-                                                                    currentOption_.isSelected = true;
-                                                                }else{
-                                                                    currentOption_.isSelected = false;
-                                                                }
-                                                                options.push(currentOption_);
-                                                            }
+                                        finalResult.maxMarks = maxMarks;
+                                        finalResult.marksScored =
+                                            studentExam.data().score;
+                                        let result = [];
+                                        for (
+                                            let i = 0;
+                                            i < questionAnswers.length;
+                                            i++
+                                        ) {
+                                            let currentQuestion = {};
+                                            let currQuestionId =
+                                                questionAnswers[i].questionId;
+                                            let questionWeightage =
+                                                questionAnswers[i].weightage;
+                                            let question =
+                                                questionAnswers[i].question;
+                                            let correctOptionIds = [];
+                                            let options = [];
+                                            currentQuestion.questionId =
+                                                currQuestionId;
+                                            currentQuestion.weightage =
+                                                questionWeightage;
+                                            currentQuestion.question = question;
+
+                                            for (
+                                                let j = 0;
+                                                j <
+                                                questionAnswers[i].options
+                                                    .length;
+                                                j++
+                                            ) {
+                                                let currentOption_ = {};
+                                                currentOption_.optionId =
+                                                    questionAnswers[i].options[
+                                                        j
+                                                    ].optionId;
+                                                currentOption_.optionDesc =
+                                                    questionAnswers[i].options[
+                                                        j
+                                                    ].optionDesc;
+                                                currentOption_.isCorrect =
+                                                    questionAnswers[i].options[
+                                                        j
+                                                    ].isCorrect;
+                                                for (
+                                                    let k = 0;
+                                                    k < studentResponse.length;
+                                                    k++
+                                                ) {
+                                                    let currQuestionId_ =
+                                                        studentResponse[k]
+                                                            .questionId;
+                                                    if (
+                                                        currQuestionId ===
+                                                        currQuestionId_
+                                                    ) {
+                                                        let selected =
+                                                            studentResponse[k]
+                                                                .userSelection;
+                                                        if (
+                                                            selected ===
+                                                            currentOption_.optionId
+                                                        ) {
+                                                            currentOption_.isSelected = true;
+                                                        } else {
+                                                            currentOption_.isSelected = false;
                                                         }
-                                                
-                                                        currentQuestion.options = options;
+                                                        options.push(
+                                                            currentOption_
+                                                        );
                                                     }
-                                                    
-                                                    result.push(currentQuestion);
                                                 }
 
-                                                finalResult.result = result;
-
-                                            if(supervisorMode){
-                                                return finalResult;
-                                            }else{
-                                                return res.status(200).json(finalResult);
-
+                                                currentQuestion.options =
+                                                    options;
                                             }
-                                        }else{
-                                            return res.status(400).json("Failed to retreive student response");
+
+                                            result.push(currentQuestion);
                                         }
-                                    }else{
-                                        return res.status(200).json({});
+
+                                        finalResult.result = result;
+
+                                        if (supervisorMode) {
+                                            return finalResult;
+                                        } else {
+                                            return res
+                                                .status(200)
+                                                .json(finalResult);
+                                        }
+                                    } else {
+                                        return res
+                                            .status(400)
+                                            .json(
+                                                "Failed to retrieve student response"
+                                            );
                                     }
-                                }else{
-                                    return res.status(400).json("Student exam not found");
+                                } else {
+                                    return res.status(200).json({});
                                 }
-                            } catch (error) {
-                                res.status.json("Problem fetching student exam's details");
+                            } else {
+                                return res
+                                    .status(400)
+                                    .json("Student exam not found");
                             }
-
-                        }else{
-                            return res.status(400).json("Question Paper doesn't exists");
+                        } catch (error) {
+                            res.status.json(
+                                "Problem fetching student exam's details"
+                            );
                         }
+                    } else {
+                        return res
+                            .status(400)
+                            .json("Question Paper doesn't exists");
                     }
-                }else{
-                    return res.status(400).json("Question paper ID not found");
                 }
-            }else{
-                return res.status(400).json("Exam doesn't exists");
+            } else {
+                return res.status(400).json("Question paper ID not found");
             }
-
-        }catch(e){
-            return res.status(500).json("Something went wrong");
+        } else {
+            return res.status(400).json("Exam doesn't exists");
         }
+    } catch (e) {
+        return res.status(500).json("Something went wrong");
     }
-
-
-
+};
 
 export {
     createExam,
@@ -1362,5 +1450,5 @@ export {
     getExamResponses,
     getIndividualExamResponse,
     getMalpracticeTypeImagesOfStudent,
-    getStudentAnswerQuestionResponse
+    getStudentAnswerQuestionResponse,
 };
