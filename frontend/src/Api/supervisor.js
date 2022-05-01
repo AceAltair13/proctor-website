@@ -276,15 +276,17 @@ export const fetchMalpracticeByType = async (
     type
 ) => {
     dispatch(setDashboardFetching(true));
-    try {
-        const res = await userRequest.get(
-            `${MALPRACTIC_FETCH_URL}?examId=${examId}&studentId=${studentId}&malpracticeType=${type}`
-        );
-        console.log(res.data);
-        dispatch(setMalpracticeImages(res.data));
-    } catch (error) {
-        snackActions.error(error.response.data);
-    } finally {
-        dispatch(setDashboardFetching(false));
-    }
+    setTimeout(async () => {
+        try {
+            const res = await userRequest.get(
+                `${MALPRACTIC_FETCH_URL}?examId=${examId}&studentId=${studentId}&malpracticeType=${type}`
+            );
+            console.log(res.data);
+            dispatch(setMalpracticeImages(res.data));
+        } catch (error) {
+            snackActions.error(error.response.data);
+        } finally {
+            dispatch(setDashboardFetching(false));
+        }
+    }, 1000);
 };

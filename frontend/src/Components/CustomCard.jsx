@@ -9,7 +9,7 @@ const CustomCard = ({ title, icon, children }) => {
                 title={<Typography variant="h6">{title}</Typography>}
                 sx={{
                     color: "white",
-                    bgcolor: "primary.main",
+                    bgcolor: "text.primary",
                 }}
                 disableTypography
             />
