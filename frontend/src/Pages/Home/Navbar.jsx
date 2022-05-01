@@ -19,9 +19,11 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 function Navbar() {
     const user = useSelector((state) => state.user.currentUser);
+    const history = useHistory();
 
     const popupState = usePopupState({
         variant: "popover",
@@ -88,9 +90,20 @@ function Navbar() {
                     horizontal: "right",
                 }}
             >
-                <MenuItem onClick={popupState.close}>Item 1</MenuItem>
-                <MenuItem onClick={popupState.close}>Item 2</MenuItem>
-                <MenuItem onClick={popupState.close}>Item 3</MenuItem>
+                {user ? (
+                    <MenuItem onClick={() => history.push("/dashboard")}>
+                        Go to dashboard
+                    </MenuItem>
+                ) : (
+                    <>
+                        <MenuItem onClick={() => history.push("/login")}>
+                            Sign In
+                        </MenuItem>
+                        <MenuItem onClick={() => history.push("/register")}>
+                            Sign Up
+                        </MenuItem>
+                    </>
+                )}
             </Menu>
         </Box>
     );

@@ -3,8 +3,12 @@ import React from "react";
 import { changePasswordValidation } from "../../../Validations/changePasswordValidation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { changePassword } from "../../../Api/auth";
 
 const ChangePassword = () => {
+    const dispatch = useDispatch();
+
     const {
         register,
         handleSubmit,
@@ -14,7 +18,8 @@ const ChangePassword = () => {
     });
 
     const onSubmit = (data) => {
-        console.log(data);
+        // console.log(data);
+        changePassword(dispatch, data);
     };
 
     return (

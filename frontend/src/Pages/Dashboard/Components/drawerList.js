@@ -1,5 +1,5 @@
 import UpcomingIcon from "@mui/icons-material/Upcoming";
-import EqualizerIcon from "@mui/icons-material/Equalizer";
+// import EqualizerIcon from "@mui/icons-material/Equalizer";
 import PersonIcon from "@mui/icons-material/Person";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
 import SchoolIcon from "@mui/icons-material/School";
@@ -7,10 +7,10 @@ import AddIcon from "@mui/icons-material/Add";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import MyExams from "../SupervisorPages/MyExams";
 import UpcomingExams from "../StudentPages/UpcomingExams";
-import MyResults from "../StudentPages/MyResults";
+// import MyResults from "../StudentPages/MyResults";
 import CreateExam from "../SupervisorPages/CreateExam";
 import StudentMonitoring from "../SupervisorPages/StudentMonitoring";
-import Results from "../SupervisorPages/Results";
+// import Results from "../SupervisorPages/Results";
 import Profile from "../CommonPages/Profile";
 import ChangePassword from "../CommonPages/ChangePassword";
 import HistoryIcon from "@mui/icons-material/History";
@@ -34,12 +34,12 @@ const studentDrawerItems = [
                 to: "/dashboard/exam/upcoming",
                 component: UpcomingExams,
             },
-            {
-                text: "My Results",
-                icon: <EqualizerIcon />,
-                to: "/dashboard/exam/results",
-                component: MyResults,
-            },
+            // {
+            //     text: "My Results",
+            //     icon: <EqualizerIcon />,
+            //     to: "/dashboard/exam/results",
+            //     component: MyResults,
+            // },
             {
                 text: "Exam History",
                 icon: <HistoryIcon />,

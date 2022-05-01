@@ -9,6 +9,7 @@ export const STUDENT_REGISTER_URL = "/user/register-student";
 export const SUPERVISOR_REGISTER_URL = "/user/register-supervisor";
 export const LOGIN_URL = "/user/login";
 export const LOGOUT_URL = "/user/logout";
+export const CHANGE_PASSWORD = "/user/change-password";
 
 // Exam
 export const FETCH_EXAMS_URL = "/exam";
