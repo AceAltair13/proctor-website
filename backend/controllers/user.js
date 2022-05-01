@@ -561,6 +561,66 @@ const resetpassword = async (req, res) => {
     res.end();
 }
 
+const changePassword = async (req, res) => {
+   
+      
+        const oldPassword= req.body.oldPassword;
+        const newPassword = req.body.newPassword;
+        const encryptedPassword = CryptoJs.AES.encrypt(
+            oldPassword,
+            config.passKey
+        ).toString();
+        const retrievedPassword = await (await firebase_firestore.collection("users").doc(req.user.userId).get()).data().password;
+        const decryptedPassword = CryptoJs.AES.decrypt(
+            retrievedPassword,
+            config.passKey
+        ).toString(CryptoJs.enc.Utf8);
+        console.log("-------------------");
+        console.log(encryptedPassword);
+        console.log("-------------------");
+        console.log(retrievedPassword);
+            
+        if(encryptedPassword === retrievedPassword){
+            return res.status(200).json("Password changed");
+            // const newHashedPassword = CryptoJs.AES.encrypt(
+            //     newPassword,
+            //     config.passKey
+            // ).toString();
+            // await firebase_firestore.collection("users").doc(req.user.userId).update({ password: newHashedPassword });
+            // return res.status(200).json("Password has been changed successfully");
+        }
+        else{
+            return res.status(400).json("Old Password is incorrect");
+        }
+    
+    }
+
+const changeprofilepassword = async (req, res) => {
+    
+        try {
+
+            const hashedPassword = CryptoJs.AES.decrypt(
+                req.body.userExists.password,
+                config.passKey
+            );
+            const OriginalPassword = hashedPassword.toString(CryptoJs.enc.Utf8);
+            if (OriginalPassword!==req.body.oldPassword) {
+                return res.status(401).json("Old password doesnot match");
+            }
+            const hashedPasswordNew = CryptoJs.AES.encrypt(
+                req.body.newPassword,
+                config.passKey
+            ).toString();
+
+            await firebase_firestore.collection("users").doc(req.user.userId).update({ password: hashedPasswordNew });
+            return res.status(200).json("Password changed successfully");
+        }
+        catch (err) {
+            res.status(500).json(err);
+        }
+    }
+
+
 const changepassword = async (req, res) => {
     try {
         auth.emailToken(req.body.token, req, res);
@@ -603,5 +663,5 @@ export {
     emailverify,
     forgotpassword,
     resetpassword,
-    changepassword
+    changeprofilepassword,
 };

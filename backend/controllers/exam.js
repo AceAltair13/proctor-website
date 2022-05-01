@@ -1189,9 +1189,9 @@ const getMalpracticeTypeImagesOfStudent = async (req, res) => {
             try{
 
                 const malpracticeCollection = await firebase_firestore.collection("exams").doc(examId).collection("candidates").doc(studentId).listCollections();
+                let returnList = [];
                 for(let i=0;i<malpracticeCollection.length;i++){
                     if(malpracticeCollection[i].id == malpracticeType){
-                        let returnList = [];
                         let documents = await malpracticeCollection[i].listDocuments();
                         for(let j=0;j<documents.length;j++){
                             let malpracticeDetail = {};
@@ -1202,15 +1202,15 @@ const getMalpracticeTypeImagesOfStudent = async (req, res) => {
                             malpracticeDetail.time = document.data().time;
                             returnList.push(malpracticeDetail);
                         }
-                        return res.status(200).json(returnList);
                     }
                 }
+                return res.status(200).json(returnList);
             }catch(error){
                 console.log(error);
                 return res.status(500).json(error);
 
             }
-        return res.status(200).json(returnList);
+        
     }else{
         return res.status(500).json("Invalid Request");
     }
