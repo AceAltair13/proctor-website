@@ -298,9 +298,9 @@ const ViewStudentResponse = () => {
                                     type="pie"
                                     options={{
                                         labels: ["Incorrect", "Correct"],
-                                        dataLabels: {
-                                            formatter: (val) => val,
-                                        },
+                                        // dataLabels: {
+                                        //     formatter: (val) => val,
+                                        // },
                                         noData: {
                                             text: "Loading...",
                                             align: "center",

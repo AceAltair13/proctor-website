@@ -13,7 +13,10 @@ import {
 } from "../Features/userSlice";
 import { resetStudent } from "../Features/studentSlice";
 import { resetExam } from "../Features/examSlice";
-import { resetDashboard } from "../Features/dashboardSlice";
+import {
+    resetDashboard,
+    setDashboardFetching,
+} from "../Features/dashboardSlice";
 import { resetQuestionPaper } from "../Features/questionPaperSlice";
 import { resetSupervisor } from "../Features/supervisorSlice";
 
@@ -72,6 +75,22 @@ export const registerUser = (dispatch, user, role, history) => {
         } catch (error) {
             dispatch(loginFailure());
             snackActions.error(error.response.data);
+        }
+    }, 1000);
+};
+
+export const changePassword = async (dispatch) => {
+    dispatch(setDashboardFetching(true));
+    // Timeout to prevent loading bar vanishing too fast
+    setTimeout(async () => {
+        try {
+            const res = await publicRequest.post("/changePassword", {});
+            snackActions.success(res.data);
+            logout(dispatch);
+        } catch (error) {
+            snackActions.error(error.response.data);
+        } finally {
+            dispatch(setDashboardFetching(false));
         }
     }, 1000);
 };
