@@ -6,8 +6,7 @@ function MobileExamError() {
     return (
         <ErrorTemplate image={MobileErrorImage} title={"Access Denied"}>
             This page is <strong>unavailable</strong> on mobile phones and
-            non-Chrome browsers. Please use a{" "}
-            <strong>Chrome Browser on a desktop</strong> instead.
+            tablets. Please use a <strong>desktop browser</strong> instead.
         </ErrorTemplate>
     );
 }

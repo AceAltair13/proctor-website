@@ -12,7 +12,6 @@ import {
 } from "./Pages/index";
 import { SnackbarProvider } from "notistack";
 import { SnackbarUtilsConfigurator } from "./Utils/SnackBarUtils";
-import ChromeOnlyRoute from "./Components/ChromeOnlyRoute";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import "react-image-lightbox/style.css";
 import PublicRoute from "./Components/PublicRoute";
@@ -36,9 +35,9 @@ function App() {
                     <PublicRoute path="/register">
                         <Register />
                     </PublicRoute>
-                    <ChromeOnlyRoute path="take-exam/:id">
+                    <ProtectedRoute path="/take-exam/:id" desktopOnly>
                         <ExamRoutes />
-                    </ChromeOnlyRoute>
+                    </ProtectedRoute>
                     <Route exact path="/">
                         <Home />
                     </Route>
